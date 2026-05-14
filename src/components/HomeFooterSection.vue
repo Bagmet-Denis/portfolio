@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { publicAssetUrl } from '@/utils/resolveAssetUrl'
 
 type ContactItem = {
   key: string
@@ -39,10 +40,13 @@ const travelFact = computed(() => facts.find((fact) => fact.key === 'travel') ??
 const countriesCount = computed(() => travelFact.value?.countries?.length ?? 0)
 
 const contactIcons: Record<string, string> = {
-  telegram: '/socials/telegram.svg',
-  instagram: '/socials/instagram.svg',
-  email: '/socials/gmail.svg',
+  telegram: publicAssetUrl('socials/telegram.svg'),
+  instagram: publicAssetUrl('socials/instagram.svg'),
+  email: publicAssetUrl('socials/gmail.svg'),
 }
+
+const mapBackground = publicAssetUrl('map_background.png')
+const instagramIcon = publicAssetUrl('socials/instagram.svg')
 
 const countryChipStyles = [
   'bg-[#FFF7EA]/82 text-[#46382f]',
@@ -55,7 +59,7 @@ const countryChipStyles = [
   <section class="mx-auto w-full max-w-[1580px] px-4 pb-12 pt-8 sm:px-6 sm:pb-16 sm:pt-10 xl:px-8">
     <div class="relative overflow-hidden rounded-[28px] bg-[#FFFDF8]/72 px-4 py-5 shadow-[0_18px_48px_rgba(47,37,33,0.08)] backdrop-blur-[1px] sm:px-6 sm:py-6">
       <img
-        src="/map_background.png"
+        :src="mapBackground"
         alt=""
         class="pointer-events-none absolute -right-24 -top-20 h-72 w-72 rotate-6 object-cover opacity-[0.13] mix-blend-multiply sm:h-96 sm:w-96"
       />
@@ -88,7 +92,7 @@ const countryChipStyles = [
               :href="travelFact.link.href"
               class="mt-4 inline-flex items-center gap-2 rounded-full bg-white/78 px-3 py-2 text-[11px] font-bold uppercase tracking-[0.12em] text-[#C95E3E] shadow-[0_8px_18px_rgba(47,37,33,0.08)] transition hover:-translate-y-0.5 hover:bg-[#FFF7EA] hover:text-[#2f2521]"
             >
-              <img src="/socials/instagram.svg" alt="" class="h-4 w-4" />
+              <img :src="instagramIcon" alt="" class="h-4 w-4" />
               {{ travelFact.link.label }}
             </a>
           </article>
@@ -113,7 +117,7 @@ const countryChipStyles = [
             >
               <img
                 v-if="country.flag"
-                :src="country.flag"
+                :src="publicAssetUrl(country.flag)"
                 :alt="country.name"
                 class="h-3.5 w-3.5 rounded-full object-cover"
               />

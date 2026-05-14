@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { resolveAssetUrl } from '@/utils/resolveAssetUrl';
+import { publicAssetUrl, resolveAssetUrl } from '@/utils/resolveAssetUrl';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n()
 const denimPattern = resolveAssetUrl('src/assets/paper_2_pattern.svg')
-const plasticOverlay = '/plastic_overlay.png';
+const plasticOverlay = publicAssetUrl('plastic_overlay.png')
 </script>
 
 <template>

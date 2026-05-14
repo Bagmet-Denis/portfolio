@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
+import { publicAssetUrl } from '@/utils/resolveAssetUrl'
 
 const { tm } = useI18n()
+const paperOverlay = publicAssetUrl('paper_overlay.png')
 
 const personal = tm('experience.personal') as Array<{ key: string; label: string; value: string | string[] }>
 const itemAccentStyles = [
@@ -27,12 +29,12 @@ const itemAccentStyles = [
     }
 ] as const
 const languageFlags: Record<string, string> = {
-    'Украинский': '/flags/ua.png',
-    'Русский': '/flags/ru.png',
-    'Ukrainian': '/flags/ua.png',
-    'Russian': '/flags/ru.png',
-    'English': '/flags/en.png',
-    'Английский': '/flags/en.png'
+    'Украинский': publicAssetUrl('flags/ua.png'),
+    'Русский': publicAssetUrl('flags/ru.png'),
+    'Ukrainian': publicAssetUrl('flags/ua.png'),
+    'Russian': publicAssetUrl('flags/ru.png'),
+    'English': publicAssetUrl('flags/en.png'),
+    'Английский': publicAssetUrl('flags/en.png')
 }
 </script>
 
@@ -46,7 +48,7 @@ const languageFlags: Record<string, string> = {
             class="pointer-events-none absolute rounded-[10px] bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))] sm:rounded-[12px]">
         </div>
         <div class="pointer-events-none absolute mix-blend-multiply ">
-            <img src="/paper_overlay.png" alt="" class="h-full w-full object-cover">
+            <img :src="paperOverlay" alt="" class="h-full w-full object-cover">
         </div>
         <div class="relative z-10 flex flex-col gap-1 sm:gap-1.5 p-2">
             <div v-for="(item, index) in personal" :key="item.label"

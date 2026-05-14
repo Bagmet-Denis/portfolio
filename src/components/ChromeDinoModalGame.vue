@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { publicAssetUrl } from '@/utils/resolveAssetUrl'
 
 type Obstacle = {
   id: number
@@ -17,7 +18,7 @@ const GRAVITY = 1800
 const JUMP_VELOCITY = 670
 const MIN_SPAWN_DELAY = 850
 const MAX_SPAWN_DELAY = 1680
-const gameboyBodySrc = '/gameboy/body_gameboy.png'
+const gameboyBodySrc = publicAssetUrl('gameboy/body_gameboy.png')
 
 const score = ref(0)
 const bestScore = ref(0)

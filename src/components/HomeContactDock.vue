@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
+import { publicAssetUrl } from '@/utils/resolveAssetUrl'
 
 type ContactItem = {
   key: string
@@ -11,6 +12,8 @@ type ContactItem = {
 const { tm } = useI18n()
 
 const contacts = tm('home.contactCard.items') as ContactItem[]
+const paperOverlay = publicAssetUrl('paper_overlay.png')
+const plasticPacketOverlay = publicAssetUrl('plastic_packet_overlay.png')
 
 const contactAccents = [
   {
@@ -88,11 +91,11 @@ const contactAccents = [
     </div>
 
     <div class="pointer-events-none absolute inset-0 opacity-55 mix-blend-multiply">
-      <img src="/paper_overlay.png" alt="" class="h-full w-full object-cover" />
+      <img :src="paperOverlay" alt="" class="h-full w-full object-cover" />
     </div>
 
     <div class="pointer-events-none absolute inset-0 opacity-55">
-      <img src="/plastic_packet_overlay.png" alt="" class="h-full w-full object-cover" />
+      <img :src="plasticPacketOverlay" alt="" class="h-full w-full object-cover" />
     </div>
   </div>
 </template>

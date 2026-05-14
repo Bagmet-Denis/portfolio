@@ -5,6 +5,7 @@ import { RouterView } from 'vue-router'
 import { saveLocale, type AppLocale } from './i18n'
 import SeasonsFalling from 'vue-seasons-falling';
 import NavBar from './components/NavBar.vue'
+import { publicAssetUrl } from './utils/resolveAssetUrl'
 
 const { locale } = useI18n()
 
@@ -13,7 +14,8 @@ watch(locale, (value) => saveLocale(value as AppLocale))
 // const backgroundPattern = resolveAssetUrl('src/assets/background_light_waves.svg');
 // const backgroundPattern = resolveAssetUrl('src/assets/background_dark_waves.svg');
 // const backgroundPattern = resolveAssetUrl('src/assets/paper_pattern.svg');
-const backgroundPattern = '/grid_pattern.svg';
+const backgroundPattern = publicAssetUrl('grid_pattern.svg')
+const paperOverlay = publicAssetUrl('paper_overlay.png')
 </script>
 
 <template>
@@ -26,7 +28,7 @@ const backgroundPattern = '/grid_pattern.svg';
       :style="{ backgroundImage: `url(${backgroundPattern})`, backgroundRepeat: 'repeat', backgroundSize: '20px 20px' }">
 
       <div class="absolute inset-0 pointer-events-none z-0 mix-blend-darken opacity-60"
-        style="background-image: url('/paper_overlay.png'); background-repeat: repeat; background-size: auto;">
+        :style="{ backgroundImage: `url(${paperOverlay})`, backgroundRepeat: 'repeat', backgroundSize: 'auto' }">
       </div>
 
       <div class="relative z-[1000]">

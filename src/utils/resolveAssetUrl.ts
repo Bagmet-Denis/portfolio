@@ -10,6 +10,11 @@ const urlByGlobKey = import.meta.glob<string>(
   },
 ) as Record<string, string>
 
+export function publicAssetUrl(path: string): string {
+  const clean = path.replace(/^\/+/, '')
+  return `${import.meta.env.BASE_URL}${clean}`
+}
+
 /**
  * Resolves paths from data files like `src/assets/foo/bar.png` to Vite URLs.
  * If the file was moved under `src/assets/projects/`, tries that path when the legacy path is missing.

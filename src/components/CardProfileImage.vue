@@ -1,3 +1,9 @@
+<script setup lang="ts">
+import { publicAssetUrl } from '@/utils/resolveAssetUrl'
+
+const castleImage = publicAssetUrl('castle.png')
+</script>
+
 <template>
   <div
     class="relative flex w-[340px] max-w-full min-h-[320px] items-end justify-end sm:w-[430px] sm:min-h-[410px] lg:w-[520px] lg:min-h-[520px]">
@@ -8,7 +14,7 @@
 
     <div v-motion class="absolute right-0 bottom-0" :initial="{ x: 400, scale: 0 }" :enter="{ x: 0, scale: 1 }"
       :transition="{ type: 'spring', stiffness: 100 }" :delay="600" :duration="1200">
-      <img src="/castle.png" alt="" class="w-90 md:w-100 opacity-35" />
+      <img :src="castleImage" alt="" class="w-90 md:w-100 opacity-35" />
     </div>
   </div>
 </template>

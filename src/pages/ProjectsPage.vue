@@ -2,7 +2,7 @@
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { cyberSecurityProject, desktopProjects, mobileProjects } from '@/data/projects'
-import { resolveAssetUrl, resolveAssetUrls } from '@/utils/resolveAssetUrl'
+import { publicAssetUrl, resolveAssetUrl, resolveAssetUrls } from '@/utils/resolveAssetUrl'
 import { getProjectDescription } from '@/utils/projectDescriptions'
 import LegalNoticeBanner from '@/components/LegalNoticeBanner.vue'
 import AntiAIBanner from '@/components/AntiAIBanner.vue'
@@ -73,7 +73,9 @@ const categoryAccentClasses: Record<ProjectCategory, string> = {
   cybersecurity: 'bg-[#AC3F2B]',
 }
 
-const cloudSrc = '/cloud.png'
+const cloudSrc = publicAssetUrl('cloud.png')
+const paperOverlay = publicAssetUrl('paper_overlay.png')
+const gridPattern = publicAssetUrl('grid_pattern.svg')
 const cloudDecorations = [
   {
     className:
@@ -116,7 +118,7 @@ const codebyProfileIconUrl =
   resolveAssetUrl('src/assets/projects/security/codeby-profile.png') ||
   resolveAssetUrl('src/assets/projects/security/codeby-profile.png.png')
 const hackerOneServicesIconUrl = resolveAssetUrl('src/assets/projects/security/hackerone-services.png')
-const telegramLogoUrl = '/socials/telegram.svg'
+const telegramLogoUrl = publicAssetUrl('socials/telegram.svg')
 
 const fullStackProjectTitles = new Set([
   'Teleprompter Automatic',
@@ -357,9 +359,9 @@ const infoProject = computed(() => {
       <section
         class="relative overflow-hidden rounded-[28px] border border-white/10 bg-black px-3 py-3 shadow-[0_24px_70px_rgba(0,0,0,0.28)] sm:px-4 sm:py-4">
         <div class="absolute inset-0 opacity-22 mix-blend-screen"
-          style="background-image: url('/paper_overlay.png'); background-size: cover; background-position: center;" />
+          :style="{ backgroundImage: `url(${paperOverlay})`, backgroundSize: 'cover', backgroundPosition: 'center' }" />
         <div class="absolute inset-0 opacity-12"
-          style="background-image: url('/grid_pattern.svg'); background-size: 28px; background-position: center;" />
+          :style="{ backgroundImage: `url(${gridPattern})`, backgroundSize: '28px', backgroundPosition: 'center' }" />
         <div class="absolute -left-14 -top-12 h-36 w-36 rounded-full bg-[#D96138]/16 blur-3xl" />
         <div class="absolute right-[-40px] top-[-30px] h-40 w-40 rounded-full bg-[#006C7C]/12 blur-3xl" />
         <div class="absolute bottom-[-50px] left-1/3 h-36 w-36 rounded-full bg-[#5F8171]/12 blur-3xl" />

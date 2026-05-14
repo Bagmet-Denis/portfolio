@@ -3,6 +3,7 @@ import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import emblaCarouselVue from 'embla-carousel-vue'
 import type { EmblaCarouselType, EmblaOptionsType } from 'embla-carousel'
 import type { ProjectCard, StoreType } from '@/types/projectCard'
+import { publicAssetUrl } from '@/utils/resolveAssetUrl'
 
 const [emblaRef, emblaApi] = emblaCarouselVue({
   align: 'start',
@@ -43,6 +44,8 @@ const ticketCardHeight = computed(() => {
   if (isCybersecurityCard.value) return 340
   return 420
 })
+const holographicOverlay = publicAssetUrl('holographic.svg')
+const backgroundPaperUrl = `url("${publicAssetUrl('background_paper.png')}")`
 
 function syncEmblaState(api?: EmblaCarouselType) {
   canScrollPrev.value = api?.canScrollPrev() ?? false
@@ -83,7 +86,7 @@ onBeforeUnmount(() => {
         isInsentryCase ? 'project-ticket-shell--insentry border-[#9DB5C9]/45 bg-[#EEF4F7] shadow-[0_16px_36px_rgba(50,73,88,0.14)]' : '',
       ]">
       <div v-if="isTeleprompterAutomaticProject(project)" class="pointer-events-none absolute inset-0 z-[1] opacity-55">
-        <img src="/holographic.svg" alt="" class="h-full w-full object-cover mix-blend-screen" />
+        <img :src="holographicOverlay" alt="" class="h-full w-full object-cover mix-blend-screen" />
       </div>
 
       <section class="project-ticket-info relative flex min-w-0 overflow-hidden bg-[#f7f8fa] p-3.5"
@@ -238,7 +241,7 @@ onBeforeUnmount(() => {
 .project-ticket-shell {
   background:
     #fff8f3,
-    url('/background_paper.png');
+    v-bind(backgroundPaperUrl);
   background-size: auto, 420px;
   box-shadow: 0 14px 34px rgba(32, 14, 12, 0.1);
 }
@@ -246,28 +249,28 @@ onBeforeUnmount(() => {
 .project-ticket-shell--insentry {
   background:
     #eef4f7,
-    url('/background_paper.png');
+    v-bind(backgroundPaperUrl);
   background-size: auto, 420px;
 }
 
 .project-ticket-info {
   background:
     #f8f5ef,
-    url('/background_paper.png');
+    v-bind(backgroundPaperUrl);
   background-size: auto, 420px;
 }
 
 .project-ticket-divider {
   background:
     #f7f0e8,
-    url('/background_paper.png');
+    v-bind(backgroundPaperUrl);
   background-size: auto, 420px;
 }
 
 .project-ticket-gallery {
   background:
     #f8f5ef,
-    url('/background_paper.png');
+    v-bind(backgroundPaperUrl);
   background-size: auto, 420px;
 }
 
@@ -280,7 +283,7 @@ onBeforeUnmount(() => {
 .project-ticket-shell--insentry .project-ticket-divider {
   background:
     #eef4f7,
-    url('/background_paper.png');
+    v-bind(backgroundPaperUrl);
   background-size: auto, 420px;
 }
 

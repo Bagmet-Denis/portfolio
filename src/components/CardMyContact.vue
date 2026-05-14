@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
+import { publicAssetUrl } from '@/utils/resolveAssetUrl'
 
 const { tm } = useI18n()
+const paperOverlay = publicAssetUrl('paper_overlay.png')
+const plasticPacketOverlay = publicAssetUrl('plastic_packet_overlay.png')
 
 const contacts = tm('experience.contact') as Array<{
     key: string
@@ -25,11 +28,11 @@ const contacts = tm('experience.contact') as Array<{
         </div>
 
         <div class="pointer-events-none absolute inset-0 opacity-55 mix-blend-multiply">
-            <img src="/paper_overlay.png" alt="" class="h-full w-full object-cover" />
+            <img :src="paperOverlay" alt="" class="h-full w-full object-cover" />
         </div>
 
         <div class="pointer-events-none absolute inset-0 opacity-45">
-            <img src="/plastic_packet_overlay.png" alt="" class="h-full w-full object-cover" />
+            <img :src="plasticPacketOverlay" alt="" class="h-full w-full object-cover" />
         </div>
     </div>
 </template>

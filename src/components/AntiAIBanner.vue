@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
+import { publicAssetUrl } from '@/utils/resolveAssetUrl'
 
 const { t, tm } = useI18n()
+const holographicOverlay = publicAssetUrl('holographic.svg')
 </script>
 
 <template>
@@ -36,7 +38,7 @@ const { t, tm } = useI18n()
     </div>
 
     <div class="absolute inset-0">
-      <img src="/holographic.svg" alt="" class="h-full w-full object-cover" />
+      <img :src="holographicOverlay" alt="" class="h-full w-full object-cover" />
     </div>
   </div>
 </template>

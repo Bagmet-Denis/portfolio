@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { publicAssetUrl } from '@/utils/resolveAssetUrl'
 
 type FactCountry = {
   name: string
@@ -30,6 +31,8 @@ const { tm } = useI18n()
 const facts = tm('experience.factsCard.items') as FactItem[]
 const expandedLabels = tm('experience.factsCard.expanded') as ExpandedLabels
 const expanded = ref<Record<string, boolean>>({})
+const paperOverlay = publicAssetUrl('paper_overlay.png')
+const plasticPacketOverlay = publicAssetUrl('plastic_packet_overlay.png')
 
 function toggleExpanded(key: string) {
   expanded.value[key] = !expanded.value[key]
@@ -134,7 +137,7 @@ function animateLeave(el: Element) {
                 >
                   <img
                     v-if="country.flag"
-                    :src="country.flag"
+                    :src="publicAssetUrl(country.flag)"
                     :alt="country.name"
                     class="h-3.5 w-3.5 rounded-full object-cover"
                   />
@@ -148,11 +151,11 @@ function animateLeave(el: Element) {
     </div>
 
     <div class="pointer-events-none absolute inset-0 opacity-55 mix-blend-multiply">
-      <img src="/paper_overlay.png" alt="" class="h-full w-full object-cover" />
+      <img :src="paperOverlay" alt="" class="h-full w-full object-cover" />
     </div>
 
     <div class="pointer-events-none absolute inset-0 opacity-55">
-      <img src="/plastic_packet_overlay.png" alt="" class="h-full w-full object-cover" />
+      <img :src="plasticPacketOverlay" alt="" class="h-full w-full object-cover" />
     </div>
   </div>
 </template>

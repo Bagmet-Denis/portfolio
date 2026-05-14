@@ -7,8 +7,10 @@ import BlockFeaturedProject from '@/components/BlockFeaturedProject.vue'
 import BlockLastProjects from '@/components/BlockLastProjects.vue'
 import CardProfileImage from '@/components/CardProfileImage.vue'
 import HomeFooterSection from '@/components/HomeFooterSection.vue'
+import { publicAssetUrl } from '@/utils/resolveAssetUrl'
 
-const cloudSrc = '/cloud.png'
+const cloudSrc = publicAssetUrl('cloud.png')
+const gridPattern = publicAssetUrl('grid_pattern.svg')
 
 const homeCloudDecorations = [
   {
@@ -88,7 +90,7 @@ const homeCloudDecorations = [
       >
         <div
           class="absolute inset-0 opacity-18 mix-blend-screen"
-          style="background-image: url('/grid_pattern.svg'); background-size: 28px; background-position: center;"
+          :style="{ backgroundImage: `url(${gridPattern})`, backgroundSize: '28px', backgroundPosition: 'center' }"
         />
         <div class="absolute -left-10 top-6 h-36 w-36 rounded-full bg-[#d7342a]/20 blur-3xl" />
         <div class="absolute right-0 top-0 h-44 w-44 rounded-full bg-[#f3d0b6]/10 blur-3xl" />

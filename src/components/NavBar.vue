@@ -3,10 +3,12 @@ import { saveLocale, type AppLocale } from '@/i18n';
 import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { RouterLink } from 'vue-router'
+import { publicAssetUrl } from '@/utils/resolveAssetUrl'
 
 const { t, locale } = useI18n()
 watch(locale, (value) => saveLocale(value as AppLocale))
 const localeMenu = ref<HTMLDetailsElement | null>(null)
+const cvUrl = publicAssetUrl('cv.pdf')
 
 const localeOptions: Array<{ value: AppLocale; flag: string; label: string }> = [
   { value: 'ru', flag: '🇷🇺', label: 'RU' },
@@ -87,7 +89,7 @@ function setLocale(value: AppLocale) {
           </div>
         </details>
 
-        <a href="/cv.pdf" download
+        <a :href="cvUrl" download
           class="rounded-full bg-[#B0464A] px-4 py-2 text-sm font-semibold text-white shadow-[0_8px_18px_rgba(176,70,74,0.18)] transition duration-200 hover:bg-[#c05255]">
           {{ t('controls.downloadCv') }}
         </a>

@@ -3,6 +3,7 @@ import { onBeforeUnmount, ref, watch } from 'vue'
 import emblaCarouselVue from 'embla-carousel-vue'
 import type { EmblaCarouselType, EmblaOptionsType } from 'embla-carousel'
 import type { ProjectCard, StoreType } from '@/types/projectCard'
+import { publicAssetUrl } from '@/utils/resolveAssetUrl'
 
 const [emblaRef, emblaApi] = emblaCarouselVue({
   align: 'start',
@@ -13,6 +14,7 @@ void emblaRef
 
 const canScrollPrev = ref(false)
 const canScrollNext = ref(false)
+const backgroundPaperUrl = `url("${publicAssetUrl('background_paper.png')}")`
 
 const props = defineProps<{
   project: ProjectCard
@@ -162,7 +164,7 @@ onBeforeUnmount(() => {
   border-radius: 24px;
   background:
     #fff8f3,
-    url('/background_paper.png');
+    v-bind(backgroundPaperUrl);
   background-size: auto, 420px;
   box-shadow: 0 14px 34px rgba(32, 14, 12, 0.1);
 }
@@ -178,7 +180,7 @@ onBeforeUnmount(() => {
   padding: 0.9rem;
   background:
     #f8f5ef,
-    url('/background_paper.png');
+    v-bind(backgroundPaperUrl);
   background-size: auto, 420px;
 }
 
@@ -186,7 +188,7 @@ onBeforeUnmount(() => {
   padding: 0.35rem;
   background:
     #f8f5ef,
-    url('/background_paper.png');
+    v-bind(backgroundPaperUrl);
   background-size: auto, 420px;
 }
 
@@ -196,7 +198,7 @@ onBeforeUnmount(() => {
   min-height: 14px;
   background:
     #f7f0e8,
-    url('/background_paper.png');
+    v-bind(backgroundPaperUrl);
   background-size: auto, 420px;
 }
 

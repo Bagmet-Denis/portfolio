@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { publicAssetUrl } from '@/utils/resolveAssetUrl'
 
 type SkillCategory = {
   key: string
@@ -18,6 +19,8 @@ const { tm } = useI18n()
 const skillCategories = tm('experience.skillsCard.categories') as SkillCategory[]
 const expandedLabels = tm('experience.skillsCard.expanded') as ExpandedLabels
 const expanded = ref<Record<string, boolean>>({})
+const paperOverlay = publicAssetUrl('paper_overlay.png')
+const plasticPacketOverlay = publicAssetUrl('plastic_packet_overlay.png')
 const skillAccentStyles = [
   {
     badge: 'bg-[#6F5643] text-[#ECE6C2]',
@@ -128,11 +131,11 @@ function animateLeave(el: Element) {
     </div>
 
     <div class="pointer-events-none absolute inset-0 opacity-60 mix-blend-multiply">
-      <img src="/paper_overlay.png" alt="" class="h-full w-full object-cover" />
+      <img :src="paperOverlay" alt="" class="h-full w-full object-cover" />
     </div>
 
     <div class="pointer-events-none absolute inset-0 opacity-60">
-      <img src="/plastic_packet_overlay.png" alt="" class="h-full w-full object-cover" />
+      <img :src="plasticPacketOverlay" alt="" class="h-full w-full object-cover" />
     </div>
   </div>
 </template>

@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { desktopProjects, mobileProjects } from '@/data/projects'
+import { publicAssetUrl } from '@/utils/resolveAssetUrl'
 import { useI18n } from 'vue-i18n';
 const { t } = useI18n()
+
+const plasticPacketOverlay = publicAssetUrl('plastic_packet_overlay.png')
 </script>
 
 <template>
@@ -74,7 +77,7 @@ const { t } = useI18n()
         </div>
 
         <div class="absolute inset-0 z-0 pointer-events-none">
-            <img src="/plastic_packet_overlay.png" alt="" class="w-full h-full object-cover opacity-80 sm:opacity-100">
+            <img :src="plasticPacketOverlay" alt="" class="w-full h-full object-cover opacity-80 sm:opacity-100">
         </div>
 
     </div>
