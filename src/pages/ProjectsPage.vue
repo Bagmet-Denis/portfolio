@@ -8,6 +8,7 @@ import LegalNoticeBanner from '@/components/LegalNoticeBanner.vue'
 import AntiAIBanner from '@/components/AntiAIBanner.vue'
 import ProjectTicketCard from '@/components/ProjectTicketCard.vue'
 import TeleprompterAutomaticInfoPage from '@/pages/project-details/TeleprompterAutomaticInfoPage.vue'
+import MAlienInfoPage from '@/pages/project-details/MAlienInfoPage.vue'
 import type { ProjectCard, ProjectCategory, StoreLink, StoreType } from '@/types/projectCard'
 
 const { t, tm } = useI18n()
@@ -126,6 +127,7 @@ const fullStackProjectTitles = new Set([
   'Skin - Widgets, Icons, Themes',
   'Mod Pack for Melon Playground',
   'Алло - Запись звонков',
+  'M-Alien',
 ])
 
 const prioritizedProjectTitles = [
@@ -138,6 +140,7 @@ const prioritizedProjectTitles = [
   'Транспондер',
   'Главная дорога',
   'Главная дорога. RFID',
+  'M-Alien',
   'Skin - Widgets, Icons, Themes',
   'Femina',
   'DMT',
@@ -267,7 +270,12 @@ const mobileProjectCards = computed<ProjectCard[]>(() =>
           iconUrl: resolveAssetUrl(project.iconPath),
           galleryUrls: resolveAssetUrls(isToneOfVictoryProject ? toneOfVictoryProjectScreenshots : project.screenshots),
           storeLinks,
-          infoModalKey: project.title === 'Teleprompter Automatic' ? 'teleprompter-automatic' : undefined,
+          infoModalKey:
+            project.title === 'Teleprompter Automatic'
+              ? 'teleprompter-automatic'
+              : project.title === 'M-Alien'
+                ? 'm-alien'
+                : undefined,
         } satisfies ProjectCard,
         originalIndex,
       }
@@ -536,7 +544,7 @@ const infoProject = computed(() => {
           :no-images-text="t('projects.noImages')" :info-button-text="t('projects.showInfo')" />
       </section>
 
-      <div v-if="infoProject?.infoModalKey === 'teleprompter-automatic'"
+      <div v-if="infoProject?.infoModalKey"
         class="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(17,27,34,0.52)] p-3 sm:p-5"
         role="dialog" aria-modal="true" @click.self="closeInfoModal" @keydown.esc="closeInfoModal" tabindex="0">
         <div
@@ -562,7 +570,8 @@ const infoProject = computed(() => {
             </div>
 
             <div class="p-4 sm:p-6">
-              <TeleprompterAutomaticInfoPage />
+              <TeleprompterAutomaticInfoPage v-if="infoProject.infoModalKey === 'teleprompter-automatic'" />
+              <MAlienInfoPage v-else-if="infoProject.infoModalKey === 'm-alien'" />
             </div>
           </div>
         </div>
