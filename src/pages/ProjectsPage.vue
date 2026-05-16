@@ -129,14 +129,15 @@ const fullStackProjectTitles = new Set([
 ])
 
 const prioritizedProjectTitles = [
-  'Тренировки. Блин да Гриф',
   'Teleprompter Automatic',
+  'Тренировки. Блин да Гриф',
+  'Складолог',
   'ProStor.ae',
-  'Skin - Widgets, Icons, Themes',
+  'Город Курорт',
   '585Gold - золотые изделия',
+  'Skin - Widgets, Icons, Themes',
   'Femina',
   'DMT',
-  'Город Курорт',
   'The Tone of Victory',
 ] as const
 

@@ -72,11 +72,13 @@ const latestProjects = computed<ProjectCard[]>(() => {
   }
 
   return [
-    insentryContribution,
-    byTitle('Тренировки. Блин да Гриф'),
     byTitle('Teleprompter Automatic'),
+    byTitle('Тренировки. Блин да Гриф'),
     byTitle('Складолог'),
+    byTitle('ProStor.ae'),
     byTitle('Город Курорт'),
+    byTitle('585Gold - золотые изделия'),
+    insentryContribution,
   ].filter(Boolean) as ProjectCard[]
 })
 
