@@ -162,10 +162,9 @@ onBeforeUnmount(() => {
   margin: 0 auto;
   border: 1px solid rgba(46, 20, 18, 0.15);
   border-radius: 24px;
-  background:
-    #fff8f3,
-    v-bind(backgroundPaperUrl);
-  background-size: auto, 420px;
+  background-color: #fff8f3;
+  background-image: v-bind(backgroundPaperUrl);
+  background-size: 420px;
   box-shadow: 0 14px 34px rgba(32, 14, 12, 0.1);
 }
 
@@ -178,28 +177,25 @@ onBeforeUnmount(() => {
 .ticket-card__info {
   overflow: hidden;
   padding: 0.9rem;
-  background:
-    #f8f5ef,
-    v-bind(backgroundPaperUrl);
-  background-size: auto, 420px;
+  background-color: #f8f5ef;
+  background-image: v-bind(backgroundPaperUrl);
+  background-size: 420px;
 }
 
 .ticket-card__gallery {
   padding: 0.35rem;
-  background:
-    #f8f5ef,
-    v-bind(backgroundPaperUrl);
-  background-size: auto, 420px;
+  background-color: #f8f5ef;
+  background-image: v-bind(backgroundPaperUrl);
+  background-size: 420px;
 }
 
 .ticket-card__divider {
   position: relative;
   display: block;
   min-height: 14px;
-  background:
-    #f7f0e8,
-    v-bind(backgroundPaperUrl);
-  background-size: auto, 420px;
+  background-color: #f7f0e8;
+  background-image: v-bind(backgroundPaperUrl);
+  background-size: 420px;
 }
 
 .ticket-card__dash {

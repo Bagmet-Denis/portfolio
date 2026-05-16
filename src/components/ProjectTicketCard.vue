@@ -239,39 +239,34 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .project-ticket-shell {
-  background:
-    #fff8f3,
-    v-bind(backgroundPaperUrl);
-  background-size: auto, 420px;
+  background-color: #fff8f3;
+  background-image: v-bind(backgroundPaperUrl);
+  background-size: 420px;
   box-shadow: 0 14px 34px rgba(32, 14, 12, 0.1);
 }
 
 .project-ticket-shell--insentry {
-  background:
-    #eef4f7,
-    v-bind(backgroundPaperUrl);
-  background-size: auto, 420px;
+  background-color: #eef4f7;
+  background-image: v-bind(backgroundPaperUrl);
+  background-size: 420px;
 }
 
 .project-ticket-info {
-  background:
-    #f8f5ef,
-    v-bind(backgroundPaperUrl);
-  background-size: auto, 420px;
+  background-color: #f8f5ef;
+  background-image: v-bind(backgroundPaperUrl);
+  background-size: 420px;
 }
 
 .project-ticket-divider {
-  background:
-    #f7f0e8,
-    v-bind(backgroundPaperUrl);
-  background-size: auto, 420px;
+  background-color: #f7f0e8;
+  background-image: v-bind(backgroundPaperUrl);
+  background-size: 420px;
 }
 
 .project-ticket-gallery {
-  background:
-    #f8f5ef,
-    v-bind(backgroundPaperUrl);
-  background-size: auto, 420px;
+  background-color: #f8f5ef;
+  background-image: v-bind(backgroundPaperUrl);
+  background-size: 420px;
 }
 
 .project-ticket-gallery-panel {
@@ -281,10 +276,9 @@ onBeforeUnmount(() => {
 .project-ticket-shell--insentry .project-ticket-info,
 .project-ticket-shell--insentry .project-ticket-gallery,
 .project-ticket-shell--insentry .project-ticket-divider {
-  background:
-    #eef4f7,
-    v-bind(backgroundPaperUrl);
-  background-size: auto, 420px;
+  background-color: #eef4f7;
+  background-image: v-bind(backgroundPaperUrl);
+  background-size: 420px;
 }
 
 @media (min-width: 900px) {
