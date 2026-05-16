@@ -135,6 +135,8 @@ const prioritizedProjectTitles = [
   'ProStor.ae',
   'Город Курорт',
   '585Gold - золотые изделия',
+  'Транспондер',
+  'Главная дорога',
   'Skin - Widgets, Icons, Themes',
   'Femina',
   'DMT',
