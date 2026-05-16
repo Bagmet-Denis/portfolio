@@ -14,6 +14,7 @@ export default {
       'I build fast and user-friendly interfaces. Here you will find my experience, projects, and contacts.',
     name: 'Denis Bagmet',
     role: 'Mobile Developer',
+    secondaryRole: 'Security Research',
     about:
       'I build fast and user-friendly apps and interfaces. I also enjoy security research and turning ideas into working products.',
   },

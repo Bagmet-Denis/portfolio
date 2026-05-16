@@ -26,7 +26,7 @@ const plasticOverlay = publicAssetUrl('plastic_overlay.png')
 
                     <div class="w-fit bg-[#D96138] px-2 skew-x-[-10deg]">
                         <p class="text-xs leading-relaxed text-white/90 skew-x-10 sm:text-sm lg:text-base">
-                            {{ t('hero.role') }}
+                            {{ t('hero.secondaryRole') }}
                         </p>
                     </div>
 

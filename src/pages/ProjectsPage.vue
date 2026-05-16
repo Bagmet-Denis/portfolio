@@ -189,6 +189,7 @@ const insentryContributionCard = computed<ProjectCard>(() => ({
 }))
 
 const activeCategory = ref<ProjectCategory>('mobile')
+const showAntiAIBanner = false
 
 const isLightboxOpen = ref(false)
 const lightboxProjectId = ref<string | null>(null)
@@ -426,7 +427,7 @@ const infoProject = computed(() => {
       </section>
 
       <div class="mt-6 space-y-4">
-        <AntiAIBanner v-if="activeCategory === 'mobile'" class="max-w-[420px] md:ml-2 md:rotate-[1deg]" />
+        <AntiAIBanner v-if="showAntiAIBanner && activeCategory === 'mobile'" class="max-w-[420px] md:ml-2 md:rotate-[1deg]" />
         <div v-if="isCybersecurityCategory" class="grid gap-4 xl:grid-cols-[minmax(0,1fr)_360px] xl:items-start">
           <div class="grid w-full gap-3 md:max-w-[360px]">
             <div
