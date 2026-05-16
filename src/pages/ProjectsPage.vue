@@ -137,6 +137,7 @@ const prioritizedProjectTitles = [
   '585Gold - золотые изделия',
   'Транспондер',
   'Главная дорога',
+  'Главная дорога. RFID',
   'Skin - Widgets, Icons, Themes',
   'Femina',
   'DMT',
