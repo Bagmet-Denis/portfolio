@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeUnmount, ref, watch } from 'vue'
+import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import emblaCarouselVue from 'embla-carousel-vue'
 import type { EmblaCarouselType, EmblaOptionsType } from 'embla-carousel'
 import type { ProjectCard, StoreType } from '@/types/projectCard'
@@ -14,6 +14,10 @@ void emblaRef
 
 const canScrollPrev = ref(false)
 const canScrollNext = ref(false)
+const selectedIndex = ref(0)
+const articleRef = ref<HTMLElement | null>(null)
+const isGalleryNearViewport = ref(false)
+let galleryObserver: IntersectionObserver | null = null
 const backgroundPaperUrl = `url("${publicAssetUrl('background_paper.png')}")`
 
 const props = defineProps<{
@@ -26,6 +30,7 @@ const props = defineProps<{
 function syncEmblaState(api?: EmblaCarouselType) {
   canScrollPrev.value = api?.canScrollPrev() ?? false
   canScrollNext.value = api?.canScrollNext() ?? false
+  selectedIndex.value = api?.selectedScrollSnap() ?? 0
 }
 
 watch(emblaApi, (api) => {
@@ -48,13 +53,36 @@ function scrollNext() {
   emblaApi.value?.scrollNext()
 }
 
+function shouldRenderGalleryImage(index: number) {
+  return isGalleryNearViewport.value && Math.abs(index - selectedIndex.value) <= 1
+}
+
+onMounted(() => {
+  if (!articleRef.value || typeof IntersectionObserver === 'undefined') {
+    isGalleryNearViewport.value = true
+    return
+  }
+
+  galleryObserver = new IntersectionObserver(
+    ([entry]) => {
+      if (!entry?.isIntersecting) return
+      isGalleryNearViewport.value = true
+      galleryObserver?.disconnect()
+      galleryObserver = null
+    },
+    { rootMargin: '720px 0px' },
+  )
+  galleryObserver.observe(articleRef.value)
+})
+
 onBeforeUnmount(() => {
+  galleryObserver?.disconnect()
   emblaApi.value?.destroy()
 })
 </script>
 
 <template>
-  <article class="ticket-card overflow-visible">
+  <article ref="articleRef" class="ticket-card overflow-visible">
     <div class="ticket-card__shell">
       <section class="ticket-card__info">
         <div class="ticket-card__content relative z-10">
@@ -111,9 +139,10 @@ onBeforeUnmount(() => {
               <div class="project-ticket-embla__container">
                 <div v-for="(src, index) in project.galleryUrls" :key="`${project.id}-img-${index}`"
                   class="project-ticket-embla__slide flex items-center justify-center">
-                  <img :src="src" :alt="`${project.title} ${index + 1}`"
+                  <img v-if="shouldRenderGalleryImage(index)" :src="src" :alt="`${project.title} ${index + 1}`"
                     class="h-[240px] w-full object-contain sm:h-[280px] min-[900px]:h-full"
-                    loading="lazy" decoding="async" @click="openLightbox(project.id, index)" />
+                    loading="lazy" fetchpriority="low" decoding="async" @click="openLightbox(project.id, index)" />
+                  <div v-else class="h-[240px] w-full sm:h-[280px] min-[900px]:h-full" aria-hidden="true"></div>
                 </div>
               </div>
             </div>
