@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 import { cyberSecurityProject, desktopProjects, mobileProjects } from '@/data/projects'
 import { publicAssetUrl } from '@/utils/resolveAssetUrl'
 
 const { t, tm, locale } = useI18n()
+const router = useRouter()
 
 interface ExperienceLink {
   label: string
@@ -175,6 +177,14 @@ function toneClasses(tone: ExperienceTone): { badge: string; accent: string; glo
         glow: 'rgba(198,151,114,0.28)',
       }
   }
+}
+
+function isExternalHref(href: string): boolean {
+  return /^(https?:)?\/\//.test(href) || href.startsWith('mailto:') || href.startsWith('tel:')
+}
+
+function resolvedExperienceHref(href: string): string {
+  return href.startsWith('/') ? router.resolve(href).href : href
 }
 </script>
 
@@ -413,13 +423,13 @@ function toneClasses(tone: ExperienceTone): { badge: string; accent: string; glo
                 <a
                   v-for="link in item.links"
                   :key="link.href"
-                  :href="link.href"
-                  :target="link.href.startsWith('http') ? '_blank' : undefined"
-                  :rel="link.href.startsWith('http') ? 'noopener noreferrer' : undefined"
+                  :href="resolvedExperienceHref(link.href)"
+                  :target="isExternalHref(link.href) ? '_blank' : undefined"
+                  :rel="isExternalHref(link.href) ? 'noopener noreferrer' : undefined"
                   class="group inline-flex items-center gap-2 rounded-full border border-[#b0464a]/18 bg-[linear-gradient(180deg,rgba(255,248,238,0.92),rgba(176,70,74,0.08))] px-4 py-2 text-sm font-semibold text-[#8d4934] shadow-[0_10px_22px_rgba(98,63,38,0.08)] transition duration-200 hover:-translate-y-0.5 hover:border-[#b0464a]/30 hover:bg-[#fff8ee] hover:shadow-[0_14px_28px_rgba(98,63,38,0.12)]"
                 >
                   {{ link.label }}
-                  <span v-if="link.href.startsWith('http')" class="text-[#b0464a]/68 transition group-hover:translate-x-0.5">
+                  <span v-if="isExternalHref(link.href)" class="text-[#b0464a]/68 transition group-hover:translate-x-0.5">
                     ↗
                   </span>
                 </a>
