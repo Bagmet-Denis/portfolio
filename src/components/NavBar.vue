@@ -8,11 +8,28 @@ import { publicAssetUrl } from '@/utils/resolveAssetUrl'
 const { t, locale } = useI18n()
 watch(locale, (value) => saveLocale(value as AppLocale))
 const localeMenu = ref<HTMLDetailsElement | null>(null)
-const cvUrl = publicAssetUrl('cv.pdf')
+const cvMenu = ref<HTMLDetailsElement | null>(null)
 
 const localeOptions: Array<{ value: AppLocale; flag: string; label: string }> = [
   { value: 'ru', flag: '🇷🇺', label: 'RU' },
   { value: 'en', flag: '🇬🇧', label: 'EN' },
+]
+
+const cvOptions = [
+  {
+    value: 'ru',
+    flag: '🇷🇺',
+    label: 'RU CV',
+    url: publicAssetUrl('cv/RU_CV_Bagmet_Denis.pdf'),
+    filename: 'RU_CV_Bagmet_Denis.pdf',
+  },
+  {
+    value: 'en',
+    flag: '🇬🇧',
+    label: 'EN CV',
+    url: publicAssetUrl('cv/EN_CV_Bagmet_Denis.pdf'),
+    filename: 'EN_CV_Bagmet_Denis.pdf',
+  },
 ]
 
 const selectedLocale = computed(
@@ -22,6 +39,10 @@ const selectedLocale = computed(
 function setLocale(value: AppLocale) {
   locale.value = value
   localeMenu.value?.removeAttribute('open')
+}
+
+function closeCvMenu() {
+  cvMenu.value?.removeAttribute('open')
 }
 </script>
 
@@ -89,10 +110,22 @@ function setLocale(value: AppLocale) {
           </div>
         </details>
 
-        <a :href="cvUrl" download
-          class="rounded-full bg-[#B0464A] px-4 py-2 text-sm font-semibold text-white shadow-[0_8px_18px_rgba(176,70,74,0.18)] transition duration-200 hover:bg-[#c05255]">
-          {{ t('controls.downloadCv') }}
-        </a>
+        <details ref="cvMenu" class="group relative z-[1100]">
+          <summary
+            class="cursor-pointer list-none rounded-full bg-[#B0464A] px-4 py-2 text-sm font-semibold text-white shadow-[0_8px_18px_rgba(176,70,74,0.18)] transition duration-200 hover:bg-[#c05255]">
+            {{ t('controls.downloadCv') }}
+          </summary>
+
+          <div
+            class="absolute right-0 top-full z-[1100] mt-2 min-w-36 rounded-xl border border-white/12 bg-[#1f1b19]/98 p-1.5 shadow-[0_18px_44px_rgba(0,0,0,0.34)] backdrop-blur">
+            <a v-for="option in cvOptions" :key="option.value" :href="option.url" :download="option.filename"
+              class="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm font-semibold text-[#FBEFD6]/76 transition hover:bg-white/8 hover:text-[#FBEFD6]"
+              @click="closeCvMenu">
+              <span aria-hidden="true">{{ option.flag }}</span>
+              <span>{{ option.label }}</span>
+            </a>
+          </div>
+        </details>
       </div>
 
     </div>
