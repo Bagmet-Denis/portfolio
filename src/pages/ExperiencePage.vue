@@ -17,11 +17,14 @@ interface ExperienceHighlight {
 }
 
 interface ExperienceItem {
+  company?: string
   title: string
   period: string
+  duration?: string
   description?: string
   stack?: string[]
   bullets?: string[]
+  achievements?: string[]
   links?: ExperienceLink[]
   highlight?: ExperienceHighlight
 }
@@ -63,6 +66,8 @@ const technologyIconMap: Record<string, string> = {
   kotlin: publicAssetUrl('technologies/kotlin.svg'),
   javascript: publicAssetUrl('technologies/js.svg'),
   typescript: publicAssetUrl('technologies/typescript.svg'),
+  nodejs: publicAssetUrl('technologies/nodejs2.svg'),
+  expressjs: publicAssetUrl('technologies/nodejs2.svg'),
   python: publicAssetUrl('technologies/python.svg'),
   firebase: publicAssetUrl('technologies/firebase.svg'),
   sqlite: publicAssetUrl('technologies/sqlite.svg'),
@@ -80,6 +85,8 @@ const technologyIconMap: Record<string, string> = {
   rest: publicAssetUrl('technologies/swagger.svg'),
   restapi: publicAssetUrl('technologies/swagger.svg'),
   graphql: publicAssetUrl('technologies/graphql.svg'),
+  websocket: publicAssetUrl('technologies/swagger.svg'),
+  platformchannels: publicAssetUrl('technologies/flutter.svg'),
   bloc: publicAssetUrl('technologies/flutter.svg'),
   cicd: publicAssetUrl('technologies/github.svg'),
   proxyman: publicAssetUrl('technologies/postman.svg'),
@@ -327,11 +334,19 @@ function toneClasses(tone: ExperienceTone): { badge: string; accent: string; glo
                   <h3 class="mt-2 text-xl font-semibold leading-tight text-[#2f211a] sm:text-2xl">
                     {{ item.title }}
                   </h3>
+                  <p v-if="item.company" class="mt-1 text-sm font-semibold text-[#8d4934]">
+                    {{ item.company }}
+                  </p>
                 </div>
 
-                <span class="inline-flex w-fit rounded-full border border-[#d9c1ae] bg-white/60 px-3 py-1 text-sm font-medium text-[#6d5b51]">
-                  {{ item.period }}
-                </span>
+                <div class="flex flex-col items-start gap-1 sm:items-end">
+                  <span class="inline-flex w-fit rounded-full border border-[#d9c1ae] bg-white/60 px-3 py-1 text-sm font-medium text-[#6d5b51]">
+                    {{ item.period }}
+                  </span>
+                  <span v-if="item.duration" class="text-xs font-semibold uppercase tracking-[0.14em] text-[#9b634d]">
+                    {{ item.duration }}
+                  </span>
+                </div>
               </div>
 
               <p v-if="item.description" class="mt-3 max-w-[820px] text-sm leading-6 text-[#63534a] sm:text-[15px]">
@@ -362,6 +377,25 @@ function toneClasses(tone: ExperienceTone): { badge: string; accent: string; glo
                   <span>{{ bullet }}</span>
                 </li>
               </ul>
+
+              <div
+                v-if="item.achievements?.length"
+                class="mt-4 rounded-[16px] border border-[#d9c1ae] bg-[#fff8ee] p-4"
+              >
+                <p class="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#9b634d]">
+                  {{ locale === 'ru' ? 'Ключевые результаты' : 'Key results' }}
+                </p>
+                <ul class="mt-3 space-y-2">
+                  <li
+                    v-for="achievement in item.achievements"
+                    :key="achievement"
+                    class="flex gap-3 text-sm leading-6 text-[#5e4d45]"
+                  >
+                    <span class="mt-[0.65rem] h-1.5 w-1.5 shrink-0 rounded-full bg-[#e4b64d]"></span>
+                    <span>{{ achievement }}</span>
+                  </li>
+                </ul>
+              </div>
 
               <div
                 v-if="item.highlight"
@@ -401,13 +435,14 @@ function toneClasses(tone: ExperienceTone): { badge: string; accent: string; glo
 <style scoped>
 .experience-timeline {
   position: relative;
+  --timeline-marker-center: 1.25rem;
 }
 
 .experience-timeline::before {
   content: '';
   position: absolute;
   bottom: 1.25rem;
-  left: 1.25rem;
+  left: calc(var(--timeline-marker-center) - 1px);
   top: 0.75rem;
   width: 2px;
   background: linear-gradient(180deg, rgba(176, 70, 74, 0.46), rgba(198, 151, 114, 0.18));
@@ -454,9 +489,9 @@ function toneClasses(tone: ExperienceTone): { badge: string; accent: string; glo
   }
 }
 
-@media (max-width: 640px) {
-  .experience-timeline::before {
-    left: 1.25rem;
+@media (min-width: 640px) {
+  .experience-timeline {
+    --timeline-marker-center: 1.75rem;
   }
 }
 </style>
