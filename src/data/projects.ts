@@ -230,7 +230,7 @@ export const mobileProjects: MobileProjectModel[] = [
       'HTTP',
     ],
     'https://apps.apple.com/us/app/транспондер/id1506754728',
-    '',
+    'https://play.google.com/store/apps/details?id=com.msphighway.app&hl=ru',
     '',
   ),
   new MobileProjectModel(
