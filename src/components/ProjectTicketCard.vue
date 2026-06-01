@@ -2,8 +2,9 @@
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import emblaCarouselVue from 'embla-carousel-vue'
 import type { EmblaCarouselType, EmblaOptionsType } from 'embla-carousel'
+import { useI18n } from 'vue-i18n'
 import type { ProjectCard, StoreType } from '@/types/projectCard'
-import { publicAssetUrl } from '@/utils/resolveAssetUrl'
+import { publicAssetUrl, resolveAssetUrls } from '@/utils/resolveAssetUrl'
 
 const [emblaRef, emblaApi] = emblaCarouselVue({
   align: 'start',
@@ -12,11 +13,13 @@ const [emblaRef, emblaApi] = emblaCarouselVue({
 } satisfies EmblaOptionsType)
 void emblaRef
 
+const { t, locale } = useI18n()
 const canScrollPrev = ref(false)
 const canScrollNext = ref(false)
 const selectedIndex = ref(0)
 const articleRef = ref<HTMLElement | null>(null)
 const isGalleryNearViewport = ref(false)
+const selectedToneStandUrl = ref('')
 let galleryObserver: IntersectionObserver | null = null
 
 const props = defineProps<{
@@ -32,18 +35,106 @@ function isTeleprompterAutomaticProject(project: ProjectCard) {
   return project.title === 'Teleprompter Automatic'
 }
 
+function isMAlienProject(project: ProjectCard) {
+  return project.title === 'M-Alien'
+}
+
+function isToneOfVictoryProject(project: ProjectCard) {
+  return project.title === 'The Tone of Victory'
+}
+
 const isCybersecurityCard = computed(() => props.project.category === 'cybersecurity')
 const isInsentryCase = computed(() => props.project.id === 'mobile-insentry-raw-decoder')
 const isClosedOsintCase = computed(() => props.project.title === 'Закрытый OSINT-инструмент для поиска цифрового следа')
+const toneOfVictoryStandUrls = computed(() =>
+  isToneOfVictoryProject(props.project)
+    ? resolveAssetUrls([
+        'src/assets/projects/tag/stand0.jpeg',
+        'src/assets/projects/tag/stand1.jpeg',
+        'src/assets/projects/tag/stand2.jpeg',
+      ])
+    : [],
+)
+const teleprompterSystemTitle = computed(() =>
+  locale.value === 'ru' ? 'iOS app + backend + web-панель' : 'iOS app + backend + web control panel',
+)
+const teleprompterSystemHighlights = computed(() =>
+  locale.value === 'ru'
+    ? [
+        {
+          label: 'Backend',
+          text: 'синхронизация сценариев, remote-control команды, серверная логика',
+        },
+        {
+          label: 'Web panel',
+          text: 'управление текстами, подписками и рабочими сценариями вне iOS-приложения',
+        },
+        {
+          label: 'Device flow',
+          text: 'iPhone, web и Apple Watch связаны в один управляемый продуктовый контур',
+        },
+      ]
+    : [
+        {
+          label: 'Backend',
+          text: 'script sync, remote-control commands, and server-side product logic',
+        },
+        {
+          label: 'Web panel',
+          text: 'script, subscription, and workflow management outside the iOS app',
+        },
+        {
+          label: 'Device flow',
+          text: 'iPhone, web, and Apple Watch connected into one controllable product loop',
+        },
+      ],
+)
+const mAlienSystemTitle = computed(() =>
+  locale.value === 'ru' ? 'Flutter app + Node.js backend + real-time core' : 'Flutter app + Node.js backend + real-time core',
+)
+const mAlienSystemHighlights = computed(() =>
+  locale.value === 'ru'
+    ? [
+        {
+          label: 'Private auth',
+          text: 'регистрация по уникальному коду без телефона, email и социальных сетей',
+        },
+        {
+          label: 'Messaging backend',
+          text: 'личные и групповые чаты, Socket.IO/WebSocket, медиа и голосовые сообщения',
+        },
+        {
+          label: 'Product logic',
+          text: 'real-time перевод, уведомления, кастомизация диалогов и серверная инфраструктура',
+        },
+      ]
+    : [
+        {
+          label: 'Private auth',
+          text: 'unique-code registration without phone, email, or social accounts',
+        },
+        {
+          label: 'Messaging backend',
+          text: 'direct and group chats, Socket.IO/WebSocket, media, and voice messages',
+        },
+        {
+          label: 'Product logic',
+          text: 'real-time translation, notifications, chat customization, and server infrastructure',
+        },
+      ],
+)
 const visibleTechnologies = computed(() => props.project.technologies.slice(0, 8))
 const hiddenTechnologyCount = computed(() => Math.max(props.project.technologies.length - visibleTechnologies.value.length, 0))
 const ticketStubWidth = computed(() => {
+  if (isToneOfVictoryProject(props.project)) return 360
   if (isInsentryCase.value) return 320
   if (isClosedOsintCase.value) return 300
   if (isCybersecurityCard.value) return 260
   return 280
 })
 const ticketCardHeight = computed(() => {
+  if (isToneOfVictoryProject(props.project)) return 720
+  if (isTeleprompterAutomaticProject(props.project)) return 560
   if (isInsentryCase.value) return 380
   if (isCybersecurityCard.value) return 340
   return 420
@@ -79,6 +170,14 @@ function scrollNext() {
 
 function shouldRenderGalleryImage(index: number) {
   return isGalleryNearViewport.value && Math.abs(index - selectedIndex.value) <= 1
+}
+
+function openToneStandPreview(src: string) {
+  selectedToneStandUrl.value = src
+}
+
+function closeToneStandPreview() {
+  selectedToneStandUrl.value = ''
 }
 
 onMounted(() => {
@@ -129,15 +228,44 @@ onBeforeUnmount(() => {
               :class="isInsentryCase ? 'border-[#9DB5C9]/55 bg-white shadow-[0_10px_22px_rgba(50,73,88,0.16)]' : 'border-black/10'"
               loading="lazy" decoding="async" />
 
-            <div class="min-w-0 self-center">
+            <div class="min-w-0 flex-1 self-center">
               <p v-if="project.eyebrow" class="mb-1 text-[10px] font-black uppercase tracking-[0.18em]"
                 :class="isInsentryCase ? 'text-[#466B83]' : 'text-[#6F5643]'">
                 {{ project.eyebrow }}
               </p>
-              <h2 class="line-clamp-2 text-base font-black leading-tight sm:text-lg"
-                :class="isInsentryCase ? 'text-[#172A37]' : 'text-[#231814]'">
-                {{ project.title }}
-              </h2>
+              <div class="flex min-w-0 items-start gap-3">
+                <h2 class="line-clamp-2 min-w-0 text-base font-black leading-tight sm:text-lg"
+                  :class="isInsentryCase ? 'text-[#172A37]' : 'text-[#231814]'">
+                  {{ project.title }}
+                </h2>
+                <div class="flex-1"></div>
+                <div v-if="project.clientCountries?.length" class="flex shrink-0 flex-wrap justify-end gap-1">
+                  <span
+                    v-for="country in project.clientCountries"
+                    :key="country.name"
+                    class="inline-flex w-fit items-center gap-1.5 rounded-full border border-[#b0464a]/18 bg-[#fff7ec]/86 px-1.5 py-1 text-[9px] font-bold leading-none text-[#743225] shadow-[0_6px_12px_rgba(116,50,37,0.08)]"
+                    :class="isInsentryCase ? 'border-[#5E8DA9]/22 bg-white/58 text-[#38576A]' : ''"
+                  >
+                    <img
+                      v-if="country.flagUrl"
+                      :src="country.flagUrl"
+                      alt=""
+                      class="h-3 w-[18px] shrink-0 rounded-[2px] object-contain"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    <span
+                      v-else
+                      class="h-2 w-2 shrink-0 rounded-full bg-[#b0464a]"
+                      :class="isInsentryCase ? 'bg-[#5E8DA9]' : ''"
+                      aria-hidden="true"
+                    ></span>
+                    <span class="whitespace-nowrap">
+                      {{ country.name }}
+                    </span>
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -152,6 +280,157 @@ onBeforeUnmount(() => {
                 class="text-sm leading-6 text-[#4f413c] [&_a]:mt-2 [&_a]:inline-flex [&_a]:w-fit [&_a]:items-center [&_a]:rounded-full [&_a]:border [&_a]:border-[#AC3F2B]/20 [&_a]:bg-[#AC3F2B]/10 [&_a]:px-3 [&_a]:py-1.5 [&_a]:text-xs [&_a]:font-bold [&_a]:text-[#8B3224] [&_a]:no-underline [&_a]:shadow-[0_8px_18px_rgba(172,63,43,0.10)] [&_a]:transition [&_a:hover]:-translate-y-0.5 [&_a:hover]:bg-[#AC3F2B]/16"
                 :class="isInsentryCase ? 'text-[13px] leading-5 text-[#344956]' : isCybersecurityCard ? 'line-clamp-8 text-[13px] leading-5' : 'line-clamp-6'"
                 v-html="project.description"></p>
+            </div>
+
+            <div
+              v-if="isTeleprompterAutomaticProject(project)"
+              class="relative mt-3 overflow-hidden rounded-[20px] border border-[#746085]/26 bg-[linear-gradient(135deg,rgba(15,16,19,0.98)_0%,rgba(44,45,52,0.96)_48%,rgba(55,38,78,0.94)_100%)] p-3 text-white shadow-[0_18px_34px_rgba(31,28,42,0.24)]"
+            >
+              <div class="pointer-events-none absolute -right-16 -top-16 h-36 w-36 rounded-full bg-[#8e67d8]/24 blur-2xl"></div>
+              <div class="pointer-events-none absolute -left-16 bottom-[-4.5rem] h-32 w-32 rounded-full bg-white/8 blur-2xl"></div>
+              <div class="pointer-events-none absolute inset-x-0 top-0 h-px bg-white/18"></div>
+
+              <div class="relative min-w-0">
+                <p class="text-[9px] font-black uppercase tracking-[0.18em] text-[#d8c8ff]">
+                  Full-stack product system
+                </p>
+                <h3 class="mt-1 text-sm font-black leading-tight text-[#f7f4ef]">
+                  {{ teleprompterSystemTitle }}
+                </h3>
+              </div>
+
+              <div class="relative mt-3 grid gap-2 min-[1180px]:grid-cols-3">
+                <div
+                  v-for="highlight in teleprompterSystemHighlights"
+                  :key="highlight.label"
+                  class="min-w-0 rounded-[14px] border border-white/14 bg-white/12 p-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] backdrop-blur"
+                >
+                  <p class="text-[10px] font-black uppercase tracking-[0.16em] text-[#d8c8ff]">
+                    {{ highlight.label }}
+                  </p>
+                  <p class="mt-1 text-[12px] font-semibold leading-5 text-white/90">
+                    {{ highlight.text }}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div
+              v-if="isMAlienProject(project)"
+              class="mt-3 overflow-hidden rounded-[20px] border border-[#5ab7df]/26 bg-[linear-gradient(135deg,rgba(8,28,48,0.96)_0%,rgba(24,91,142,0.94)_52%,rgba(91,190,225,0.9)_100%)] p-3 text-white shadow-[0_18px_34px_rgba(32,116,174,0.22)]"
+            >
+              <div class="flex items-center justify-between gap-3">
+                <div class="min-w-0">
+                  <p class="text-[10px] font-black uppercase tracking-[0.2em] text-white/72">
+                    Full-stack messenger platform
+                  </p>
+                  <h3 class="mt-1 text-sm font-black leading-tight">
+                    {{ mAlienSystemTitle }}
+                  </h3>
+                </div>
+              </div>
+
+              <div class="mt-3 grid gap-2 min-[1180px]:grid-cols-3">
+                <div
+                  v-for="highlight in mAlienSystemHighlights"
+                  :key="highlight.label"
+                  class="rounded-[14px] border border-white/14 bg-white/12 p-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] backdrop-blur"
+                >
+                  <p class="text-[10px] font-black uppercase tracking-[0.16em] text-[#c9f2ff]">
+                    {{ highlight.label }}
+                  </p>
+                  <p class="mt-1 text-[12px] leading-5 text-white/86">
+                    {{ highlight.text }}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div
+              v-if="isToneOfVictoryProject(project)"
+              class="mt-3 overflow-hidden rounded-[24px] border border-[#e3b06d]/24 bg-[linear-gradient(135deg,rgba(16,17,20,0.96)_0%,rgba(82,31,29,0.95)_54%,rgba(189,93,54,0.92)_100%)] p-3 text-white shadow-[0_20px_38px_rgba(85,35,28,0.24)]"
+            >
+              <div class="grid gap-3 min-[1180px]:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] min-[1180px]:items-stretch">
+                <div class="flex min-w-0 flex-col">
+                  <p class="text-[10px] font-black uppercase tracking-[0.22em] text-[#f4b48b]">
+                    TAG Heuer x Formula 1
+                  </p>
+                  <h3 class="mt-1 text-base font-black leading-tight text-[#fff4ea]">
+                    {{ t('home.featuredCaseTitle') }}
+                  </h3>
+                  <p class="mt-2 text-[12px] leading-5 text-white/76">
+                    {{ t('home.featuredCaseLead') }}
+                  </p>
+
+                  <div class="mt-3 grid gap-2 sm:grid-cols-3 min-[1180px]:grid-cols-1">
+                    <div class="rounded-[14px] border border-white/12 bg-white/10 p-2.5 backdrop-blur">
+                      <p class="text-[9px] font-black uppercase tracking-[0.18em] text-[#ffd1ad]">
+                        {{ t('home.featuredCaseFacts.clientLabel') }}
+                      </p>
+                      <p class="mt-1 text-[11px] leading-4 text-white/86">
+                        {{ t('home.featuredCaseFacts.clientValue') }}
+                      </p>
+                    </div>
+                    <div class="rounded-[14px] border border-white/12 bg-white/10 p-2.5 backdrop-blur">
+                      <p class="text-[9px] font-black uppercase tracking-[0.18em] text-[#ffd1ad]">
+                        {{ t('home.featuredCaseFacts.formatLabel') }}
+                      </p>
+                      <p class="mt-1 text-[11px] leading-4 text-white/86">
+                        {{ t('home.featuredCaseFacts.formatValue') }}
+                      </p>
+                    </div>
+                    <div class="rounded-[14px] border border-white/12 bg-white/10 p-2.5 backdrop-blur">
+                      <p class="text-[9px] font-black uppercase tracking-[0.18em] text-[#ffd1ad]">
+                        {{ t('home.featuredCaseStand.meta') }}
+                      </p>
+                      <p class="mt-1 text-[11px] leading-4 text-white/86">
+                        {{ t('home.featuredCaseStand.description') }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="grid min-h-[230px] gap-2 sm:grid-cols-[1.16fr_0.84fr]">
+                  <button
+                    v-if="toneOfVictoryStandUrls[0]"
+                    type="button"
+                    class="group relative overflow-hidden rounded-[18px] border border-white/14 bg-white/8 p-1.5 text-left shadow-[0_16px_28px_rgba(0,0,0,0.22)] transition hover:border-[#f4b48b]/50 focus:outline-none focus:ring-2 focus:ring-[#f4b48b]/70"
+                    @click="openToneStandPreview(toneOfVictoryStandUrls[0])"
+                  >
+                    <img
+                      :src="toneOfVictoryStandUrls[0]"
+                      :alt="`${project.title} stand 1`"
+                      class="h-full min-h-[230px] w-full rounded-[14px] object-cover transition duration-300 group-hover:scale-[1.025]"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    <span class="absolute left-3 top-3 rounded-full border border-white/18 bg-black/42 px-2.5 py-1 text-[9px] font-black uppercase tracking-[0.18em] text-white backdrop-blur">
+                      Spring 2025
+                    </span>
+                  </button>
+
+                  <div class="grid gap-2">
+                    <button
+                      v-for="(src, standIndex) in toneOfVictoryStandUrls.slice(1)"
+                      :key="`${project.id}-stand-${standIndex + 2}`"
+                      type="button"
+                      class="group relative overflow-hidden rounded-[18px] border border-white/14 bg-white/8 p-1.5 text-left shadow-[0_12px_22px_rgba(0,0,0,0.18)] transition hover:border-[#f4b48b]/50 focus:outline-none focus:ring-2 focus:ring-[#f4b48b]/70"
+                      @click="openToneStandPreview(src)"
+                    >
+                      <img
+                        :src="src"
+                        :alt="`${project.title} stand ${standIndex + 2}`"
+                        class="h-[108px] w-full rounded-[14px] object-cover transition duration-300 group-hover:scale-[1.025]"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                      <span class="absolute left-3 top-3 rounded-full border border-white/18 bg-black/42 px-2 py-0.5 text-[8px] font-black uppercase tracking-[0.16em] text-white backdrop-blur">
+                        South Korea
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div v-if="project.solvedTasks?.length" class="rounded-[18px] p-3"
@@ -199,9 +478,12 @@ onBeforeUnmount(() => {
             </a>
             <button type="button"
               v-if="project.infoModalKey && openInfoModal && infoButtonText"
-              class="inline-flex items-center justify-center rounded-xl border border-[#24445a]/14 bg-[#eef4f7] px-4 py-2 text-sm font-semibold text-[#24445a] transition duration-200 hover:bg-[#e4eef3] hover:shadow-[0_8px_18px_rgba(36,68,90,0.10)]"
+              class="group inline-flex items-center justify-center gap-2.5 rounded-2xl border border-[#241814] bg-[#241814] px-4 py-2.5 text-sm font-black text-[#fff8ee] shadow-[0_12px_24px_rgba(35,24,20,0.22)] ring-1 ring-white/55 transition duration-200 hover:-translate-y-0.5 hover:bg-[#3a2822] hover:shadow-[0_16px_30px_rgba(35,24,20,0.26)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#241814]"
               @click="openInfoModal(project.id)">
               {{ infoButtonText }}
+              <span class="grid h-6 w-6 place-items-center rounded-full bg-[#fff8ee] text-base leading-none text-[#9f3a31] transition duration-200 group-hover:translate-x-0.5 group-hover:bg-white">
+                →
+              </span>
             </button>
           </div>
         </div>
@@ -264,6 +546,32 @@ onBeforeUnmount(() => {
         </div>
       </section>
     </div>
+
+    <Teleport to="body">
+      <div
+        v-if="selectedToneStandUrl"
+        class="fixed inset-0 z-[90] flex items-center justify-center bg-black/78 p-4 backdrop-blur-sm"
+        role="dialog"
+        aria-modal="true"
+        @click.self="closeToneStandPreview"
+      >
+        <div class="relative w-full max-w-5xl overflow-hidden rounded-[28px] border border-white/14 bg-[#120f0d] p-2 shadow-[0_28px_80px_rgba(0,0,0,0.45)]">
+          <button
+            type="button"
+            class="absolute right-4 top-4 z-10 grid h-10 w-10 place-items-center rounded-full border border-white/16 bg-black/48 text-xl font-bold text-white backdrop-blur transition hover:bg-black/70"
+            :aria-label="t('projects.closeModal')"
+            @click="closeToneStandPreview"
+          >
+            ×
+          </button>
+          <img
+            :src="selectedToneStandUrl"
+            :alt="`${project.title} stand photo`"
+            class="max-h-[82vh] w-full rounded-[22px] object-contain"
+          />
+        </div>
+      </div>
+    </Teleport>
   </article>
 </template>
 

@@ -347,33 +347,73 @@ function highlightedTextSegments(value: string): HighlightedTextSegment[] {
             </h1>
           </div>
 
-          <div class="flex flex-wrap gap-3">
-            <div class="min-w-[150px] rounded-[18px] border border-[#d2b79d] bg-[#fff8ef]/86 px-4 py-3">
-              <p class="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#9e674f]">
+          <div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            <div class="group relative min-h-[154px] overflow-hidden rounded-[22px] border border-[#c9a98b]/72 bg-[#fffaf3]/90 p-4 shadow-[0_14px_28px_rgba(93,58,35,0.10)]">
+              <span class="absolute left-0 top-0 h-full w-1 bg-[#b0464a]"></span>
+              <span class="absolute -right-10 -top-10 h-24 w-24 rounded-full bg-[#b0464a]/10 transition duration-300 group-hover:scale-125"></span>
+              <p class="relative text-[11px] font-black uppercase tracking-[0.18em] text-[#9e674f]">
                 {{ locale === 'ru' ? 'Общий опыт' : 'Total experience' }}
               </p>
-              <p class="mt-1.5 font-black-ops text-3xl uppercase text-[#3c281f]">{{ yearsOfExperience }}</p>
+              <div class="relative mt-3 flex items-end gap-2">
+                <p class="font-rubik text-[2.85rem] font-black leading-none text-[#332019]">{{ yearsOfExperience }}</p>
+                <p class="pb-1.5 text-[12px] font-bold uppercase tracking-[0.12em] text-[#8a6a56]">
+                  {{ locale === 'ru' ? 'лет' : 'years' }}
+                </p>
+              </div>
+              <p class="relative mt-2 text-sm font-semibold leading-5 text-[#5f4638]">
+                {{ locale === 'ru' ? 'Коммерческая разработка с 2017 года' : 'Commercial development since 2017' }}
+              </p>
             </div>
 
-            <div class="min-w-[150px] rounded-[18px] border border-[#d2b79d] bg-[#fff8ef]/86 px-4 py-3">
-              <p class="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#9e674f]">
+            <div class="group relative min-h-[154px] overflow-hidden rounded-[22px] border border-[#c9a98b]/72 bg-[#fffaf3]/90 p-4 shadow-[0_14px_28px_rgba(93,58,35,0.10)]">
+              <span class="absolute left-0 top-0 h-full w-1 bg-[#377cb5]"></span>
+              <span class="absolute -right-10 -top-10 h-24 w-24 rounded-full bg-[#377cb5]/10 transition duration-300 group-hover:scale-125"></span>
+              <p class="relative text-[11px] font-black uppercase tracking-[0.18em] text-[#9e674f]">
                 {{ locale === 'ru' ? 'Мобильная разработка' : 'Mobile development' }}
               </p>
-              <p class="mt-1.5 font-black-ops text-3xl uppercase text-[#3c281f]">{{ mobileExperience }}</p>
+              <div class="relative mt-3 flex items-end gap-2">
+                <p class="font-rubik text-[2.85rem] font-black leading-none text-[#332019]">{{ mobileExperience }}</p>
+                <p class="pb-1.5 text-[12px] font-bold uppercase tracking-[0.12em] text-[#8a6a56]">
+                  {{ locale === 'ru' ? 'лет' : 'years' }}
+                </p>
+              </div>
+              <p class="relative mt-2 text-sm font-semibold leading-5 text-[#5f4638]">
+                {{ locale === 'ru' ? 'iOS, Flutter, релизы и рост продуктов' : 'iOS, Flutter, releases, and product growth' }}
+              </p>
             </div>
 
-            <div class="min-w-[150px] rounded-[18px] border border-[#d2b79d] bg-[#fff8ef]/86 px-4 py-3">
-              <p class="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#9e674f]">
+            <div class="group relative min-h-[154px] overflow-hidden rounded-[22px] border border-[#c9a98b]/72 bg-[#fffaf3]/90 p-4 shadow-[0_14px_28px_rgba(93,58,35,0.10)]">
+              <span class="absolute left-0 top-0 h-full w-1 bg-[#d98b35]"></span>
+              <span class="absolute -right-10 -top-10 h-24 w-24 rounded-full bg-[#d98b35]/12 transition duration-300 group-hover:scale-125"></span>
+              <p class="relative text-[11px] font-black uppercase tracking-[0.18em] text-[#9e674f]">
                 {{ locale === 'ru' ? 'AppSec / Reverse' : 'AppSec / Reverse' }}
               </p>
-              <p class="mt-1.5 font-black-ops text-3xl uppercase text-[#3c281f]">{{ securityExperience }}</p>
+              <div class="relative mt-3 flex items-end gap-2">
+                <p class="font-rubik text-[2.85rem] font-black leading-none text-[#332019]">{{ securityExperience }}</p>
+                <p class="pb-1.5 text-[12px] font-bold uppercase tracking-[0.12em] text-[#8a6a56]">
+                  {{ locale === 'ru' ? 'года' : 'years' }}
+                </p>
+              </div>
+              <p class="relative mt-2 text-sm font-semibold leading-5 text-[#5f4638]">
+                {{ locale === 'ru' ? 'Mobile AppSec, reverse engineering, bug bounty' : 'Mobile AppSec, reverse engineering, bug bounty' }}
+              </p>
             </div>
 
-            <div class="min-w-[150px] rounded-[18px] border border-[#d2b79d] bg-[#fff8ef]/86 px-4 py-3">
-              <p class="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#9e674f]">
+            <div class="group relative min-h-[154px] overflow-hidden rounded-[22px] border border-[#c9a98b]/72 bg-[#fffaf3]/90 p-4 shadow-[0_14px_28px_rgba(93,58,35,0.10)]">
+              <span class="absolute left-0 top-0 h-full w-1 bg-[#5e8f73]"></span>
+              <span class="absolute -right-10 -top-10 h-24 w-24 rounded-full bg-[#5e8f73]/12 transition duration-300 group-hover:scale-125"></span>
+              <p class="relative text-[11px] font-black uppercase tracking-[0.18em] text-[#9e674f]">
                 {{ locale === 'ru' ? 'Сделано проектов' : 'Projects shipped' }}
               </p>
-              <p class="mt-1.5 font-black-ops text-3xl uppercase text-[#3c281f]">{{ completedProjectsCount }}</p>
+              <div class="relative mt-3 flex items-end gap-2">
+                <p class="font-rubik text-[2.85rem] font-black leading-none text-[#332019]">{{ completedProjectsCount }}</p>
+                <p class="pb-1.5 text-[12px] font-bold uppercase tracking-[0.12em] text-[#8a6a56]">
+                  {{ locale === 'ru' ? 'работ' : 'shipped' }}
+                </p>
+              </div>
+              <p class="relative mt-2 text-sm font-semibold leading-5 text-[#5f4638]">
+                {{ locale === 'ru' ? 'Мобильные приложения, backend и web-панели' : 'Mobile apps, backend, and web panels' }}
+              </p>
             </div>
           </div>
         </div>
@@ -488,12 +528,16 @@ function highlightedTextSegments(value: string): HighlightedTextSegment[] {
                   <h3 class="mt-2 text-xl font-semibold leading-tight text-[#2f211a] sm:text-2xl">
                     {{ item.title }}
                   </h3>
-                  <p v-if="item.company" class="mt-1 text-sm font-semibold text-[#8d4934]">
-                    {{ item.company }}
-                  </p>
+                  <div
+                    v-if="item.company"
+                    class="mt-2 inline-flex max-w-full items-center gap-2 rounded-[10px] border border-[#b0464a]/24 bg-[linear-gradient(135deg,#fffaf2_0%,#f5d8c8_100%)] px-3 py-1.5 text-sm font-bold text-[#743225] shadow-[0_8px_18px_rgba(116,50,37,0.12)]"
+                  >
+                    <span class="h-2 w-2 shrink-0 rounded-full bg-[#b0464a] shadow-[0_0_0_4px_rgba(176,70,74,0.12)]"></span>
+                    <span class="min-w-0 truncate">{{ item.company }}</span>
+                  </div>
                 </div>
 
-                <div class="flex flex-col items-start gap-1 sm:items-end">
+                <div class="flex flex-col items-start gap-2 sm:items-end">
                   <span class="inline-flex w-fit rounded-full border border-[#d9c1ae] bg-white/60 px-3 py-1 text-sm font-medium text-[#6d5b51]">
                     {{ item.period }}
                   </span>
@@ -502,13 +546,13 @@ function highlightedTextSegments(value: string): HighlightedTextSegment[] {
                   </span>
                   <button
                     type="button"
-                    class="mt-1 inline-flex w-fit items-center gap-2 rounded-full border border-[#b0464a]/18 bg-[#fffaf2] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-[#8d4934] transition duration-200 hover:-translate-y-0.5 hover:border-[#b0464a]/30 hover:bg-white"
+                    class="inline-flex w-fit items-center gap-2.5 rounded-full border border-[#5e211a] bg-[#8f302a] px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[#fff8ee] shadow-[0_12px_24px_rgba(143,48,42,0.28)] transition duration-200 hover:-translate-y-0.5 hover:bg-[#6f261f] hover:shadow-[0_16px_30px_rgba(143,48,42,0.34)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#b0464a]"
                     :aria-expanded="isExperienceCardExpanded(experienceCardKey(item, index))"
                     @click="toggleExperienceCard(experienceCardKey(item, index))"
                   >
                     {{ isExperienceCardExpanded(experienceCardKey(item, index)) ? stackExpandedLabels.hide : stackExpandedLabels.show }}
                     <span
-                      class="text-sm leading-none transition duration-200"
+                      class="flex h-5 w-5 items-center justify-center rounded-full bg-[#fff8ee] text-base leading-none text-[#8f302a] transition duration-200"
                       :class="isExperienceCardExpanded(experienceCardKey(item, index)) ? 'rotate-45' : 'rotate-0'"
                       aria-hidden="true"
                     >

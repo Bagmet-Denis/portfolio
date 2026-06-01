@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n'
 import { cyberSecurityProject, desktopProjects, mobileProjects } from '@/data/projects'
 import { publicAssetUrl, resolveAssetUrl, resolveAssetUrls } from '@/utils/resolveAssetUrl'
 import { getProjectDescription } from '@/utils/projectDescriptions'
+import { projectClientCountryForTitle } from '@/utils/projectClientCountry'
 import LegalNoticeBanner from '@/components/LegalNoticeBanner.vue'
 import AntiAIBanner from '@/components/AntiAIBanner.vue'
 import ProjectImageLightbox from '@/components/ProjectImageLightbox.vue'
@@ -12,7 +13,7 @@ import TeleprompterAutomaticInfoPage from '@/pages/project-details/TeleprompterA
 import MAlienInfoPage from '@/pages/project-details/MAlienInfoPage.vue'
 import type { ProjectCard, ProjectCategory, StoreLink, StoreType } from '@/types/projectCard'
 
-const { t, tm } = useI18n()
+const { t, tm, locale } = useI18n()
 const categoryOptions: { key: ProjectCategory; labelKey: string }[] = [
   { key: 'mobile', labelKey: 'projects.categories.mobile' },
   { key: 'fullstack', labelKey: 'projects.categories.fullstack' },
@@ -153,6 +154,7 @@ const fullWidthProjectTitles = new Set([
   'Teleprompter Automatic',
   'M-Alien',
   'The Tone of Victory',
+  'Алло - Запись звонков',
 ])
 
 const prioritizedProjectIndex = new Map<string, number>(
@@ -175,6 +177,10 @@ const toneOfVictoryProjectTechnologies = [
   'AVKit',
   'Localization',
   'Audio',
+  'Video',
+  'Formula 1 activation',
+  'Stand UI',
+  'Multimarket content',
 ]
 
 const insentryContributionCard = computed<ProjectCard>(() => ({
@@ -246,6 +252,13 @@ const mobileProjectCards = computed<ProjectCard[]>(() =>
           label: 'Скачать APK',
         })
       }
+      if (project.title === 'Город Курорт') {
+        storeLinks.push({
+          type: 'website',
+          url: 'https://vk.com/gorod_kurort',
+          label: 'VK',
+        })
+      }
       return {
         card: {
           id: `mobile-${project.id}-${project.title}`,
@@ -263,6 +276,7 @@ const mobileProjectCards = computed<ProjectCard[]>(() =>
           iconUrl: resolveAssetUrl(project.iconPath),
           galleryUrls: resolveAssetUrls(isToneOfVictoryProject ? toneOfVictoryProjectScreenshots : project.screenshots),
           storeLinks,
+          ...projectClientCountryForTitle(project.title, locale),
           infoModalKey:
             project.title === 'Teleprompter Automatic'
               ? 'teleprompter-automatic'

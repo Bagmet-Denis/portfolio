@@ -5,11 +5,12 @@ import { RouterLink } from 'vue-router'
 import { mobileProjects } from '@/data/projects'
 import { resolveAssetUrl, resolveAssetUrls } from '@/utils/resolveAssetUrl'
 import { getProjectDescription } from '@/utils/projectDescriptions'
+import { projectClientCountryForTitle } from '@/utils/projectClientCountry'
 import ProjectImageLightbox from '@/components/ProjectImageLightbox.vue'
 import ProjectTicketCardClassic from '@/components/ProjectTicketCardClassic.vue'
 import type { ProjectCard, StoreType } from '@/types/projectCard'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 const storeBadgeSrc: Record<StoreType, string> = {
   appstore: resolveAssetUrl('src/assets/projects/icons/appstore.svg'),
@@ -37,6 +38,7 @@ const featuredProject = computed<ProjectCard | null>(() => {
       'src/assets/projects/tag/tag5.png',
     ]),
     storeLinks: [],
+    ...projectClientCountryForTitle(project.title, locale),
   }
 })
 

@@ -411,7 +411,7 @@ export const mobileProjects: MobileProjectModel[] = [
       'src/assets/projects/teleprompter/teleprompter_web_2.png',
       'src/assets/projects/teleprompter/teleprompter_web_3.png',
     ],
-    ['Swift', 'SwiftUI', 'AVFoundation', 'REST API', 'Web panel', 'Apple Watch'],
+    ['Swift', 'SwiftUI', 'AVFoundation', 'Node.js', 'REST API', 'Web panel', 'Remote control', 'Apple Watch', 'Sync flows'],
     'https://apps.apple.com/us/app/teleprompter-automatic/id1607873167',
     '',
     '',

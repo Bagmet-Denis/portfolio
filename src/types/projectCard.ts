@@ -8,6 +8,12 @@ export interface StoreLink {
   label?: string
 }
 
+export interface ProjectClientCountry {
+  name: string
+  flagUrl?: string
+  flagEmoji?: string
+}
+
 export interface ProjectCard {
   id: string
   category?: ProjectCategory
@@ -18,6 +24,9 @@ export interface ProjectCard {
   iconUrl: string
   galleryUrls: string[]
   storeLinks: StoreLink[]
+  clientCountries?: ProjectClientCountry[]
+  clientCountryName?: string
+  clientCountryFlagUrl?: string
   solvedTasks?: string[]
   solvedTasksTitle?: string
   infoModalKey?: string

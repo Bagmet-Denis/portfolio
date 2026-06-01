@@ -91,10 +91,37 @@ onBeforeUnmount(() => {
               class="h-14 w-14 shrink-0 rounded-[20px] border border-black/10 object-cover shadow-[0_8px_20px_rgba(47,37,33,0.12)]"
               loading="lazy" decoding="async" />
 
-            <div class="min-w-0">
-              <h2 class="text-lg font-black leading-tight text-[#231814] sm:text-xl">
-                {{ project.title }}
-              </h2>
+            <div class="min-w-0 flex-1">
+              <div class="flex min-w-0 items-start gap-3">
+                <h2 class="min-w-0 text-lg font-black leading-tight text-[#231814] sm:text-xl">
+                  {{ project.title }}
+                </h2>
+                <div class="flex-1"></div>
+                <div v-if="project.clientCountries?.length" class="flex shrink-0 flex-wrap justify-end gap-1">
+                  <span
+                    v-for="country in project.clientCountries"
+                    :key="country.name"
+                    class="inline-flex w-fit items-center gap-1.5 rounded-full border border-[#b0464a]/18 bg-[#fff7ec]/86 px-1.5 py-1 text-[9px] font-bold leading-none text-[#743225] shadow-[0_6px_12px_rgba(116,50,37,0.08)]"
+                  >
+                    <img
+                      v-if="country.flagUrl"
+                      :src="country.flagUrl"
+                      alt=""
+                      class="h-3 w-[18px] shrink-0 rounded-[2px] object-contain"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    <span
+                      v-else
+                      class="h-2 w-2 shrink-0 rounded-full bg-[#b0464a]"
+                      aria-hidden="true"
+                    ></span>
+                    <span class="whitespace-nowrap">
+                      {{ country.name }}
+                    </span>
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
 

@@ -5,11 +5,12 @@ import { RouterLink } from 'vue-router'
 import { mobileProjects } from '@/data/projects'
 import { resolveAssetUrl, resolveAssetUrls } from '@/utils/resolveAssetUrl'
 import { getProjectDescription } from '@/utils/projectDescriptions'
+import { projectClientCountryForTitle } from '@/utils/projectClientCountry'
 import ProjectImageLightbox from '@/components/ProjectImageLightbox.vue'
 import ProjectTicketCard from '@/components/ProjectTicketCard.vue'
 import type { ProjectCard, StoreType } from '@/types/projectCard'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 const storeBadgeSrc: Record<StoreType, string> = {
   appstore: resolveAssetUrl('src/assets/projects/icons/appstore.svg'),
@@ -31,6 +32,13 @@ const latestProjects = computed<ProjectCard[]>(() => {
         label: 'Скачать APK',
       })
     }
+    if (project.title === 'Город Курорт') {
+      storeLinks.push({
+        type: 'website' as const,
+        url: 'https://vk.com/gorod_kurort',
+        label: 'VK',
+      })
+    }
 
     return {
       id: `mobile-${project.id}-${project.title}`,
@@ -40,6 +48,7 @@ const latestProjects = computed<ProjectCard[]>(() => {
       iconUrl: resolveAssetUrl(project.iconPath),
       galleryUrls: resolveAssetUrls(project.screenshots),
       storeLinks,
+      ...projectClientCountryForTitle(project.title, locale),
     }
   })
 
@@ -78,7 +87,6 @@ const latestProjects = computed<ProjectCard[]>(() => {
     byTitle('Складолог'),
     byTitle('ProStor.ae'),
     byTitle('Город Курорт'),
-    byTitle('585Gold - золотые изделия'),
     insentryContribution,
   ].filter(Boolean) as ProjectCard[]
 })
@@ -134,7 +142,7 @@ function closeLightbox() {
         <article
           v-for="(project, index) in latestProjects"
           :key="project.id"
-          :class="project.id === 'mobile-insentry-raw-decoder' ? 'lg:col-span-2' : ''"
+          :class="project.id === 'mobile-insentry-raw-decoder' || project.title === 'Teleprompter Automatic' ? 'lg:col-span-2' : ''"
         >
           <div v-motion :initial="{
             opacity: 0,
