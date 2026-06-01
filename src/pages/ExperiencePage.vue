@@ -56,6 +56,7 @@ const experienceItems = computed(() => tm('experience.items') as ExperienceItem[
 const skillCategories = computed(() => tm('experience.skillsCard.categories') as SkillCategory[])
 const stackExpandedLabels = computed(() => tm('experience.skillsCard.expanded') as ExpandedLabels)
 const isStackExpanded = ref(false)
+const expandedExperienceCards = ref<Record<string, boolean>>({})
 
 const yearsOfExperience = computed(() => `${Math.max(new Date().getFullYear() - 2017, 1)}+`)
 const mobileExperience = computed(() => `${Math.max(new Date().getFullYear() - 2019, 1)}+`)
@@ -238,6 +239,18 @@ function resolvedExperienceHref(href: string): string {
 
 function toggleStackExpanded() {
   isStackExpanded.value = !isStackExpanded.value
+}
+
+function experienceCardKey(item: ExperienceItem, index: number): string {
+  return `${item.title}-${item.period}-${index}`
+}
+
+function toggleExperienceCard(key: string) {
+  expandedExperienceCards.value[key] = !expandedExperienceCards.value[key]
+}
+
+function isExperienceCardExpanded(key: string) {
+  return Boolean(expandedExperienceCards.value[key])
 }
 
 function animateEnter(el: Element) {
@@ -443,7 +456,7 @@ function highlightedTextSegments(value: string): HighlightedTextSegment[] {
       <div class="experience-timeline">
         <article
           v-for="(item, index) in experienceItems"
-          :key="`${item.title}-${item.period}`"
+          :key="experienceCardKey(item, index)"
           class="timeline-item group relative flex gap-4 pb-5 last:pb-0 sm:gap-6"
         >
           <div class="relative flex w-10 shrink-0 justify-center sm:w-14">
@@ -487,100 +500,119 @@ function highlightedTextSegments(value: string): HighlightedTextSegment[] {
                   <span v-if="item.duration" class="text-xs font-semibold uppercase tracking-[0.14em] text-[#9b634d]">
                     {{ item.duration }}
                   </span>
+                  <button
+                    type="button"
+                    class="mt-1 inline-flex w-fit items-center gap-2 rounded-full border border-[#b0464a]/18 bg-[#fffaf2] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-[#8d4934] transition duration-200 hover:-translate-y-0.5 hover:border-[#b0464a]/30 hover:bg-white"
+                    :aria-expanded="isExperienceCardExpanded(experienceCardKey(item, index))"
+                    @click="toggleExperienceCard(experienceCardKey(item, index))"
+                  >
+                    {{ isExperienceCardExpanded(experienceCardKey(item, index)) ? stackExpandedLabels.hide : stackExpandedLabels.show }}
+                    <span
+                      class="text-sm leading-none transition duration-200"
+                      :class="isExperienceCardExpanded(experienceCardKey(item, index)) ? 'rotate-45' : 'rotate-0'"
+                      aria-hidden="true"
+                    >
+                      +
+                    </span>
+                  </button>
                 </div>
               </div>
 
-              <p v-if="item.description" class="mt-3 max-w-[900px] text-[15px] leading-7 text-[#63534a] lg:text-[17px] lg:leading-8">
-                {{ item.description }}
-              </p>
+              <Transition name="expand-body" @enter="animateEnter" @after-enter="animateAfterEnter" @leave="animateLeave">
+                <div v-if="isExperienceCardExpanded(experienceCardKey(item, index))" class="overflow-hidden">
+                  <p v-if="item.description" class="mt-3 max-w-[900px] text-[15px] leading-7 text-[#63534a] lg:text-[17px] lg:leading-8">
+                    {{ item.description }}
+                  </p>
 
-              <div v-if="item.stack?.length" class="mt-3 flex flex-wrap gap-2">
-                <span
-                  v-for="tag in item.stack"
-                  :key="tag"
-                  class="inline-flex items-center gap-1.5 rounded-full border border-[#dcc7b4] bg-[#fff8ee] px-3 py-1 text-xs font-medium text-[#705d53]"
-                >
-                  <img
-                    v-if="technologyIconFor(tag)"
-                    :src="technologyIconFor(tag)"
-                    :alt="tag"
-                    class="h-4 w-4 object-contain"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                  {{ tag }}
-                </span>
-              </div>
-
-              <ul v-if="item.bullets?.length" class="mt-4 space-y-2.5">
-                <li v-for="bullet in item.bullets" :key="bullet" class="flex gap-3 text-[15px] leading-7 text-[#5e4d45] lg:text-base lg:leading-8">
-                  <span class="mt-[0.8rem] h-1.5 w-1.5 shrink-0 rounded-full bg-[#b0464a] lg:mt-[0.9rem]"></span>
-                  <span>
-                    <template
-                      v-for="(segment, segmentIndex) in highlightedTextSegments(bullet)"
-                      :key="`${segment.text}-${segmentIndex}`"
+                  <div v-if="item.stack?.length" class="mt-3 flex flex-wrap gap-2">
+                    <span
+                      v-for="tag in item.stack"
+                      :key="tag"
+                      class="inline-flex items-center gap-1.5 rounded-full border border-[#dcc7b4] bg-[#fff8ee] px-3 py-1 text-xs font-medium text-[#705d53]"
                     >
-                      <strong v-if="segment.highlighted" class="font-bold text-[#9d3438]">{{ segment.text }}</strong>
-                      <template v-else>{{ segment.text }}</template>
-                    </template>
-                  </span>
-                </li>
-              </ul>
-
-              <div
-                v-if="item.achievements?.length"
-                class="mt-4 rounded-[16px] border border-[#d9c1ae] bg-[#fff8ee] p-4"
-              >
-                <p class="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#9b634d]">
-                  {{ locale === 'ru' ? 'Ключевые результаты' : 'Key results' }}
-                </p>
-                <ul class="mt-3 space-y-2">
-                  <li
-                    v-for="achievement in item.achievements"
-                    :key="achievement"
-                    class="flex gap-3 text-[15px] leading-7 text-[#5e4d45] lg:text-base lg:leading-8"
-                  >
-                    <span class="mt-[0.8rem] h-1.5 w-1.5 shrink-0 rounded-full bg-[#e4b64d] lg:mt-[0.9rem]"></span>
-                    <span>
-                      <template
-                        v-for="(segment, segmentIndex) in highlightedTextSegments(achievement)"
-                        :key="`${segment.text}-${segmentIndex}`"
-                      >
-                        <strong v-if="segment.highlighted" class="font-bold text-[#9d3438]">{{ segment.text }}</strong>
-                        <template v-else>{{ segment.text }}</template>
-                      </template>
+                      <img
+                        v-if="technologyIconFor(tag)"
+                        :src="technologyIconFor(tag)"
+                        :alt="tag"
+                        class="h-4 w-4 object-contain"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                      {{ tag }}
                     </span>
-                  </li>
-                </ul>
-              </div>
+                  </div>
 
-              <div
-                v-if="item.highlight"
-                class="mt-4 rounded-[16px] border border-[#d9c1ae] bg-[#fff8ee] p-4"
-              >
-                <p class="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#9b634d]">
-                  {{ item.highlight.label }}
-                </p>
-                <p class="mt-2 text-[15px] leading-7 text-[#5e4d45] lg:text-base lg:leading-8">
-                  {{ item.highlight.text }}
-                </p>
-              </div>
+                  <ul v-if="item.bullets?.length" class="mt-4 space-y-2.5">
+                    <li v-for="bullet in item.bullets" :key="bullet" class="flex gap-3 text-[15px] leading-7 text-[#5e4d45] lg:text-base lg:leading-8">
+                      <span class="mt-[0.8rem] h-1.5 w-1.5 shrink-0 rounded-full bg-[#b0464a] lg:mt-[0.9rem]"></span>
+                      <span>
+                        <template
+                          v-for="(segment, segmentIndex) in highlightedTextSegments(bullet)"
+                          :key="`${segment.text}-${segmentIndex}`"
+                        >
+                          <strong v-if="segment.highlighted" class="font-bold text-[#9d3438]">{{ segment.text }}</strong>
+                          <template v-else>{{ segment.text }}</template>
+                        </template>
+                      </span>
+                    </li>
+                  </ul>
 
-              <div v-if="item.links?.length" class="mt-4 flex flex-wrap gap-3">
-                <a
-                  v-for="link in item.links"
-                  :key="link.href"
-                  :href="resolvedExperienceHref(link.href)"
-                  :target="isExternalHref(link.href) ? '_blank' : undefined"
-                  :rel="isExternalHref(link.href) ? 'noopener noreferrer' : undefined"
-                  class="group inline-flex items-center gap-2 rounded-full border border-[#b0464a]/18 bg-[linear-gradient(180deg,rgba(255,248,238,0.92),rgba(176,70,74,0.08))] px-4 py-2 text-sm font-semibold text-[#8d4934] shadow-[0_10px_22px_rgba(98,63,38,0.08)] transition duration-200 hover:-translate-y-0.5 hover:border-[#b0464a]/30 hover:bg-[#fff8ee] hover:shadow-[0_14px_28px_rgba(98,63,38,0.12)]"
-                >
-                  {{ link.label }}
-                  <span v-if="isExternalHref(link.href)" class="text-[#b0464a]/68 transition group-hover:translate-x-0.5">
-                    ↗
-                  </span>
-                </a>
-              </div>
+                  <div
+                    v-if="item.achievements?.length"
+                    class="mt-4 rounded-[16px] border border-[#d9c1ae] bg-[#fff8ee] p-4"
+                  >
+                    <p class="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#9b634d]">
+                      {{ locale === 'ru' ? 'Ключевые результаты' : 'Key results' }}
+                    </p>
+                    <ul class="mt-3 space-y-2">
+                      <li
+                        v-for="achievement in item.achievements"
+                        :key="achievement"
+                        class="flex gap-3 text-[15px] leading-7 text-[#5e4d45] lg:text-base lg:leading-8"
+                      >
+                        <span class="mt-[0.8rem] h-1.5 w-1.5 shrink-0 rounded-full bg-[#e4b64d] lg:mt-[0.9rem]"></span>
+                        <span>
+                          <template
+                            v-for="(segment, segmentIndex) in highlightedTextSegments(achievement)"
+                            :key="`${segment.text}-${segmentIndex}`"
+                          >
+                            <strong v-if="segment.highlighted" class="font-bold text-[#9d3438]">{{ segment.text }}</strong>
+                            <template v-else>{{ segment.text }}</template>
+                          </template>
+                        </span>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div
+                    v-if="item.highlight"
+                    class="mt-4 rounded-[16px] border border-[#d9c1ae] bg-[#fff8ee] p-4"
+                  >
+                    <p class="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#9b634d]">
+                      {{ item.highlight.label }}
+                    </p>
+                    <p class="mt-2 text-[15px] leading-7 text-[#5e4d45] lg:text-base lg:leading-8">
+                      {{ item.highlight.text }}
+                    </p>
+                  </div>
+
+                  <div v-if="item.links?.length" class="mt-4 flex flex-wrap gap-3">
+                    <a
+                      v-for="link in item.links"
+                      :key="link.href"
+                      :href="resolvedExperienceHref(link.href)"
+                      :target="isExternalHref(link.href) ? '_blank' : undefined"
+                      :rel="isExternalHref(link.href) ? 'noopener noreferrer' : undefined"
+                      class="group inline-flex items-center gap-2 rounded-full border border-[#b0464a]/18 bg-[linear-gradient(180deg,rgba(255,248,238,0.92),rgba(176,70,74,0.08))] px-4 py-2 text-sm font-semibold text-[#8d4934] shadow-[0_10px_22px_rgba(98,63,38,0.08)] transition duration-200 hover:-translate-y-0.5 hover:border-[#b0464a]/30 hover:bg-[#fff8ee] hover:shadow-[0_14px_28px_rgba(98,63,38,0.12)]"
+                    >
+                      {{ link.label }}
+                      <span v-if="isExternalHref(link.href)" class="text-[#b0464a]/68 transition group-hover:translate-x-0.5">
+                        ↗
+                      </span>
+                    </a>
+                  </div>
+                </div>
+              </Transition>
             </div>
           </div>
         </article>
