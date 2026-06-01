@@ -72,7 +72,7 @@ const countryChipStyles = [
               Travel log
             </span>
           </div>
-          <h2 class="mt-3 max-w-sm text-[25px] font-semibold leading-tight text-[#2f2521] sm:text-4xl">
+          <h2 class="mt-3 max-w-sm text-[27px] font-semibold leading-tight text-[#2f2521] sm:text-[2.55rem]">
             {{ t('experience.factsCard.title') }}
           </h2>
 
@@ -80,10 +80,10 @@ const countryChipStyles = [
             <p class="text-[10px] font-black uppercase tracking-[0.18em] text-[#8B442F]">
               {{ travelFact.label }}
             </p>
-            <p class="mt-2 text-base leading-7 text-[#2f2521] sm:text-[17px]">
+            <p class="mt-2 text-[17px] leading-7 text-[#2f2521] sm:text-lg sm:leading-8">
               {{ travelFact.value }}
             </p>
-            <p v-if="travelFact.note" class="mt-2 text-sm leading-6 text-[#6f5d52]">
+            <p v-if="travelFact.note" class="mt-2 text-[15px] leading-6 text-[#6f5d52] sm:text-base">
               {{ travelFact.note }}
             </p>
 
@@ -98,7 +98,7 @@ const countryChipStyles = [
           </article>
         </header>
 
-        <div v-if="travelFact?.countries?.length" class="rounded-[22px] bg-white/38 p-3 shadow-[inset_0_0_0_1px_rgba(47,33,26,0.04)] sm:p-4">
+        <div v-if="travelFact?.countries?.length" class="rounded-[22px] bg-white/38 p-3.5 shadow-[inset_0_0_0_1px_rgba(47,33,26,0.04)] sm:p-5">
           <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
             <p class="text-[10px] font-black uppercase tracking-[0.18em] text-[#6F5643]">
               {{ expandedLabels.title }}
@@ -108,18 +108,18 @@ const countryChipStyles = [
             </span>
           </div>
 
-          <div class="flex flex-wrap gap-2">
+          <div class="flex flex-wrap gap-2.5">
             <span
               v-for="(country, index) in travelFact.countries"
               :key="country.name"
-              class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-xs font-semibold shadow-[0_7px_16px_rgba(47,37,33,0.06)] transition duration-200 hover:-translate-y-0.5"
+              class="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold shadow-[0_8px_18px_rgba(47,37,33,0.07)] transition duration-200 hover:-translate-y-0.5"
               :class="countryChipStyles[index % countryChipStyles.length]"
             >
               <img
                 v-if="country.flag"
                 :src="publicAssetUrl(country.flag)"
                 :alt="country.name"
-                class="h-3.5 w-3.5 rounded-full object-cover"
+                class="h-5 w-5 rounded-full object-cover"
               />
               {{ country.name }}
             </span>
@@ -128,21 +128,21 @@ const countryChipStyles = [
       </div>
     </div>
 
-    <aside class="mt-4 flex justify-start sm:justify-end">
-      <div class="inline-flex max-w-full items-center gap-2 rounded-full bg-[#2f2521] px-2 py-2 shadow-[0_12px_26px_rgba(47,37,33,0.14)]">
-        <span class="px-2 text-[10px] font-black uppercase tracking-[0.16em] text-[#FFFDF8]/82">
+    <aside class="mt-5 flex justify-start sm:justify-end">
+      <div class="inline-flex max-w-full items-center gap-3 rounded-full bg-[#2f2521] px-3 py-3 shadow-[0_16px_34px_rgba(47,37,33,0.18)] sm:px-4">
+        <span class="px-2 text-[11px] font-black uppercase tracking-[0.16em] text-[#FFFDF8]/86 sm:text-xs">
           {{ t('home.socialsTitle') }}
         </span>
-        <nav class="flex items-center gap-1.5">
+        <nav class="flex items-center gap-2">
           <a
             v-for="item in contacts"
             :key="item.key"
             :href="item.href"
             :aria-label="item.label"
             :title="`${item.label}: ${item.value}`"
-            class="flex h-9 w-9 items-center justify-center rounded-full bg-[#FFFDF8] transition duration-200 hover:-translate-y-0.5 hover:bg-[#F7F0E7]"
+            class="flex h-11 w-11 items-center justify-center rounded-full bg-[#FFFDF8] transition duration-200 hover:-translate-y-0.5 hover:bg-[#F7F0E7]"
           >
-            <img :src="contactIcons[item.key]" :alt="item.label" class="h-5 w-5" />
+            <img :src="contactIcons[item.key]" :alt="item.label" class="h-6 w-6" />
           </a>
         </nav>
       </div>

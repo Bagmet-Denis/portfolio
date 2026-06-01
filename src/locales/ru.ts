@@ -16,7 +16,7 @@ export default {
     role: 'Мобильный Разработчик',
     secondaryRole: 'iOS / Flutter',
     about:
-      'Разрабатываю мобильные приложения и интерфейсы: от продуктовой логики и интеграций до аккуратного UI и стабильного релиза.',
+      'iOS, Flutter, AppSec и любовь к сложным задачам. Где другие видят баг — я вижу интересную инженерную задачу.',
   },
   home: {
     latestProjectsTitle: 'Последние работы',
@@ -92,8 +92,8 @@ export default {
       experience: 'Опыт работы',
     },
     personal: [
-      { key: 'name', label: 'Имя', value: 'Багмет Денис' },
-      { key: 'birth', label: 'Дата рождения', value: '16 марта 1999 (26)' },
+      { key: 'name', label: 'Имя', value: 'Багмет Денис Александрович' },
+      { key: 'birth', label: 'Дата рождения', value: '16 марта 1999 (27)' },
       { key: 'location', label: 'Город проживания', value: 'Ростов-на-Дону' },
       { key: 'university', label: 'ВУЗ', value: 'Донецкий национальный университет' },
       { key: 'specialty', label: 'Специальность', value: '09.03.01 Информатика и вычислительная техника' },
@@ -115,7 +115,7 @@ export default {
         {
           key: 'programmingLanguages',
           label: 'Языки программирования',
-          items: ['JavaScript', 'TypeScript', 'Python']
+          items: ['Dart', 'Swift', 'JavaScript', 'TypeScript', 'Python']
         },
         {
           key: 'frameworks',
@@ -125,12 +125,12 @@ export default {
         {
           key: 'databases',
           label: 'Базы данных и хранение данных',
-          items: ['SQLite', 'Core Data', 'Realm', 'Firebase', 'PostgreSQL', 'MySQL']
+          items: ['SQLite', 'Core Data', 'Hive', 'Firebase', 'PostgreSQL', 'MongoDB']
         },
         {
           key: 'toolsDev',
           label: 'Инструменты разработки',
-          items: ['Xcode', 'Android Studio', 'Visual Studio Code', 'Cursor', 'PyCharm', 'Git', 'Postman']
+          items: ['Xcode', 'Android Studio', 'Visual Studio Code', 'Cursor', 'PyCharm', 'Git', 'Postman', 'Figma', 'Proxyman']
         },
         {
           key: 'toolsTraffic',
@@ -178,6 +178,7 @@ export default {
             { name: 'Южная Корея', flag: '/flags/south korea.svg' },
             { name: 'Турция', flag: '/flags/turkey.svg' },
             { name: 'Украина', flag: '/flags/ukraine.svg' },
+            { name: 'Узбекистан', flag: '/flags/uzbekistan.svg' },
             { name: 'ОАЭ', flag: '/flags/united arab emirates.svg' }
           ]
         },

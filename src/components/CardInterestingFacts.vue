@@ -76,7 +76,7 @@ function animateLeave(el: Element) {
         <div class="rounded-full border border-black/10 bg-[#5F8171] px-2 py-1 text-[9px] uppercase tracking-[0.16em] text-white sm:px-2.5 sm:text-[10px] sm:tracking-[0.2em]">
           Life
         </div>
-        <h3 class="text-[15px] font-semibold text-black/80 sm:text-base">
+        <h3 class="text-base font-semibold text-black/80 sm:text-lg">
           {{ $t('experience.factsCard.title') }}
         </h3>
       </div>
@@ -87,15 +87,15 @@ function animateLeave(el: Element) {
           :key="fact.key"
           class="rounded-[14px] border border-black/8 bg-[#FAFAF7]/95 p-2 sm:rounded-[16px] sm:p-2.5"
         >
-          <div class="text-[9px] uppercase tracking-[0.12em] text-black/45 sm:text-[11px] sm:tracking-[0.16em]">
+          <div class="text-[10px] uppercase tracking-[0.12em] text-black/45 sm:text-xs sm:tracking-[0.16em]">
             {{ fact.label }}
           </div>
 
-          <p class="mt-1.5 text-[11px] leading-4.5 text-black/75 sm:text-[13px] sm:leading-5">
+          <p class="mt-1.5 text-xs leading-5 text-black/75 sm:text-sm sm:leading-6">
             {{ fact.value }}
           </p>
 
-          <p v-if="fact.note" class="mt-1.5 text-[10px] leading-4 text-black/55 sm:text-[11px] sm:leading-4.5">
+          <p v-if="fact.note" class="mt-1.5 text-[11px] leading-4.5 text-black/55 sm:text-xs sm:leading-5">
             {{ fact.note }}
           </p>
 
@@ -103,7 +103,7 @@ function animateLeave(el: Element) {
             <a
               v-if="fact.link"
               :href="fact.link.href"
-              class="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white px-2.5 py-1 text-[10px] font-medium text-black/70 transition hover:bg-[#F3EEE3] sm:px-3 sm:text-[11px]"
+              class="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white px-2.5 py-1 text-[11px] font-medium text-black/70 transition hover:bg-[#F3EEE3] sm:px-3 sm:text-xs"
             >
               {{ fact.link.label }}
             </a>
@@ -111,7 +111,7 @@ function animateLeave(el: Element) {
             <button
               v-if="fact.countries?.length"
               type="button"
-              class="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white px-2.5 py-1 text-[10px] font-medium text-black/70 transition hover:bg-[#F3EEE3] sm:px-3 sm:text-[11px]"
+              class="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white px-2.5 py-1 text-[11px] font-medium text-black/70 transition hover:bg-[#F3EEE3] sm:px-3 sm:text-xs"
               @click="toggleExpanded(fact.key)"
             >
               {{ isExpanded(fact.key) ? expandedLabels.hide : expandedLabels.show }}
@@ -125,21 +125,21 @@ function animateLeave(el: Element) {
             @leave="animateLeave"
           >
             <div v-if="fact.countries?.length && isExpanded(fact.key)" class="mt-3 overflow-hidden">
-              <div class="mb-2 text-[9px] uppercase tracking-[0.12em] text-black/40 sm:text-[11px] sm:tracking-[0.16em]">
+              <div class="mb-2 text-[10px] uppercase tracking-[0.12em] text-black/40 sm:text-xs sm:tracking-[0.16em]">
                 {{ expandedLabels.title }}
               </div>
 
-              <div class="flex w-full flex-wrap gap-1.5">
+              <div class="flex w-full flex-wrap gap-2">
                 <div
                   v-for="country in fact.countries"
                   :key="country.name"
-                  class="flex items-center gap-1.5 rounded-full border border-black/10 bg-white px-2.5 py-1 text-[11px] text-black/75 sm:px-3 sm:text-xs"
+                  class="flex items-center gap-2 rounded-full border border-black/10 bg-white px-3 py-1.5 text-sm text-black/75"
                 >
                   <img
                     v-if="country.flag"
                     :src="publicAssetUrl(country.flag)"
                     :alt="country.name"
-                    class="h-3.5 w-3.5 rounded-full object-cover"
+                    class="h-4.5 w-4.5 rounded-full object-cover"
                   />
                   <span>{{ country.name }}</span>
                 </div>

@@ -19,12 +19,12 @@ const paperOverlay = publicAssetUrl('paper_overlay.png')
 </script>
 
 <template>
-  <div class="min-h-screen bg-[#f3eadf] flex items-center justify-center p-0 md:p-4 relative">
+  <div class="relative flex h-[100dvh] overflow-hidden bg-[#f3eadf] p-0 md:p-4">
 
 
     <!-- Панель приложения -->
     <div
-      class="relative z-10 w-full md:rounded-xl md:shadow-xl bg-(--color-header-bg) overflow-hidden flex flex-col text-(--color-text)"
+      class="relative z-10 flex h-full min-h-0 w-full flex-col overflow-hidden bg-(--color-header-bg) text-(--color-text) md:rounded-xl md:shadow-xl"
       :style="{ backgroundImage: `url(${backgroundPattern})`, backgroundRepeat: 'repeat', backgroundSize: '20px 20px' }">
 
       <div class="absolute inset-0 pointer-events-none z-0 mix-blend-darken opacity-60"
@@ -35,8 +35,8 @@ const paperOverlay = publicAssetUrl('paper_overlay.png')
         <NavBar class="sticky top-0" />
       </div>
 
-      <div class="relative z-10 flex-1 overflow-auto">
-        <div class="absolute inset-0">
+      <div data-app-scroll class="relative z-10 min-h-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-contain [scrollbar-gutter:stable]">
+        <div class="pointer-events-none absolute inset-0 overflow-hidden">
           <SeasonsFalling season="spring" :amount="120" :mouseInteraction="true" />
         </div>
 

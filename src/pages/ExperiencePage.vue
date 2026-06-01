@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { cyberSecurityProject, desktopProjects, mobileProjects } from '@/data/projects'
@@ -37,18 +37,67 @@ interface SkillCategory {
   items: string[]
 }
 
+interface ExpandedLabels {
+  show: string
+  hide: string
+}
+
 type ExperienceTone = 'ios' | 'flutter' | 'security' | 'reverse' | 'default'
+
+interface HighlightedTextSegment {
+  text: string
+  highlighted: boolean
+}
 
 const cloudSrc = publicAssetUrl('cloud.png')
 const paperOverlay = publicAssetUrl('paper_overlay.png')
 
 const experienceItems = computed(() => tm('experience.items') as ExperienceItem[])
 const skillCategories = computed(() => tm('experience.skillsCard.categories') as SkillCategory[])
+const stackExpandedLabels = computed(() => tm('experience.skillsCard.expanded') as ExpandedLabels)
+const isStackExpanded = ref(false)
 
 const yearsOfExperience = computed(() => `${Math.max(new Date().getFullYear() - 2017, 1)}+`)
 const mobileExperience = computed(() => `${Math.max(new Date().getFullYear() - 2019, 1)}+`)
 const securityExperience = '3+'
 const completedProjectsCount = computed(() => `${mobileProjects.length + desktopProjects.length + cyberSecurityProject.length}+`)
+
+const experienceHighlightPhrases: Record<string, string[]> = {
+  ru: [
+    'Разработал и выпустил более 30 мобильных',
+    'выручкой более 1 млн ₽ в месяц',
+    'реализовал full-stack решение',
+    'Участвовал в запуске стартапов',
+    'выпустил более 20 Flutter-приложений',
+    'для рынков США, ОАЭ и России',
+    'Решал сложные инженерные задачи',
+    'выпустил более 8 Flutter-приложений',
+    'Участвовал в полном цикле разработки',
+    'Проводил исследование безопасности Android/iOS-приложений',
+    'Документировал найденные уязвимости',
+    'Обнаружил уязвимость в Telegram',
+    'получал подтверждения и вознаграждения через HackerOne.',
+    'помог найти и идентифицировать более 400 владельцев автомобилей в рамках отзывных кампаний крупных автопроизводителей.',
+    'Получил сертификацию WAPT',
+  ],
+  en: [
+    'Shipped 30+ mobile products',
+    'monthly revenue above 1M RUB',
+    'implemented a full-stack solution',
+    'Contributed to startup launches',
+    'Shipped 20+ Flutter applications',
+    'for the US, UAE, and Russian markets',
+    'Solved complex engineering tasks',
+    'Shipped 8+ Flutter applications',
+    'Worked across the full product cycle',
+    'Researched Android/iOS app security',
+    'Documented discovered vulnerabilities',
+    'Discovered a Telegram vulnerability',
+    'received confirmations and rewards through HackerOne.',
+    'Helped identify 400+ vehicle owners for major automaker recall campaigns using custom OSINT tooling.',
+    'Earned WAPT',
+  ],
+}
 
 const technologyIconMap: Record<string, string> = {
   swift: publicAssetUrl('technologies/swift.svg'),
@@ -186,6 +235,71 @@ function isExternalHref(href: string): boolean {
 function resolvedExperienceHref(href: string): string {
   return href.startsWith('/') ? router.resolve(href).href : href
 }
+
+function toggleStackExpanded() {
+  isStackExpanded.value = !isStackExpanded.value
+}
+
+function animateEnter(el: Element) {
+  const element = el as HTMLElement
+  element.style.height = '0'
+  element.style.opacity = '0'
+  element.style.overflow = 'hidden'
+  void element.offsetHeight
+  element.style.height = `${element.scrollHeight}px`
+  element.style.opacity = '1'
+}
+
+function animateAfterEnter(el: Element) {
+  const element = el as HTMLElement
+  element.style.height = 'auto'
+  element.style.overflow = 'visible'
+}
+
+function animateLeave(el: Element) {
+  const element = el as HTMLElement
+  element.style.height = `${element.scrollHeight}px`
+  element.style.opacity = '1'
+  element.style.overflow = 'hidden'
+  void element.offsetHeight
+  element.style.height = '0'
+  element.style.opacity = '0'
+}
+
+function highlightedTextSegments(value: string): HighlightedTextSegment[] {
+  const phrases = experienceHighlightPhrases[locale.value] ?? experienceHighlightPhrases.en
+  const segments: HighlightedTextSegment[] = []
+  let cursor = 0
+
+  while (cursor < value.length) {
+    let nextPhrase = ''
+    let nextIndex = -1
+
+    for (const phrase of phrases) {
+      const phraseIndex = value.indexOf(phrase, cursor)
+      if (phraseIndex === -1) continue
+
+      if (nextIndex === -1 || phraseIndex < nextIndex || (phraseIndex === nextIndex && phrase.length > nextPhrase.length)) {
+        nextIndex = phraseIndex
+        nextPhrase = phrase
+      }
+    }
+
+    if (nextIndex === -1) {
+      segments.push({ text: value.slice(cursor), highlighted: false })
+      break
+    }
+
+    if (nextIndex > cursor) {
+      segments.push({ text: value.slice(cursor, nextIndex), highlighted: false })
+    }
+
+    segments.push({ text: nextPhrase, highlighted: true })
+    cursor = nextIndex + nextPhrase.length
+  }
+
+  return segments
+}
 </script>
 
 <template>
@@ -256,7 +370,7 @@ function resolvedExperienceHref(href: string): string {
     <section class="relative z-10 mx-auto max-w-[1280px] px-4 py-5 sm:px-6 xl:px-8">
       <div class="rounded-[24px] border border-[#432f27]/12 bg-[#fff8ee]/82 p-4 shadow-[0_14px_34px_rgba(98,63,38,0.07)] sm:p-5">
         <div class="flex flex-col gap-4">
-          <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+          <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p class="font-rubik text-sm uppercase tracking-[0.24em] text-[#9a6248]">
                 {{ locale === 'ru' ? 'Рабочий стек' : 'Working stack' }}
@@ -265,36 +379,53 @@ function resolvedExperienceHref(href: string): string {
                 {{ locale === 'ru' ? 'Инструменты сгруппированы по смыслу' : 'Tools grouped by purpose' }}
               </h2>
             </div>
+            <button
+              type="button"
+              class="inline-flex w-fit items-center gap-2 rounded-full border border-[#b0464a]/18 bg-[#fffaf2] px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#8d4934] shadow-[0_10px_22px_rgba(98,63,38,0.08)] transition duration-200 hover:-translate-y-0.5 hover:border-[#b0464a]/30 hover:bg-white"
+              :aria-expanded="isStackExpanded"
+              @click="toggleStackExpanded"
+            >
+              {{ isStackExpanded ? stackExpandedLabels.hide : stackExpandedLabels.show }}
+              <span
+                class="text-base leading-none transition duration-200"
+                :class="isStackExpanded ? 'rotate-45' : 'rotate-0'"
+                aria-hidden="true"
+              >
+                +
+              </span>
+            </button>
           </div>
 
-          <div class="flex flex-col gap-2">
-            <div
-              v-for="category in skillCategories"
-              :key="category.key"
-              class="stack-row flex flex-col gap-3 rounded-[16px] border border-[#e0cab6] bg-[#fffaf2]/84 p-3 sm:flex-row sm:items-center"
-            >
-              <h3 class="w-full shrink-0 text-sm font-semibold text-[#3f2a21] sm:w-[15rem]">
-                {{ category.label }}
-              </h3>
-              <div class="flex flex-wrap gap-2">
-                <span
-                  v-for="item in category.items"
-                  :key="item"
-                  class="inline-flex items-center gap-1.5 rounded-full bg-[#efe0d0] px-2.5 py-1 text-xs font-medium text-[#6c5448]"
-                >
-                  <img
-                    v-if="technologyIconFor(item)"
-                    :src="technologyIconFor(item)"
-                    :alt="item"
-                    class="h-4 w-4 object-contain"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                  {{ item }}
-                </span>
+          <Transition name="expand-body" @enter="animateEnter" @after-enter="animateAfterEnter" @leave="animateLeave">
+            <div v-if="isStackExpanded" class="flex flex-col gap-2 overflow-hidden">
+              <div
+                v-for="category in skillCategories"
+                :key="category.key"
+                class="stack-row flex flex-col gap-3 rounded-[16px] border border-[#e0cab6] bg-[#fffaf2]/84 p-3 sm:flex-row sm:items-center"
+              >
+                <h3 class="w-full shrink-0 text-sm font-semibold text-[#3f2a21] sm:w-[15rem]">
+                  {{ category.label }}
+                </h3>
+                <div class="flex flex-wrap gap-2">
+                  <span
+                    v-for="item in category.items"
+                    :key="item"
+                    class="inline-flex items-center gap-1.5 rounded-full bg-[#efe0d0] px-2.5 py-1 text-xs font-medium text-[#6c5448]"
+                  >
+                    <img
+                      v-if="technologyIconFor(item)"
+                      :src="technologyIconFor(item)"
+                      :alt="item"
+                      class="h-4 w-4 object-contain"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    {{ item }}
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
+          </Transition>
         </div>
       </div>
     </section>
@@ -359,7 +490,7 @@ function resolvedExperienceHref(href: string): string {
                 </div>
               </div>
 
-              <p v-if="item.description" class="mt-3 max-w-[820px] text-sm leading-6 text-[#63534a] sm:text-[15px]">
+              <p v-if="item.description" class="mt-3 max-w-[900px] text-[15px] leading-7 text-[#63534a] lg:text-[17px] lg:leading-8">
                 {{ item.description }}
               </p>
 
@@ -382,9 +513,17 @@ function resolvedExperienceHref(href: string): string {
               </div>
 
               <ul v-if="item.bullets?.length" class="mt-4 space-y-2.5">
-                <li v-for="bullet in item.bullets" :key="bullet" class="flex gap-3 text-sm leading-6 text-[#5e4d45]">
-                  <span class="mt-[0.7rem] h-1.5 w-1.5 shrink-0 rounded-full bg-[#b0464a]"></span>
-                  <span>{{ bullet }}</span>
+                <li v-for="bullet in item.bullets" :key="bullet" class="flex gap-3 text-[15px] leading-7 text-[#5e4d45] lg:text-base lg:leading-8">
+                  <span class="mt-[0.8rem] h-1.5 w-1.5 shrink-0 rounded-full bg-[#b0464a] lg:mt-[0.9rem]"></span>
+                  <span>
+                    <template
+                      v-for="(segment, segmentIndex) in highlightedTextSegments(bullet)"
+                      :key="`${segment.text}-${segmentIndex}`"
+                    >
+                      <strong v-if="segment.highlighted" class="font-bold text-[#9d3438]">{{ segment.text }}</strong>
+                      <template v-else>{{ segment.text }}</template>
+                    </template>
+                  </span>
                 </li>
               </ul>
 
@@ -399,10 +538,18 @@ function resolvedExperienceHref(href: string): string {
                   <li
                     v-for="achievement in item.achievements"
                     :key="achievement"
-                    class="flex gap-3 text-sm leading-6 text-[#5e4d45]"
+                    class="flex gap-3 text-[15px] leading-7 text-[#5e4d45] lg:text-base lg:leading-8"
                   >
-                    <span class="mt-[0.65rem] h-1.5 w-1.5 shrink-0 rounded-full bg-[#e4b64d]"></span>
-                    <span>{{ achievement }}</span>
+                    <span class="mt-[0.8rem] h-1.5 w-1.5 shrink-0 rounded-full bg-[#e4b64d] lg:mt-[0.9rem]"></span>
+                    <span>
+                      <template
+                        v-for="(segment, segmentIndex) in highlightedTextSegments(achievement)"
+                        :key="`${segment.text}-${segmentIndex}`"
+                      >
+                        <strong v-if="segment.highlighted" class="font-bold text-[#9d3438]">{{ segment.text }}</strong>
+                        <template v-else>{{ segment.text }}</template>
+                      </template>
+                    </span>
                   </li>
                 </ul>
               </div>
@@ -414,7 +561,7 @@ function resolvedExperienceHref(href: string): string {
                 <p class="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#9b634d]">
                   {{ item.highlight.label }}
                 </p>
-                <p class="mt-2 text-sm leading-7 text-[#5e4d45]">
+                <p class="mt-2 text-[15px] leading-7 text-[#5e4d45] lg:text-base lg:leading-8">
                   {{ item.highlight.text }}
                 </p>
               </div>
@@ -469,6 +616,11 @@ function resolvedExperienceHref(href: string): string {
   border-color: rgba(176, 70, 74, 0.24);
   background: rgba(255, 252, 246, 0.96);
   transform: translateX(2px);
+}
+
+.expand-body-enter-active,
+.expand-body-leave-active {
+  transition: height 0.28s ease, opacity 0.22s ease;
 }
 
 .experience-cloud-left {

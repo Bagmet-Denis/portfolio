@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { RouterLink } from 'vue-router'
 import { mobileProjects } from '@/data/projects'
 import { resolveAssetUrl, resolveAssetUrls } from '@/utils/resolveAssetUrl'
 import { getProjectDescription } from '@/utils/projectDescriptions'
+import ProjectImageLightbox from '@/components/ProjectImageLightbox.vue'
 import ProjectTicketCard from '@/components/ProjectTicketCard.vue'
 import type { ProjectCard, StoreType } from '@/types/projectCard'
 
@@ -82,6 +83,15 @@ const latestProjects = computed<ProjectCard[]>(() => {
   ].filter(Boolean) as ProjectCard[]
 })
 
+const lightboxProjectId = ref<string | null>(null)
+const lightboxIndex = ref(0)
+
+const lightboxProject = computed(() => {
+  const id = lightboxProjectId.value
+  if (!id) return null
+  return latestProjects.value.find((project) => project.id === id) ?? null
+})
+
 function stripHtml(input: string): string {
   return input
     .replace(/<br\s*\/?>/gi, ' ')
@@ -90,8 +100,14 @@ function stripHtml(input: string): string {
     .trim()
 }
 
-function openLatestProjectLightbox() {
-  // Homepage cards stay as lightweight previews for now.
+function openLatestProjectLightbox(projectId: string, index: number) {
+  lightboxProjectId.value = projectId
+  lightboxIndex.value = index
+}
+
+function closeLightbox() {
+  lightboxProjectId.value = null
+  lightboxIndex.value = 0
 }
 </script>
 
@@ -142,4 +158,13 @@ function openLatestProjectLightbox() {
       </div>
     </div>
   </section>
+
+  <ProjectImageLightbox
+    :project="lightboxProject"
+    :index="lightboxIndex"
+    :no-images-text="t('projects.noImages')"
+    :close-label="t('projects.closeModal')"
+    @close="closeLightbox"
+    @update:index="lightboxIndex = $event"
+  />
 </template>

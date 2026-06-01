@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { RouterLink } from 'vue-router'
 import { mobileProjects } from '@/data/projects'
 import { resolveAssetUrl, resolveAssetUrls } from '@/utils/resolveAssetUrl'
 import { getProjectDescription } from '@/utils/projectDescriptions'
+import ProjectImageLightbox from '@/components/ProjectImageLightbox.vue'
 import ProjectTicketCardClassic from '@/components/ProjectTicketCardClassic.vue'
 import type { ProjectCard, StoreType } from '@/types/projectCard'
 
@@ -44,10 +45,43 @@ const standGalleryUrls = resolveAssetUrls([
   'src/assets/projects/tag/stand1.jpeg',
   'src/assets/projects/tag/stand2.jpeg',
 ])
+
+const standProject = computed<ProjectCard>(() => ({
+  id: 'tone-of-victory-stand',
+  title: `${t('home.featuredCaseTitle')} / ${t('home.featuredCaseStand.title')}`,
+  description: t('home.featuredCaseStand.description'),
+  technologies: [],
+  iconUrl: featuredProject.value?.iconUrl ?? standGalleryUrls[0],
+  galleryUrls: standGalleryUrls,
+  storeLinks: [],
+}))
+
+const lightboxProjectId = ref<string | null>(null)
+const lightboxIndex = ref(0)
+
+const lightboxProject = computed<ProjectCard | null>(() => {
+  if (lightboxProjectId.value === featuredProject.value?.id) return featuredProject.value
+  if (lightboxProjectId.value === standProject.value.id) return standProject.value
+  return null
+})
+
+function openLightbox(projectId: string, index: number) {
+  lightboxProjectId.value = projectId
+  lightboxIndex.value = index
+}
+
+function closeLightbox() {
+  lightboxProjectId.value = null
+  lightboxIndex.value = 0
+}
+
+function openStandLightbox(index: number) {
+  openLightbox(standProject.value.id, index)
+}
 </script>
 
 <template>
-  <section class="relative overflow-hidden px-4 py-6 sm:px-6 xl:px-8">
+  <section class="relative overflow-hidden px-4 pb-6 pt-4 sm:px-6 xl:px-8">
     <div class="relative mx-auto max-w-[1580px]">
       <div class="mb-5 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
         <div class="max-w-3xl">
@@ -89,7 +123,7 @@ const standGalleryUrls = resolveAssetUrls([
 
         <div class="min-w-0">
           <ProjectTicketCardClassic v-if="featuredProject" :project="featuredProject" :store-badge-src="storeBadgeSrc"
-            :open-lightbox="() => { }" :no-images-text="t('projects.noImages')" />
+            :open-lightbox="openLightbox" :no-images-text="t('projects.noImages')" />
         </div>
       </div>
 
@@ -109,8 +143,11 @@ const standGalleryUrls = resolveAssetUrls([
           </div>
 
           <div class="grid gap-3 lg:grid-cols-[1.25fr_0.9fr_0.9fr]">
-            <figure
-              class="group relative overflow-hidden rounded-[28px] border border-white/12 bg-white/6 p-2 shadow-[0_18px_36px_rgba(0,0,0,0.22)] backdrop-blur">
+            <button
+              type="button"
+              class="group relative overflow-hidden rounded-[28px] border border-white/12 bg-white/6 p-2 text-left shadow-[0_18px_36px_rgba(0,0,0,0.22)] backdrop-blur transition hover:border-white/24 focus:outline-none focus:ring-2 focus:ring-[#f4b48b]/70"
+              :aria-label="`${standProject.title} 1`"
+              @click="openStandLightbox(0)">
               <div
                 class="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.01))] opacity-70" />
               <img :src="standGalleryUrls[0]" alt="The Tone of Victory stand 1"
@@ -119,10 +156,13 @@ const standGalleryUrls = resolveAssetUrls([
                 class="absolute left-4 top-4 rounded-full border border-white/18 bg-black/36 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-white backdrop-blur">
                 Spring 2025
               </div>
-            </figure>
+            </button>
 
-            <figure v-for="(src, index) in standGalleryUrls.slice(1)" :key="`stand-${index + 1}`"
-              class="group relative overflow-hidden rounded-[28px] border border-white/12 bg-white/6 p-2 shadow-[0_18px_36px_rgba(0,0,0,0.22)] backdrop-blur">
+            <button v-for="(src, index) in standGalleryUrls.slice(1)" :key="`stand-${index + 1}`"
+              type="button"
+              class="group relative overflow-hidden rounded-[28px] border border-white/12 bg-white/6 p-2 text-left shadow-[0_18px_36px_rgba(0,0,0,0.22)] backdrop-blur transition hover:border-white/24 focus:outline-none focus:ring-2 focus:ring-[#f4b48b]/70"
+              :aria-label="`${standProject.title} ${index + 2}`"
+              @click="openStandLightbox(index + 1)">
               <div
                 class="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.01))] opacity-70" />
               <img :src="src" :alt="`The Tone of Victory stand ${index + 2}`"
@@ -131,7 +171,7 @@ const standGalleryUrls = resolveAssetUrls([
                 class="absolute left-4 top-4 rounded-full border border-white/18 bg-black/36 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-white backdrop-blur">
                 South Korea
               </div>
-            </figure>
+            </button>
           </div>
       </aside>
 
@@ -142,4 +182,13 @@ const standGalleryUrls = resolveAssetUrls([
       </div>
     </div>
   </section>
+
+  <ProjectImageLightbox
+    :project="lightboxProject"
+    :index="lightboxIndex"
+    :no-images-text="t('projects.noImages')"
+    :close-label="t('projects.closeModal')"
+    @close="closeLightbox"
+    @update:index="lightboxIndex = $event"
+  />
 </template>

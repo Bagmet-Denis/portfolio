@@ -6,6 +6,7 @@ import { publicAssetUrl, resolveAssetUrl, resolveAssetUrls } from '@/utils/resol
 import { getProjectDescription } from '@/utils/projectDescriptions'
 import LegalNoticeBanner from '@/components/LegalNoticeBanner.vue'
 import AntiAIBanner from '@/components/AntiAIBanner.vue'
+import ProjectImageLightbox from '@/components/ProjectImageLightbox.vue'
 import ProjectTicketCard from '@/components/ProjectTicketCard.vue'
 import TeleprompterAutomaticInfoPage from '@/pages/project-details/TeleprompterAutomaticInfoPage.vue'
 import MAlienInfoPage from '@/pages/project-details/MAlienInfoPage.vue'
@@ -147,6 +148,13 @@ const prioritizedProjectTitles = [
   'The Tone of Victory',
 ] as const
 
+const fullWidthProjectTitles = new Set([
+  'ProStor.ae',
+  'Teleprompter Automatic',
+  'M-Alien',
+  'The Tone of Victory',
+])
+
 const prioritizedProjectIndex = new Map<string, number>(
   prioritizedProjectTitles.map((title, index) => [title, index]),
 )
@@ -221,21 +229,6 @@ function closeLightbox() {
   isLightboxOpen.value = false
   lightboxProjectId.value = null
   lightboxIndex.value = 0
-}
-
-function lightboxPrev() {
-  if (!lightboxProject.value) return
-  lightboxIndex.value = Math.max(0, lightboxIndex.value - 1)
-}
-
-function lightboxNext() {
-  if (!lightboxProject.value) return
-  lightboxIndex.value = Math.min(lightboxProject.value.galleryUrls.length - 1, lightboxIndex.value + 1)
-}
-
-function setLightboxIndex(index: number) {
-  if (!lightboxProject.value) return
-  lightboxIndex.value = Math.min(Math.max(index, 0), lightboxProject.value.galleryUrls.length - 1)
 }
 
 const mobileProjectCards = computed<ProjectCard[]>(() =>
@@ -338,17 +331,6 @@ const lightboxProject = computed(() => {
   const id = lightboxProjectId.value
   if (!id) return null
   return visibleProjects.value.find((p) => p.id === id) ?? null
-})
-
-const lightboxImage = computed(() => {
-  if (!lightboxProject.value) return null
-  return lightboxProject.value.galleryUrls[lightboxIndex.value] ?? null
-})
-
-const canScrollLightboxPrev = computed(() => lightboxIndex.value > 0)
-const canScrollLightboxNext = computed(() => {
-  if (!lightboxProject.value) return false
-  return lightboxIndex.value < lightboxProject.value.galleryUrls.length - 1
 })
 
 const infoProject = computed(() => {
@@ -477,7 +459,7 @@ const infoProject = computed(() => {
         </div>
       </div>
 
-      <section class="relative z-10 mt-8 grid gap-4 lg:grid-cols-2 lg:items-start">
+      <section class="relative z-10 mt-8 grid gap-4 lg:grid-flow-dense lg:grid-cols-2 lg:items-start">
         <article
           v-if="isCybersecurityCategory"
           class="group relative min-w-0 overflow-hidden rounded-[22px] border border-white/10 bg-[#080707] p-3 shadow-[0_16px_36px_rgba(0,0,0,0.28),0_14px_28px_rgba(172,63,43,0.08)] backdrop-blur transition duration-200 hover:-translate-y-0.5 hover:border-white/18 lg:col-span-2">
@@ -537,6 +519,7 @@ const infoProject = computed(() => {
 
         <ProjectTicketCard v-for="project in visibleProjects" :key="project.id" :project="project"
           :class="[
+            fullWidthProjectTitles.has(project.title) ? 'lg:col-span-2' : '',
             project.id === 'mobile-insentry-raw-decoder' ? 'lg:col-span-2' : '',
             project.title === 'Закрытый OSINT-инструмент для поиска цифрового следа' ? 'lg:col-span-2' : '',
           ]"
@@ -577,80 +560,15 @@ const infoProject = computed(() => {
         </div>
       </div>
 
-      <!-- Lightbox -->
-      <div v-if="isLightboxOpen && lightboxProject"
-        class="fixed inset-0 z-50 flex items-center justify-center bg-black/52 p-3 sm:p-6" role="dialog" aria-modal="true"
-        @click.self="closeLightbox" @keydown.esc="closeLightbox" tabindex="0">
-        <div class="relative flex h-full max-h-[94vh] w-full max-w-[1320px] items-center justify-center">
-          <div
-            class="absolute left-0 top-0 z-30 max-w-[calc(100%-56px)] rounded-2xl bg-white/88 px-3 py-2 text-[#141414] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.72),0_14px_34px_rgba(0,0,0,0.28)] sm:px-4">
-            <p class="truncate text-sm font-black sm:text-base">{{ lightboxProject.title }}</p>
-            <p class="mt-0.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#141414]/62">
-                {{ lightboxIndex + 1 }} / {{ lightboxProject.galleryUrls.length }}
-            </p>
-          </div>
-
-          <button type="button"
-            class="absolute right-0 top-0 z-30 grid h-10 w-10 place-items-center rounded-full bg-white/88 text-xl leading-none text-[#141414] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.72),0_14px_34px_rgba(0,0,0,0.28)] transition hover:bg-white"
-            :aria-label="t('projects.closeModal')"
-            @click="closeLightbox">
-            ×
-          </button>
-
-          <button v-if="lightboxProject.galleryUrls.length > 1" type="button"
-            class="absolute left-0 top-1/2 z-30 hidden h-12 w-12 -translate-y-1/2 place-items-center rounded-full bg-white/88 text-3xl text-[#141414] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.72),0_14px_34px_rgba(0,0,0,0.28)] transition hover:bg-white disabled:opacity-35 sm:grid"
-            :disabled="!canScrollLightboxPrev" aria-label="Previous" @click.stop="lightboxPrev">
-            ‹
-          </button>
-
-          <div
-            class="relative flex max-h-full w-full items-center justify-center px-0 pb-20 pt-14 sm:px-16 sm:pb-24 sm:pt-14">
-            <img v-if="lightboxImage" :src="lightboxImage" :alt="`${lightboxProject.title} ${lightboxIndex + 1}`"
-              class="block max-h-[calc(94vh-148px)] w-full object-contain drop-shadow-[0_28px_70px_rgba(0,0,0,0.58)]"
-              loading="lazy" decoding="async" />
-            <div v-else
-              class="flex min-h-[240px] w-full items-center justify-center rounded-lg text-sm text-white/62">
-              {{ t('projects.noImages') }}
-            </div>
-          </div>
-
-          <button v-if="lightboxProject.galleryUrls.length > 1" type="button"
-            class="absolute right-0 top-1/2 z-30 hidden h-12 w-12 -translate-y-1/2 place-items-center rounded-full bg-white/88 text-3xl text-[#141414] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.72),0_14px_34px_rgba(0,0,0,0.28)] transition hover:bg-white disabled:opacity-35 sm:grid"
-            :disabled="!canScrollLightboxNext" aria-label="Next" @click.stop="lightboxNext">
-            ›
-          </button>
-
-          <div v-if="lightboxProject.galleryUrls.length > 1"
-            class="absolute bottom-20 left-1/2 z-30 flex -translate-x-1/2 items-center justify-center gap-3 sm:hidden">
-            <button type="button"
-              class="rounded-full bg-white/88 px-5 py-2 text-xl text-[#141414] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.72),0_12px_28px_rgba(0,0,0,0.26)] disabled:opacity-35"
-              :disabled="!canScrollLightboxPrev" aria-label="Previous" @click.stop="lightboxPrev">
-              ‹
-            </button>
-            <button type="button"
-              class="rounded-full bg-white/88 px-5 py-2 text-xl text-[#141414] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.72),0_12px_28px_rgba(0,0,0,0.26)] disabled:opacity-35"
-              :disabled="!canScrollLightboxNext" aria-label="Next" @click.stop="lightboxNext">
-              ›
-            </button>
-          </div>
-
-          <div v-if="lightboxProject.galleryUrls.length > 1"
-            class="absolute inset-x-0 bottom-0 z-30 mx-auto w-full max-w-[760px] rounded-2xl bg-white/82 px-2 py-2.5 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.70),0_14px_34px_rgba(0,0,0,0.24)] sm:px-3">
-            <div class="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:thin] sm:justify-center">
-              <button v-for="(src, index) in lightboxProject.galleryUrls" :key="`${lightboxProject.id}-thumb-${index}`"
-                type="button"
-                class="group relative h-14 w-11 shrink-0 overflow-hidden rounded-lg bg-black transition sm:h-[72px] sm:w-14"
-                :class="index === lightboxIndex
-                  ? 'opacity-100 shadow-[0_0_0_2px_rgba(20,20,20,0.88),0_10px_22px_rgba(0,0,0,0.26)]'
-                  : 'opacity-64 shadow-[0_0_0_1px_rgba(20,20,20,0.18)] hover:opacity-95 hover:shadow-[0_0_0_1px_rgba(20,20,20,0.34)]'"
-                :aria-label="`${lightboxProject.title} ${index + 1}`" @click.stop="setLightboxIndex(index)">
-                <img :src="src" alt="" class="h-full w-full object-cover transition duration-200 group-hover:scale-105"
-                  loading="lazy" decoding="async" />
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <ProjectImageLightbox
+        v-if="isLightboxOpen"
+        :project="lightboxProject"
+        :index="lightboxIndex"
+        :no-images-text="t('projects.noImages')"
+        :close-label="t('projects.closeModal')"
+        @close="closeLightbox"
+        @update:index="lightboxIndex = $event"
+      />
     </main>
   </div>
 </template>

@@ -5,7 +5,6 @@ import CardCountProjects from '@/components/CardCountProjects.vue'
 import CardInfoAboutMe from '@/components/CardInfoAboutMe.vue'
 import BlockFeaturedProject from '@/components/BlockFeaturedProject.vue'
 import BlockLastProjects from '@/components/BlockLastProjects.vue'
-import CardProfileImage from '@/components/CardProfileImage.vue'
 import HomeFooterSection from '@/components/HomeFooterSection.vue'
 import { publicAssetUrl } from '@/utils/resolveAssetUrl'
 
@@ -42,11 +41,10 @@ const homeCloudDecorations = [
     transition: { duration: 1180, delay: 520 },
   },
 ]
-
 </script>
 
 <template>
-  <div class="min-h-screen overflow-x-hidden [touch-action:pan-y]">
+  <div class="relative min-h-full overflow-x-hidden [touch-action:pan-y]">
     <div class="pointer-events-none absolute inset-0 overflow-hidden">
       <img v-for="(cloud, index) in homeCloudDecorations" :key="`home-cloud-${index}`" v-motion :src="cloudSrc" alt=""
         class="absolute select-none blur-[0.35px]" :initial="cloud.initial" :visible-once="cloud.visible"
@@ -54,9 +52,9 @@ const homeCloudDecorations = [
     </div>
 
     <main class="relative z-10 mx-auto w-full">
-      <section class="mx-auto max-w-[1580px] px-4 py-4 sm:px-6 xl:px-8">
-        <div class="space-y-4 lg:hidden">
-          <div class="grid gap-4 md:grid-cols-[minmax(0,1fr)_220px] md:items-start">
+      <section class="relative mx-auto max-w-[1580px] px-4 py-4 sm:px-6 lg:pb-6 xl:px-8">
+        <div class="relative z-10 space-y-3 lg:hidden">
+          <div class="grid gap-3 md:grid-cols-[minmax(0,1fr)_220px] md:items-start">
             <CardAboutMe class="min-w-0 rotate-1" />
             <div class="flex justify-center md:justify-start">
               <CardCountProjects class="rotate-3" />
@@ -64,41 +62,47 @@ const homeCloudDecorations = [
           </div>
 
           <div
-            class="grid grid-cols-[minmax(0,1fr)_minmax(116px,180px)] items-end gap-3 sm:grid-cols-[minmax(0,1fr)_220px] sm:gap-4">
+            class="grid gap-3 sm:gap-4">
             <CardInfoAboutMe class="min-w-0" />
-            <CardProfileImage />
           </div>
         </div>
 
-        <div class="hidden lg:grid lg:grid-cols-12 lg:items-start lg:gap-4 xl:gap-6">
-          <CardAboutMe class="min-w-0 lg:col-span-6 xl:col-span-7 lg:rotate-1 xl:rotate-2" />
-
-          <div class="flex justify-center lg:col-span-3 xl:col-span-2 xl:justify-start">
-            <CardCountProjects class="w-full max-w-[250px] -rotate-3 xl:-rotate-4" />
+        <div
+          class="relative z-10 hidden lg:grid lg:grid-cols-[minmax(640px,880px)_minmax(260px,340px)] lg:items-start lg:gap-x-8 xl:grid-cols-[minmax(760px,940px)_minmax(300px,380px)] xl:gap-x-10">
+          <div class="flex min-w-0 max-w-[900px] flex-col gap-3 xl:gap-4">
+            <CardAboutMe class="min-w-0 max-w-none lg:rotate-1 xl:rotate-2" />
+            <CardInfoAboutMe class="lg:-rotate-1" />
           </div>
 
-          <div class="flex lg:col-span-3 lg:row-span-2 lg:min-h-full lg:items-end lg:justify-end lg:self-end">
-            <CardProfileImage class="origin-bottom lg:translate-y-2 xl:translate-y-4" />
+          <div class="flex justify-center xl:justify-start">
+            <CardCountProjects class="w-full max-w-[340px] -rotate-3 xl:max-w-[380px] xl:-rotate-4" />
           </div>
-
-          <CardInfoAboutMe class="lg:col-span-3 xl:col-span-3" />
         </div>
       </section>
 
-      <div
-        class="relative overflow-hidden bg-[radial-gradient(circle_at_top_left,#531818_0%,#1d1716_45%,#121212_100%)]"
-      >
+      <section
+        class="relative overflow-hidden border-t border-black/10 bg-[radial-gradient(circle_at_top_left,#531818_0%,#1d1716_45%,#121212_100%)]">
         <div
           class="absolute inset-0 opacity-18 mix-blend-screen"
           :style="{ backgroundImage: `url(${gridPattern})`, backgroundSize: '28px', backgroundPosition: 'center' }"
         />
         <div class="absolute -left-10 top-6 h-36 w-36 rounded-full bg-[#d7342a]/20 blur-3xl" />
         <div class="absolute right-0 top-0 h-44 w-44 rounded-full bg-[#f3d0b6]/10 blur-3xl" />
-        <BlockFeaturedProject />
-        <BlockLastProjects />
-      </div>
+        <div class="relative z-10">
+          <BlockFeaturedProject />
+        </div>
+      </section>
 
-      <HomeFooterSection />
+      <section class="relative -mt-px overflow-hidden bg-[linear-gradient(180deg,#121212_0%,#19120f_82%,#19120f_100%)] pt-14 lg:pt-16">
+        <div class="pointer-events-none absolute inset-x-0 top-0 h-16 lg:h-20">
+          <div class="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,18,18,0)_0%,rgba(18,18,18,0.58)_58%,#121212_100%)]" />
+        </div>
+        <div class="relative z-10">
+          <BlockLastProjects />
+        </div>
+      </section>
+
+      <HomeFooterSection class="relative z-10 -mt-2 sm:-mt-3" />
 
     </main>
   </div>

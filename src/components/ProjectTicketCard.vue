@@ -186,7 +186,9 @@ onBeforeUnmount(() => {
             </div>
           </div>
 
-          <div v-if="project.storeLinks.length" class="mt-auto flex flex-wrap items-center gap-2 pt-3">
+          <div
+            v-if="project.storeLinks.length || (project.infoModalKey && openInfoModal && infoButtonText)"
+            class="mt-auto flex flex-wrap items-center gap-2 pt-3">
             <a v-for="link in project.storeLinks" :key="`${link.type}-${link.url}`" :href="link.url" target="_blank"
               rel="noopener noreferrer"
               class="inline-flex items-center justify-center rounded-2xl border border-black/8 bg-white/84 px-2 py-1.5 transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_18px_rgba(47,37,33,0.12)]"
@@ -195,10 +197,8 @@ onBeforeUnmount(() => {
                 loading="lazy" decoding="async" />
               <span v-else class="px-2 py-1 text-xs font-bold text-[#5d4a43]">{{ link.label ?? link.type }}</span>
             </a>
-          </div>
-
-          <div v-if="project.infoModalKey && openInfoModal && infoButtonText" class="mt-3">
             <button type="button"
+              v-if="project.infoModalKey && openInfoModal && infoButtonText"
               class="inline-flex items-center justify-center rounded-xl border border-[#24445a]/14 bg-[#eef4f7] px-4 py-2 text-sm font-semibold text-[#24445a] transition duration-200 hover:bg-[#e4eef3] hover:shadow-[0_8px_18px_rgba(36,68,90,0.10)]"
               @click="openInfoModal(project.id)">
               {{ infoButtonText }}

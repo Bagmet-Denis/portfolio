@@ -16,7 +16,7 @@ export default {
     role: 'Mobile Developer',
     secondaryRole: 'iOS / Flutter',
     about:
-      'I build mobile apps and interfaces, from product logic and integrations to polished UI and stable releases.',
+      'iOS, Flutter, AppSec, and a love for hard problems. Where others see a bug, I see an interesting engineering challenge.',
   },
   home: {
     latestProjectsTitle: 'Latest work',
@@ -92,8 +92,8 @@ export default {
       experience: 'Experience Timeline',
     },
     personal: [
-      { key: 'name', label: 'Name', value: 'Bagmet Denis' },
-      { key: 'birth', label: 'Date of Birth', value: '16 March 1999 (26)' },
+      { key: 'name', label: 'Name', value: 'Denis Aleksandrovich Bagmet' },
+      { key: 'birth', label: 'Date of Birth', value: '16 March 1999 (27)' },
       { key: 'location', label: 'City of Residence', value: 'Rostov-on-Don' },
       { key: 'university', label: 'University', value: 'Donetsk National University' },
       { key: 'specialty', label: 'Specialty', value: '09.03.01 Computer Science and Engineering' },
@@ -119,7 +119,7 @@ export default {
         {
           key: 'programmingLanguages',
           label: 'Programming Languages',
-          items: ['JavaScript', 'TypeScript', 'Python']
+          items: ['Dart', 'Swift', 'JavaScript', 'TypeScript', 'Python']
         },
         {
           key: 'frameworks',
@@ -129,7 +129,7 @@ export default {
         {
           key: 'databases',
           label: 'Databases & Storage',
-          items: ['SQLite', 'Core Data', 'Realm', 'Firebase', 'PostgreSQL', 'MySQL']
+          items: ['SQLite', 'Core Data', 'Hive', 'Firebase', 'PostgreSQL', 'MongoDB']
         },
         {
           key: 'toolsDev',
@@ -182,6 +182,7 @@ export default {
             { name: 'South Korea', flag: '/flags/south korea.svg' },
             { name: 'Turkey', flag: '/flags/turkey.svg' },
             { name: 'Ukraine', flag: '/flags/ukraine.svg' },
+            { name: 'Uzbekistan', flag: '/flags/uzbekistan.svg' },
             { name: 'United Arab Emirates', flag: '/flags/united arab emirates.svg' }
           ]
         },
