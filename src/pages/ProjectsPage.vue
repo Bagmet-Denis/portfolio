@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n'
 import { cyberSecurityProject, desktopProjects, mobileProjects } from '@/data/projects'
 import { publicAssetUrl, resolveAssetUrl, resolveAssetUrls } from '@/utils/resolveAssetUrl'
 import { getProjectDescription } from '@/utils/projectDescriptions'
-import { projectClientCountryForTitle } from '@/utils/projectClientCountry'
+import { projectClientCountriesForLocale, projectClientCountryForTitle } from '@/utils/projectClientCountry'
 import LegalNoticeBanner from '@/components/LegalNoticeBanner.vue'
 import AntiAIBanner from '@/components/AntiAIBanner.vue'
 import ProjectImageLightbox from '@/components/ProjectImageLightbox.vue'
@@ -333,6 +333,7 @@ const normalizedProjects = computed<Record<ProjectCategory, ProjectCard[]>>(() =
 }))
 
 const visibleProjects = computed(() => normalizedProjects.value[activeCategory.value])
+const mobileProjectCountries = computed(() => projectClientCountriesForLocale(locale))
 const categoryCounts = computed<Record<ProjectCategory, number>>(() => ({
   mobile: normalizedProjects.value.mobile.length,
   fullstack: normalizedProjects.value.fullstack.length,
@@ -424,11 +425,38 @@ const infoProject = computed(() => {
                 </div>
               </button>
             </div>
-            <div
-              class="inline-flex w-fit items-center gap-2 rounded-full border border-white/10 bg-white/8 px-3 py-1.5 text-sm text-white/62">
-              <span class="h-2.5 w-2.5 rounded-full bg-(--color-accent)"></span>
-              <span class="font-semibold text-white">{{ categoryCounts[activeCategory] }}</span>
-              {{ t('projects.activeCategoryCountSuffix') }}
+            <div class="flex flex-wrap items-center gap-2">
+              <div
+                class="inline-flex w-fit items-center gap-2 rounded-full border border-white/10 bg-white/8 px-3 py-1.5 text-sm text-white/62">
+                <span class="h-2.5 w-2.5 rounded-full bg-(--color-accent)"></span>
+                <span class="font-semibold text-white">{{ categoryCounts[activeCategory] }}</span>
+                {{ t('projects.activeCategoryCountSuffix') }}
+              </div>
+              <div
+                v-if="activeCategory === 'mobile'"
+                class="inline-flex w-fit max-w-full items-center gap-2 rounded-[18px] border border-[#D96138]/22 bg-[#D96138]/12 px-3 py-2 text-sm text-[#F8D8CC] shadow-[0_10px_24px_rgba(217,97,56,0.10)]">
+                <span class="shrink-0 text-xs font-black uppercase tracking-[0.14em] text-[#F8C6B3]/74">
+                  {{ locale.startsWith('ru') ? 'Для стран' : 'Markets' }}
+                </span>
+                <span class="shrink-0 rounded-full bg-white/10 px-2 py-1 text-xs leading-none font-black text-white">
+                  {{ mobileProjectCountries.length }}
+                </span>
+                <span class="flex min-w-0 flex-wrap items-center gap-1">
+                  <span
+                    v-for="country in mobileProjectCountries"
+                    :key="country.name"
+                    :title="country.name"
+                    class="grid h-5 w-7 place-items-center rounded-[4px] bg-white/10 text-sm leading-normal shadow-[0_0_0_1px_rgba(255,255,255,0.14)]">
+                    <img
+                      v-if="country.flagUrl"
+                      :src="country.flagUrl"
+                      :alt="country.name"
+                      class="h-full w-full rounded-[3px] object-contain"
+                    >
+                    <span v-else>{{ country.flagEmoji }}</span>
+                  </span>
+                </span>
+              </div>
             </div>
           </div>
         </div>

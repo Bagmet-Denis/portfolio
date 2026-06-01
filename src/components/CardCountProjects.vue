@@ -1,18 +1,11 @@
 <script setup lang="ts">
 import { desktopProjects, mobileProjects } from '@/data/projects'
-import { projectClientCountriesForLocale } from '@/utils/projectClientCountry'
 import { publicAssetUrl } from '@/utils/resolveAssetUrl'
-import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-const { t, locale } = useI18n()
+const { t } = useI18n()
 
 const plasticPacketOverlay = publicAssetUrl('plastic_packet_overlay.png')
-const projectCountries = computed(() => projectClientCountriesForLocale(locale))
-const countryLabel = computed(() => (locale.value.startsWith('ru') ? 'Для стран' : 'Markets'))
-const countryCountLabel = computed(() =>
-    locale.value.startsWith('ru') ? `${projectCountries.value.length} стран` : `${projectCountries.value.length} countries`,
-)
 </script>
 
 <template>
@@ -47,34 +40,6 @@ const countryCountLabel = computed(() =>
                     </div>
                     <div class="mt-0.5 leading-1 text-[4px] md:text-[10px] md:leading-3 lg:text-[11px] lg:leading-3 text-white/80">
                         {{ t('projects_completed') }}
-                    </div>
-                    <div class="mt-1 border-t border-white/18 pt-1 sm:mt-1.5 sm:pt-1.5">
-                        <div class="flex items-center justify-between gap-1">
-                            <span
-                                class="text-[4px] leading-none uppercase tracking-[0.08em] text-white/55 md:text-[8px] lg:text-[9px]">
-                                {{ countryLabel }}
-                            </span>
-                            <span
-                                class="rounded-full bg-white/14 px-1 py-0.5 text-[4px] leading-none font-black text-white md:text-[8px] lg:text-[9px]">
-                                {{ countryCountLabel }}
-                            </span>
-                        </div>
-                        <div class="mt-1 flex flex-wrap gap-0.5 sm:gap-1">
-                            <span
-                                v-for="country in projectCountries"
-                                :key="country.name"
-                                :title="country.name"
-                                class="grid h-2.5 w-3.5 place-items-center overflow-hidden rounded-[2px] bg-white/12 text-[6px] leading-none shadow-[0_0_0_1px_rgba(255,255,255,0.16)] md:h-4 md:w-5 md:text-[10px] lg:h-4.5 lg:w-6 lg:text-[11px]"
-                            >
-                                <img
-                                    v-if="country.flagUrl"
-                                    :src="country.flagUrl"
-                                    :alt="country.name"
-                                    class="h-full w-full object-contain"
-                                >
-                                <span v-else>{{ country.flagEmoji }}</span>
-                            </span>
-                        </div>
                     </div>
                 </div>
             </div>

@@ -1046,7 +1046,7 @@ export const mobileProjects: MobileProjectModel[] = [
     ],
     '',
     '',
-    '',
+    'https://www.rustore.ru/catalog/app/com.company.gorod_kurort',
   ),
   new MobileProjectModel(
     27,
