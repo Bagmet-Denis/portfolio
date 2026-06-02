@@ -49,6 +49,7 @@ export default {
     socials: {
       github: 'GitHub',
       telegram: 'Telegram',
+      vk: 'VK',
       email: 'Email',
     },
     contactCard: {
@@ -66,6 +67,12 @@ export default {
           label: 'Instagram',
           value: '@instagram',
           href: 'https://www.instagram.com/bagmet__denis'
+        },
+        {
+          key: 'vk',
+          label: 'VK',
+          value: 'vk.com/debug0',
+          href: 'https://vk.com/debug0'
         },
         {
           key: 'email',

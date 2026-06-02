@@ -38,13 +38,13 @@ const clientCountryByProjectTitle: Record<string, ClientCountryConfig | ClientCo
   'Simple Block Ads': {
     ru: 'Сербия',
     en: 'Serbia',
-    flagPath: null,
+    flagPath: 'flags/serbia.svg',
     flagEmoji: '🇷🇸',
   },
   TikTokSaver: {
     ru: 'Армения',
     en: 'Armenia',
-    flagPath: null,
+    flagPath: 'flags/armenia.svg',
     flagEmoji: '🇦🇲',
   },
   'Face Yoga – Massage Exercises': {
@@ -56,7 +56,7 @@ const clientCountryByProjectTitle: Record<string, ClientCountryConfig | ClientCo
   'Mod Pack for Melon Playground': {
     ru: 'Беларусь',
     en: 'Belarus',
-    flagPath: null,
+    flagPath: 'flags/belarus.svg',
     flagEmoji: '🇧🇾',
   },
   'Склад Меда': {
@@ -80,20 +80,20 @@ const clientCountryByProjectTitle: Record<string, ClientCountryConfig | ClientCo
   'Table Coins': {
     ru: 'Армения',
     en: 'Armenia',
-    flagPath: null,
+    flagPath: 'flags/armenia.svg',
     flagEmoji: '🇦🇲',
   },
   'PowerFit - Workout Logs': {
     ru: 'США',
     en: 'United States',
-    flagPath: null,
+    flagPath: 'flags/united states.svg',
     flagEmoji: '🇺🇸',
   },
   'The Tone of Victory': {
-    ru: 'Южная Корея',
-    en: 'South Korea',
-    flagPath: 'flags/south korea.svg',
-    flagEmoji: '🇰🇷',
+    ru: 'Швейцария',
+    en: 'Switzerland',
+    flagPath: 'flags/switzerland.svg',
+    flagEmoji: '🇨🇭',
   },
   DMT: {
     ru: 'Россия',
@@ -104,7 +104,7 @@ const clientCountryByProjectTitle: Record<string, ClientCountryConfig | ClientCo
   'M-Alien': {
     ru: 'США',
     en: 'United States',
-    flagPath: null,
+    flagPath: 'flags/united states.svg',
     flagEmoji: '🇺🇸',
   },
   'Главная дорога. RFID': {
@@ -154,7 +154,7 @@ const clientCountryByProjectTitle: Record<string, ClientCountryConfig | ClientCo
   ProScan: {
     ru: 'США',
     en: 'United States',
-    flagPath: null,
+    flagPath: 'flags/united states.svg',
     flagEmoji: '🇺🇸',
   },
   'Blur Photo Evolution': {
@@ -166,19 +166,19 @@ const clientCountryByProjectTitle: Record<string, ClientCountryConfig | ClientCo
   'Password Manager - MyPassSaver': {
     ru: 'Сербия',
     en: 'Serbia',
-    flagPath: null,
+    flagPath: 'flags/serbia.svg',
     flagEmoji: '🇷🇸',
   },
   Femina: {
     ru: 'Сербия',
     en: 'Serbia',
-    flagPath: null,
+    flagPath: 'flags/serbia.svg',
     flagEmoji: '🇷🇸',
   },
   'Skin - Widgets, Icons, Themes': {
     ru: 'США',
     en: 'United States',
-    flagPath: null,
+    flagPath: 'flags/united states.svg',
     flagEmoji: '🇺🇸',
   },
   'Тренировки. Блин да Гриф': {
@@ -190,7 +190,7 @@ const clientCountryByProjectTitle: Record<string, ClientCountryConfig | ClientCo
   'Teleprompter Automatic': {
     ru: 'США',
     en: 'United States',
-    flagPath: null,
+    flagPath: 'flags/united states.svg',
     flagEmoji: '🇺🇸',
   },
   'ID & Passport Photos': {
@@ -214,19 +214,19 @@ const clientCountryByProjectTitle: Record<string, ClientCountryConfig | ClientCo
   'Countdown Widget Timer': {
     ru: 'Беларусь',
     en: 'Belarus',
-    flagPath: null,
+    flagPath: 'flags/belarus.svg',
     flagEmoji: '🇧🇾',
   },
   'Gif Maker generator plus': {
     ru: 'Армения',
     en: 'Armenia',
-    flagPath: null,
+    flagPath: 'flags/armenia.svg',
     flagEmoji: '🇦🇲',
   },
   'Truth or Dare - Super Party': {
     ru: 'Беларусь',
     en: 'Belarus',
-    flagPath: null,
+    flagPath: 'flags/belarus.svg',
     flagEmoji: '🇧🇾',
   },
   'Boxing Timer Interval': {

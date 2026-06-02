@@ -42,6 +42,7 @@ const countriesCount = computed(() => travelFact.value?.countries?.length ?? 0)
 const contactIcons: Record<string, string> = {
   telegram: publicAssetUrl('socials/telegram.svg'),
   instagram: publicAssetUrl('socials/instagram.svg'),
+  vk: publicAssetUrl('socials/vk.svg'),
   email: publicAssetUrl('socials/gmail.svg'),
 }
 

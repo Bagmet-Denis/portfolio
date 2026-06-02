@@ -135,6 +135,7 @@ const ticketStubWidth = computed(() => {
 const ticketCardHeight = computed(() => {
   if (isToneOfVictoryProject(props.project)) return 720
   if (isTeleprompterAutomaticProject(props.project)) return 560
+  if (props.project.title === 'Армира') return 510
   if (isInsentryCase.value) return 380
   if (isCybersecurityCard.value) return 340
   return 420

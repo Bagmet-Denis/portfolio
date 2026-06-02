@@ -62,6 +62,40 @@ const yearsOfExperience = computed(() => `${Math.max(new Date().getFullYear() - 
 const mobileExperience = computed(() => `${Math.max(new Date().getFullYear() - 2019, 1)}+`)
 const securityExperience = '3+'
 const completedProjectsCount = computed(() => `${mobileProjects.length + desktopProjects.length + cyberSecurityProject.length}+`)
+const experienceHeroStats = computed(() => [
+  {
+    key: 'total',
+    value: yearsOfExperience.value,
+    unit: locale.value === 'ru' ? 'лет' : 'years',
+    label: locale.value === 'ru' ? 'Коммерческая разработка с 2017 года' : 'Commercial development since 2017',
+    eyebrow: locale.value === 'ru' ? 'Общий опыт' : 'Total experience',
+    accent: 'bg-[#D25F3F]',
+  },
+  {
+    key: 'mobile',
+    value: mobileExperience.value,
+    unit: locale.value === 'ru' ? 'лет' : 'years',
+    label: locale.value === 'ru' ? 'iOS, Flutter, релизы и рост продуктов' : 'iOS, Flutter, releases, and product growth',
+    eyebrow: locale.value === 'ru' ? 'Mobile dev' : 'Mobile dev',
+    accent: 'bg-[#73BDA8]',
+  },
+  {
+    key: 'security',
+    value: securityExperience,
+    unit: locale.value === 'ru' ? 'года' : 'years',
+    label: locale.value === 'ru' ? 'Mobile AppSec, reverse engineering, bug bounty' : 'Mobile AppSec, reverse engineering, bug bounty',
+    eyebrow: 'AppSec / Reverse',
+    accent: 'bg-[#E2C96B]',
+  },
+  {
+    key: 'projects',
+    value: completedProjectsCount.value,
+    unit: locale.value === 'ru' ? 'работ' : 'shipped',
+    label: locale.value === 'ru' ? 'Мобильные приложения, backend и web-панели' : 'Mobile apps, backend, and web panels',
+    eyebrow: locale.value === 'ru' ? 'Сделано проектов' : 'Projects shipped',
+    accent: 'bg-[#C98466]',
+  },
+])
 
 const experienceHighlightPhrases: Record<string, string[]> = {
   ru: [
@@ -330,90 +364,53 @@ function highlightedTextSegments(value: string): HighlightedTextSegment[] {
       />
     </div>
 
-    <section class="relative z-10 mx-auto max-w-[1280px] px-4 pt-4 sm:px-6 xl:px-8">
+    <section class="relative z-10 w-full pt-0">
       <article
-        class="relative overflow-hidden rounded-[24px] border border-black/10 bg-[#f3e7d7] p-5 shadow-[0_16px_40px_rgba(98,63,38,0.12)] sm:p-7"
+        class="experience-hero-card relative min-h-[520px] overflow-hidden border-y border-black/10 bg-[#f1ead8] px-4 py-8 shadow-[0_18px_42px_rgba(74,54,38,0.12)] sm:min-h-[560px] sm:px-7 sm:py-10 lg:min-h-[610px] lg:px-10 lg:py-12"
       >
-        <div class="absolute inset-0 bg-[linear-gradient(140deg,rgba(255,255,255,0.52),rgba(255,255,255,0.12)_42%,rgba(176,70,74,0.09)_100%)]"></div>
-        <img :src="paperOverlay" alt="" class="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-78" />
+        <div class="pointer-events-none absolute inset-0 opacity-75 mix-blend-multiply">
+          <img :src="paperOverlay" alt="" class="h-full w-full object-cover" />
+        </div>
+        <div class="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(72,54,37,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(72,54,37,0.08)_1px,transparent_1px)] bg-[length:28px_28px] opacity-70"></div>
+        <div class="pointer-events-none absolute -right-24 top-[-7rem] hidden h-[46rem] w-5 rotate-[24deg] bg-[#D96138] opacity-90 shadow-[-24px_0_0_#E2C96B,-48px_0_0_#C98466,-72px_0_0_#AC3F2B,-96px_0_0_#006C7C,-120px_0_0_#5F8171] sm:block lg:right-[14%]"></div>
+        <div class="pointer-events-none absolute right-[10%] top-0 hidden h-full w-px bg-black/10 lg:block"></div>
+        <div class="pointer-events-none absolute right-[18%] top-0 hidden h-full w-px bg-black/8 lg:block"></div>
 
-        <div class="relative z-10 flex flex-col gap-7">
-          <div class="max-w-[780px]">
-            <p class="font-rubik text-sm uppercase tracking-[0.28em] text-[#a8634d]">
-              {{ t('menu.experience') }}
+        <div class="relative z-10 mx-auto flex min-h-[468px] w-full max-w-[1580px] flex-col justify-center sm:min-h-[500px] lg:min-h-[540px]">
+          <div class="max-w-[920px]">
+            <p class="text-[11px] font-black uppercase tracking-[0.22em] text-[#8B5B45] sm:text-xs">
+              {{ locale === 'ru' ? 'Опыт с 2017 года' : 'Experience since 2017' }}
             </p>
-            <h1 class="mt-2 font-rubik text-[1.85rem] font-semibold leading-tight text-[#39231a] sm:text-[2.6rem] lg:text-[3.1rem]">
-              {{ locale === 'ru' ? 'Опыт в мобильной разработке и AppSec' : 'Experience in mobile development and AppSec' }}
+
+            <h1 class="mt-4 max-w-[860px] text-[2.75rem] font-black leading-[0.86] text-[#171717] sm:text-[4.95rem] lg:text-[6.35rem]">
+              <span class="block">{{ locale === 'ru' ? 'Mobile Product' : 'Mobile Product' }}</span>
+              <span class="block">{{ locale === 'ru' ? 'Engineer' : 'Engineer' }}</span>
             </h1>
+
+            <p class="mt-5 max-w-[43rem] text-[16px] font-semibold leading-7 text-[#3B302A] sm:mt-6 sm:text-xl sm:leading-9">
+              {{ locale === 'ru' ? 'Делаю мобильные продукты на iOS и Flutter: от релиза и роста приложения до сложной интеграции, backend-связок и Mobile AppSec.' : 'I build mobile products with iOS and Flutter: from releases and growth to complex integrations, backend-connected flows, and Mobile AppSec.' }}
+            </p>
+
+            <div class="mt-6 flex flex-wrap gap-2.5">
+              <span class="-rotate-1 bg-[#5F8171] px-3 py-1.5 text-xs font-bold uppercase tracking-[0.12em] text-[#FFFDF8] shadow-[0_8px_16px_rgba(95,129,113,0.16)]">iOS</span>
+              <span class="rotate-1 bg-[#D96138] px-3 py-1.5 text-xs font-bold uppercase tracking-[0.12em] text-[#FFFDF8] shadow-[0_8px_16px_rgba(217,97,56,0.16)]">Flutter</span>
+              <span class="-rotate-1 bg-[#006C7C] px-3 py-1.5 text-xs font-bold uppercase tracking-[0.12em] text-[#FFFDF8] shadow-[0_8px_16px_rgba(0,108,124,0.14)]">Mobile AppSec</span>
+              <span class="rotate-1 bg-[#E2C96B] px-3 py-1.5 text-xs font-bold uppercase tracking-[0.12em] text-[#3E3529] shadow-[0_8px_16px_rgba(226,201,107,0.18)]">Product delivery</span>
+            </div>
           </div>
 
-          <div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-            <div class="group relative min-h-[154px] overflow-hidden rounded-[22px] border border-[#c9a98b]/72 bg-[#fffaf3]/90 p-4 shadow-[0_14px_28px_rgba(93,58,35,0.10)]">
-              <span class="absolute left-0 top-0 h-full w-1 bg-[#b0464a]"></span>
-              <span class="absolute -right-10 -top-10 h-24 w-24 rounded-full bg-[#b0464a]/10 transition duration-300 group-hover:scale-125"></span>
-              <p class="relative text-[11px] font-black uppercase tracking-[0.18em] text-[#9e674f]">
-                {{ locale === 'ru' ? 'Общий опыт' : 'Total experience' }}
-              </p>
-              <div class="relative mt-3 flex items-end gap-2">
-                <p class="font-rubik text-[2.85rem] font-black leading-none text-[#332019]">{{ yearsOfExperience }}</p>
-                <p class="pb-1.5 text-[12px] font-bold uppercase tracking-[0.12em] text-[#8a6a56]">
-                  {{ locale === 'ru' ? 'лет' : 'years' }}
+          <div class="mt-9 max-w-[960px] bg-[#171717] px-4 py-4 text-[#f1ead8] shadow-[10px_10px_0_rgba(95,129,113,0.22)] sm:px-5 lg:mt-10 lg:px-6">
+            <div class="grid grid-cols-2 gap-4 sm:grid-cols-4">
+              <div v-for="stat in experienceHeroStats" :key="stat.key" class="min-w-0 sm:border-l sm:border-[#f1ead8]/18 sm:pl-3 sm:first:border-l-0 sm:first:pl-0">
+                <p class="text-[10px] font-black uppercase tracking-[0.16em] text-[#E2C96B]">
+                  {{ stat.eyebrow }}
                 </p>
+                <div class="mt-2 flex items-end gap-1.5">
+                  <p class="text-[2.25rem] font-black leading-none text-[#f1ead8] sm:text-[2.55rem]">{{ stat.value }}</p>
+                  <p class="pb-1 text-[10px] font-black uppercase tracking-[0.1em] text-[#f1ead8]/62">{{ stat.unit }}</p>
+                </div>
+                <span class="mt-2 block h-1 w-12" :class="stat.accent"></span>
               </div>
-              <p class="relative mt-2 text-sm font-semibold leading-5 text-[#5f4638]">
-                {{ locale === 'ru' ? 'Коммерческая разработка с 2017 года' : 'Commercial development since 2017' }}
-              </p>
-            </div>
-
-            <div class="group relative min-h-[154px] overflow-hidden rounded-[22px] border border-[#c9a98b]/72 bg-[#fffaf3]/90 p-4 shadow-[0_14px_28px_rgba(93,58,35,0.10)]">
-              <span class="absolute left-0 top-0 h-full w-1 bg-[#377cb5]"></span>
-              <span class="absolute -right-10 -top-10 h-24 w-24 rounded-full bg-[#377cb5]/10 transition duration-300 group-hover:scale-125"></span>
-              <p class="relative text-[11px] font-black uppercase tracking-[0.18em] text-[#9e674f]">
-                {{ locale === 'ru' ? 'Мобильная разработка' : 'Mobile development' }}
-              </p>
-              <div class="relative mt-3 flex items-end gap-2">
-                <p class="font-rubik text-[2.85rem] font-black leading-none text-[#332019]">{{ mobileExperience }}</p>
-                <p class="pb-1.5 text-[12px] font-bold uppercase tracking-[0.12em] text-[#8a6a56]">
-                  {{ locale === 'ru' ? 'лет' : 'years' }}
-                </p>
-              </div>
-              <p class="relative mt-2 text-sm font-semibold leading-5 text-[#5f4638]">
-                {{ locale === 'ru' ? 'iOS, Flutter, релизы и рост продуктов' : 'iOS, Flutter, releases, and product growth' }}
-              </p>
-            </div>
-
-            <div class="group relative min-h-[154px] overflow-hidden rounded-[22px] border border-[#c9a98b]/72 bg-[#fffaf3]/90 p-4 shadow-[0_14px_28px_rgba(93,58,35,0.10)]">
-              <span class="absolute left-0 top-0 h-full w-1 bg-[#d98b35]"></span>
-              <span class="absolute -right-10 -top-10 h-24 w-24 rounded-full bg-[#d98b35]/12 transition duration-300 group-hover:scale-125"></span>
-              <p class="relative text-[11px] font-black uppercase tracking-[0.18em] text-[#9e674f]">
-                {{ locale === 'ru' ? 'AppSec / Reverse' : 'AppSec / Reverse' }}
-              </p>
-              <div class="relative mt-3 flex items-end gap-2">
-                <p class="font-rubik text-[2.85rem] font-black leading-none text-[#332019]">{{ securityExperience }}</p>
-                <p class="pb-1.5 text-[12px] font-bold uppercase tracking-[0.12em] text-[#8a6a56]">
-                  {{ locale === 'ru' ? 'года' : 'years' }}
-                </p>
-              </div>
-              <p class="relative mt-2 text-sm font-semibold leading-5 text-[#5f4638]">
-                {{ locale === 'ru' ? 'Mobile AppSec, reverse engineering, bug bounty' : 'Mobile AppSec, reverse engineering, bug bounty' }}
-              </p>
-            </div>
-
-            <div class="group relative min-h-[154px] overflow-hidden rounded-[22px] border border-[#c9a98b]/72 bg-[#fffaf3]/90 p-4 shadow-[0_14px_28px_rgba(93,58,35,0.10)]">
-              <span class="absolute left-0 top-0 h-full w-1 bg-[#5e8f73]"></span>
-              <span class="absolute -right-10 -top-10 h-24 w-24 rounded-full bg-[#5e8f73]/12 transition duration-300 group-hover:scale-125"></span>
-              <p class="relative text-[11px] font-black uppercase tracking-[0.18em] text-[#9e674f]">
-                {{ locale === 'ru' ? 'Сделано проектов' : 'Projects shipped' }}
-              </p>
-              <div class="relative mt-3 flex items-end gap-2">
-                <p class="font-rubik text-[2.85rem] font-black leading-none text-[#332019]">{{ completedProjectsCount }}</p>
-                <p class="pb-1.5 text-[12px] font-bold uppercase tracking-[0.12em] text-[#8a6a56]">
-                  {{ locale === 'ru' ? 'работ' : 'shipped' }}
-                </p>
-              </div>
-              <p class="relative mt-2 text-sm font-semibold leading-5 text-[#5f4638]">
-                {{ locale === 'ru' ? 'Мобильные приложения, backend и web-панели' : 'Mobile apps, backend, and web panels' }}
-              </p>
             </div>
           </div>
         </div>
