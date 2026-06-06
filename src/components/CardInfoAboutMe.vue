@@ -86,6 +86,30 @@ const languageFlags: Record<string, string> = {
     'English': publicAssetUrl('flags/en.png'),
     'Английский': publicAssetUrl('flags/en.png')
 }
+
+const languageLevels: Record<string, string> = {
+    'Русский': 'native',
+    'Russian': 'native',
+    'Украинский': 'native',
+    'Ukrainian': 'native',
+    'Английский': 'техдоки',
+    'English': 'tech docs'
+}
+
+const languageOrder: Record<string, number> = {
+    'Русский': 0,
+    'Russian': 0,
+    'Английский': 1,
+    'English': 1,
+    'Украинский': 2,
+    'Ukrainian': 2
+}
+
+const languageItems = computed(() => {
+    const values = Array.isArray(languagesItem.value?.value) ? languagesItem.value.value : []
+
+    return [...values].sort((first, second) => (languageOrder[first] ?? 10) - (languageOrder[second] ?? 10))
+})
 </script>
 
 <template>
@@ -100,11 +124,11 @@ const languageFlags: Record<string, string> = {
         <div class="pointer-events-none absolute inset-0 mix-blend-multiply opacity-80">
             <img :src="paperOverlay" alt="" class="h-full w-full object-cover">
         </div>
-        <div class="relative z-10 p-2 sm:p-2.5 lg:px-5 lg:py-2.5 xl:px-5">
-            <div class="grid grid-cols-1 gap-1 sm:gap-1.5 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:gap-x-4">
-                <div class="space-y-0.5 lg:space-y-1">
+        <div class="relative z-10 p-2 sm:p-2.5 lg:px-4 lg:py-2 xl:px-4">
+            <div class="grid grid-cols-1 gap-1 sm:gap-1.5 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:gap-x-3">
+                <div class="space-y-0.5">
                     <div v-for="item in personalInfoItems" :key="item.key"
-                        class="border-b border-white/8 pb-0.5 last:border-b-0 lg:pb-1.5">
+                        class="border-b border-white/8 pb-0.5 last:border-b-0 lg:pb-1">
                         <div class="flex items-center gap-1 lg:gap-2">
                             <span class="h-[2px] w-2.5 shrink-0 sm:w-3.5 lg:h-[3px] lg:w-5.5"
                                 :class="accentFor(item.key).line"></span>
@@ -118,15 +142,15 @@ const languageFlags: Record<string, string> = {
                         </div>
 
                         <div
-                            class="mt-1 pl-3 text-[9px] leading-snug font-medium text-[#ECE6C2] sm:text-[10px] md:text-[11px] lg:mt-1.5 lg:pl-7 lg:text-[17px] lg:leading-snug xl:text-lg">
+                            class="mt-1 pl-3 text-[9px] leading-snug font-medium text-[#ECE6C2] sm:text-[10px] md:text-[11px] lg:mt-1 lg:pl-7 lg:text-[15px] lg:leading-snug xl:text-base">
                             {{ Array.isArray(item.value) ? item.value.join(', ') : item.value }}
                         </div>
                     </div>
                 </div>
 
-                <div class="space-y-0.5 lg:space-y-1">
+                <div class="space-y-0.5">
                     <div v-for="item in educationInfoItems" :key="item.key"
-                        class="border-b border-white/8 pb-0.5 last:border-b-0 lg:pb-1.5">
+                        class="border-b border-white/8 pb-0.5 last:border-b-0 lg:pb-1">
                         <div class="flex items-center gap-1 lg:gap-2">
                             <span class="h-[2px] w-2.5 shrink-0 sm:w-3.5 lg:h-[3px] lg:w-5.5"
                                 :class="accentFor(item.key).line"></span>
@@ -140,14 +164,14 @@ const languageFlags: Record<string, string> = {
                         </div>
 
                         <div
-                            class="mt-1 pl-3 text-[9px] leading-snug font-medium text-[#ECE6C2] sm:text-[10px] md:text-[11px] lg:mt-1.5 lg:pl-7 lg:text-[17px] lg:leading-snug xl:text-lg">
+                            class="mt-1 pl-3 text-[9px] leading-snug font-medium text-[#ECE6C2] sm:text-[10px] md:text-[11px] lg:mt-1 lg:pl-7 lg:text-[15px] lg:leading-snug xl:text-base">
                             {{ Array.isArray(item.value) ? item.value.join(', ') : item.value }}
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div v-if="languagesItem" class="mt-2 border-t border-white/10 pt-1.5 lg:mt-2.5 lg:pt-2">
+            <div v-if="languagesItem" class="mt-2 border-t border-white/10 pt-1.5 lg:mt-2 lg:pt-1.5">
                 <div class="flex items-center gap-1 lg:gap-2">
                     <span class="h-[2px] w-2.5 shrink-0 sm:w-3.5 lg:h-[3px] lg:w-5.5"
                         :class="accentFor(languagesItem.key).line"></span>
@@ -160,14 +184,18 @@ const languageFlags: Record<string, string> = {
                     </div>
                 </div>
 
-                <div class="mt-1.5 flex flex-wrap gap-1 sm:gap-1.5 lg:mt-2 lg:gap-2">
-                    <div v-for="lang in (Array.isArray(languagesItem.value) ? languagesItem.value : [])" :key="lang"
-                        class="flex items-center gap-1 rounded-full border px-1.5 py-0.5 sm:px-2 sm:py-0.5 lg:gap-1.5 lg:px-3 lg:py-1"
+                <div class="mt-1.5 flex flex-wrap gap-1 sm:gap-1.5 lg:mt-1.5 lg:gap-1.5">
+                    <div v-for="lang in languageItems" :key="lang"
+                        class="flex items-center gap-1 rounded-full border px-1.5 py-0.5 sm:px-2 sm:py-0.5 lg:gap-1.5 lg:px-2.5 lg:py-0.5"
                         :class="accentFor(languagesItem.key).chip">
                         <img v-if="languageFlags[lang]" :src="languageFlags[lang]"
-                            class="h-3 w-3 rounded-full object-cover sm:h-3.5 sm:w-3.5 md:h-4 md:w-4 lg:h-5 lg:w-5" />
-                        <span class="text-[9px] font-medium sm:text-[10px] md:text-[11px] lg:text-[15px]">{{ lang
-                            }}</span>
+                            class="h-3 w-3 rounded-full object-cover sm:h-3.5 sm:w-3.5 md:h-4 md:w-4 lg:h-4 lg:w-4" />
+                        <span class="text-[9px] font-medium sm:text-[10px] md:text-[11px] lg:text-[13px]">{{ lang }}</span>
+                        <span
+                            class="rounded-full bg-black/14 px-1.5 py-0.5 text-[7px] font-bold uppercase tracking-[0.1em] text-[#ECE6C2]/78 sm:text-[8px] lg:text-[9px]"
+                        >
+                            {{ languageLevels[lang] }}
+                        </span>
                     </div>
                 </div>
             </div>

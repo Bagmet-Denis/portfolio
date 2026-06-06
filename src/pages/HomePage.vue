@@ -55,7 +55,7 @@ const homeCloudDecorations = [
       <section class="relative mx-auto max-w-[1580px] px-4 py-4 sm:px-6 lg:pb-6 xl:px-8">
         <div class="relative z-10 space-y-3 lg:hidden">
           <div class="grid gap-3 md:grid-cols-[minmax(0,1fr)_220px] md:items-start">
-            <CardAboutMe class="min-w-0 rotate-1" />
+            <CardAboutMe class="mt-2 min-w-0 rotate-1" />
             <div class="flex justify-center md:justify-start">
               <CardCountProjects class="rotate-3" />
             </div>
@@ -70,7 +70,7 @@ const homeCloudDecorations = [
         <div
           class="relative z-10 hidden lg:grid lg:grid-cols-[minmax(640px,880px)_minmax(260px,340px)] lg:items-start lg:gap-x-8 xl:grid-cols-[minmax(760px,940px)_minmax(300px,380px)] xl:gap-x-10">
           <div class="flex min-w-0 max-w-[900px] flex-col gap-3 xl:gap-4">
-            <CardAboutMe class="min-w-0 max-w-none lg:rotate-1 xl:rotate-2" />
+            <CardAboutMe class="mt-2 min-w-0 max-w-none lg:rotate-1 xl:rotate-2" />
             <CardInfoAboutMe class="lg:-rotate-1" />
           </div>
 

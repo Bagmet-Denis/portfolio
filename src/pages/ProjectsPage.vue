@@ -21,54 +21,6 @@ const categoryOptions: { key: ProjectCategory; labelKey: string }[] = [
   { key: 'cybersecurity', labelKey: 'projects.categories.cybersecurity' },
 ]
 
-const categoryMeta: Record<ProjectCategory, { eyebrowKey: string; descriptionKey: string }> = {
-  mobile: {
-    eyebrowKey: 'projects.categoryMeta.mobile.eyebrow',
-    descriptionKey: 'projects.categoryMeta.mobile.description',
-  },
-  fullstack: {
-    eyebrowKey: 'projects.categoryMeta.fullstack.eyebrow',
-    descriptionKey: 'projects.categoryMeta.fullstack.description',
-  },
-  desktop: {
-    eyebrowKey: 'projects.categoryMeta.desktop.eyebrow',
-    descriptionKey: 'projects.categoryMeta.desktop.description',
-  },
-  cybersecurity: {
-    eyebrowKey: 'projects.categoryMeta.cybersecurity.eyebrow',
-    descriptionKey: 'projects.categoryMeta.cybersecurity.description',
-  },
-}
-
-const categoryCardClasses: Record<ProjectCategory, string> = {
-  mobile:
-    'border-[#3E302A] bg-[#221A17]',
-  fullstack:
-    'border-[#26383D] bg-[#182124]',
-  desktop:
-    'border-[#334038] bg-[#1A201C]',
-  cybersecurity:
-    'border-[#432A24] bg-[#241917]',
-}
-
-const categoryCardActiveClasses: Record<ProjectCategory, string> = {
-  mobile:
-    'border-[#D96138]/50 bg-[#2A1C18] shadow-[0_12px_28px_rgba(217,97,56,0.16)]',
-  fullstack:
-    'border-[#006C7C]/50 bg-[#17272B] shadow-[0_12px_28px_rgba(0,108,124,0.16)]',
-  desktop:
-    'border-[#5F8171]/50 bg-[#1D2620] shadow-[0_12px_28px_rgba(95,129,113,0.16)]',
-  cybersecurity:
-    'border-[#AC3F2B]/50 bg-[#2B1B18] shadow-[0_12px_28px_rgba(172,63,43,0.16)]',
-}
-
-const categoryCountClasses: Record<ProjectCategory, string> = {
-  mobile: 'border-[#D96138]/18 bg-[#D96138]/14 text-[#F8C6B3]',
-  fullstack: 'border-[#006C7C]/18 bg-[#006C7C]/14 text-[#9BDEE5]',
-  desktop: 'border-[#5F8171]/18 bg-[#5F8171]/14 text-[#C4D4CB]',
-  cybersecurity: 'border-[#AC3F2B]/18 bg-[#AC3F2B]/14 text-[#F0BAAC]',
-}
-
 const categoryAccentClasses: Record<ProjectCategory, string> = {
   mobile: 'bg-[#D96138]',
   fullstack: 'bg-[#006C7C]',
@@ -367,98 +319,81 @@ const infoProject = computed(() => {
 
     <main class="relative z-10 w-full px-3 pt-2 pb-16 sm:px-4 sm:pt-3">
       <section
-        class="relative overflow-hidden rounded-[28px] border border-white/10 bg-black px-3 py-3 shadow-[0_24px_70px_rgba(0,0,0,0.28)] sm:px-4 sm:py-4">
-        <div class="absolute inset-0 opacity-22 mix-blend-screen"
+        class="projects-review-shell relative overflow-hidden rounded-[26px] p-2 sm:p-3">
+        <div class="absolute inset-0 opacity-18 mix-blend-multiply"
           :style="{ backgroundImage: `url(${paperOverlay})`, backgroundSize: 'cover', backgroundPosition: 'center' }" />
-        <div class="absolute inset-0 opacity-12"
+        <div class="absolute inset-0 opacity-8"
           :style="{ backgroundImage: `url(${gridPattern})`, backgroundSize: '28px', backgroundPosition: 'center' }" />
-        <div class="absolute -left-14 -top-12 h-36 w-36 rounded-full bg-[#D96138]/16 blur-3xl" />
-        <div class="absolute right-[-40px] top-[-30px] h-40 w-40 rounded-full bg-[#006C7C]/12 blur-3xl" />
-        <div class="absolute bottom-[-50px] left-1/3 h-36 w-36 rounded-full bg-[#5F8171]/12 blur-3xl" />
-        <div
-          class="absolute inset-x-0 top-0 h-2 bg-[linear-gradient(90deg,#D96138_0%,#AC3F2B_34%,#006C7C_68%,#5F8171_100%)]" />
 
-        <div class="relative">
-          <div class="flex flex-col gap-3">
-            <div class="max-w-3xl">
-              <h1 class="text-3xl font-black tracking-tight text-white sm:text-5xl">
-                {{ t('projects.title') }}
-              </h1>
-              <p class="mt-2 max-w-2xl text-sm leading-6 text-white/68 sm:text-base">
-                {{ t('projects.subtitle') }}
+        <div class="projects-review-window relative">
+          <div class="projects-review-header">
+            <div class="flex min-w-0 items-center gap-2">
+              <span class="projects-review-avatar">DB</span>
+              <p class="truncate text-xs text-[#9da7b3]">
+                <strong class="text-[#f0f3f6]">denis-bagmet</strong>
+                {{ locale.startsWith('ru') ? ' открыл каталог проектов' : ' opened project catalog' }}
               </p>
             </div>
-            <div
-              class="grid grid-cols-4 gap-2 overflow-hidden rounded-[22px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05)_0%,rgba(255,255,255,0.02)_100%)] p-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_12px_28px_rgba(0,0,0,0.18)] sm:gap-3 sm:p-3">
-              <button v-for="category in categoryOptions" :key="category.key" type="button"
-                class="group relative flex min-w-0 flex-col overflow-hidden rounded-[16px] border px-2 py-2.5 text-left transition duration-200 hover:-translate-y-0.5 hover:border-white/14 sm:rounded-[18px] sm:px-3 sm:py-3"
-                :class="[
-                  categoryCardClasses[category.key],
-                  activeCategory === category.key
-                    ? categoryCardActiveClasses[category.key]
-                    : 'shadow-[0_10px_20px_rgba(0,0,0,0.12)]',
-                ]" @click="activeCategory = category.key">
-                <span
-                  class="pointer-events-none absolute inset-0 rounded-[16px] ring-1 ring-inset ring-white/4 sm:rounded-[18px]"></span>
-                <span class="relative z-10 h-1 w-7 rounded-full sm:w-9"
-                  :class="categoryAccentClasses[category.key]"></span>
+            <span class="projects-review-status">
+              {{ categoryCounts[activeCategory] }} {{ locale.startsWith('ru') ? 'в выборке' : 'selected' }}
+            </span>
+          </div>
 
-                <div class="relative z-10 mt-2 min-w-0">
-                  <span class="hidden text-[10px] font-extrabold uppercase tracking-[0.2em] text-white/34 sm:block">
-                    {{ t(categoryMeta[category.key].eyebrowKey) }}
-                  </span>
-                  <span
-                    class="block text-[10px] font-semibold leading-[1.1] text-[#F8F2EA] sm:mt-1.5 sm:text-[13px] sm:font-bold sm:leading-[1.15]">
-                    {{ t(category.labelKey) }}
-                  </span>
-                </div>
+          <div class="projects-review-body">
+            <div class="projects-review-intro">
+              <div>
+                <p class="projects-review-eyebrow">
+                  {{ locale.startsWith('ru') ? 'Каталог выпущенных решений' : 'Shipped solutions catalog' }}
+                </p>
+                <h1 class="mt-2 text-3xl font-black tracking-tight sm:text-5xl">
+                  {{ t('projects.title') }}
+                </h1>
+                <p class="mt-3 max-w-2xl text-sm leading-6 sm:text-base">
+                  {{ t('projects.subtitle') }}
+                </p>
+              </div>
+              <div class="projects-review-total">
+                <strong>{{ categoryCounts[activeCategory] }}</strong>
+                <span>{{ t('projects.activeCategoryCountSuffix') }}</span>
+              </div>
+            </div>
 
-                <div class="relative z-10 mt-2 flex items-center justify-between gap-1.5 sm:mt-3">
-                  <span
-                    class="inline-flex items-center rounded-full border px-1.5 py-0.5 text-[8px] font-semibold sm:px-2 sm:py-0.5 sm:text-[10px]"
-                    :class="categoryCountClasses[category.key]">
-                    {{ categoryCounts[category.key] }}
-                  </span>
-                  <span class="hidden text-[10px] font-semibold uppercase tracking-[0.1em] text-white/24 sm:block">
-                    {{ activeCategory === category.key ? 'Active' : 'Select' }}
-                  </span>
-                </div>
+            <div class="projects-filter-panel">
+              <button
+                v-for="category in categoryOptions"
+                :key="category.key"
+                type="button"
+                class="projects-filter-option"
+                :class="{ 'projects-filter-option-active': activeCategory === category.key }"
+                @click="activeCategory = category.key"
+              >
+                <span class="projects-filter-accent" :class="categoryAccentClasses[category.key]"></span>
+                <span>{{ t(category.labelKey) }}</span>
+                <strong>{{ categoryCounts[category.key] }}</strong>
               </button>
             </div>
-            <div class="flex flex-wrap items-start gap-2">
-              <div
-                class="inline-flex w-fit items-center gap-2 rounded-full border border-white/10 bg-white/8 px-3 py-1.5 text-sm text-white/62">
-                <span class="h-2.5 w-2.5 rounded-full bg-(--color-accent)"></span>
-                <span class="font-semibold text-white">{{ categoryCounts[activeCategory] }}</span>
-                {{ t('projects.activeCategoryCountSuffix') }}
-              </div>
-              <div
-                v-if="activeCategory === 'mobile'"
-                class="grid w-full min-w-0 gap-2 rounded-[18px] border border-[#D96138]/22 bg-[#D96138]/12 px-3 py-2 text-sm text-[#F8D8CC] shadow-[0_10px_24px_rgba(217,97,56,0.10)] sm:inline-flex sm:w-fit sm:max-w-full sm:grid-cols-none sm:items-center sm:gap-2">
-                <span class="flex min-w-0 items-center gap-2">
-                  <span class="shrink-0 text-[11px] font-black uppercase tracking-[0.14em] text-[#F8C6B3]/74 sm:text-xs">
-                    {{ locale.startsWith('ru') ? 'Для стран' : 'Markets' }}
-                  </span>
-                  <span class="shrink-0 rounded-full bg-white/10 px-2 py-1 text-xs leading-none font-black text-white">
-                    {{ mobileProjectCountries.length }}
-                  </span>
+
+            <div v-if="activeCategory === 'mobile'" class="projects-markets">
+              <span class="projects-markets-label">
+                {{ locale.startsWith('ru') ? 'Проекты выпущены для рынков' : 'Projects shipped for markets' }}
+                <strong>{{ mobileProjectCountries.length }}</strong>
+              </span>
+              <span class="projects-markets-flags">
+                <span
+                  v-for="country in mobileProjectCountries"
+                  :key="country.name"
+                  :title="country.name"
+                  class="projects-market-flag"
+                >
+                  <img
+                    v-if="country.flagUrl"
+                    :src="country.flagUrl"
+                    :alt="country.name"
+                    class="h-full w-full rounded-[3px] object-contain"
+                  >
+                  <span v-else>{{ country.flagEmoji }}</span>
                 </span>
-                <span class="flex min-w-0 max-w-full flex-wrap items-center gap-1.5">
-                  <span
-                    v-for="country in mobileProjectCountries"
-                    :key="country.name"
-                    :title="country.name"
-                    class="grid h-6 w-8 shrink-0 place-items-center rounded-[5px] bg-white/10 text-sm leading-normal shadow-[0_0_0_1px_rgba(255,255,255,0.14)] sm:h-5 sm:w-7">
-                    <img
-                      v-if="country.flagUrl"
-                      :src="country.flagUrl"
-                      :alt="country.name"
-                      class="h-full w-full rounded-[4px] object-contain"
-                    >
-                    <span v-else>{{ country.flagEmoji }}</span>
-                  </span>
-                </span>
-              </div>
+              </span>
             </div>
           </div>
         </div>
@@ -616,3 +551,238 @@ const infoProject = computed(() => {
     </main>
   </div>
 </template>
+
+<style scoped>
+.projects-review-shell {
+  border: 1px solid rgba(67, 47, 39, 0.16);
+  background: rgba(255, 250, 242, 0.62);
+  box-shadow:
+    0 20px 52px rgba(74, 54, 38, 0.12),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.56);
+}
+
+.projects-review-window {
+  overflow: hidden;
+  border: 1px solid rgba(67, 47, 39, 0.16);
+  border-radius: 18px;
+  background: #fffaf2;
+  box-shadow:
+    10px 10px 0 rgba(210, 95, 63, 0.1),
+    0 20px 42px rgba(74, 54, 38, 0.12);
+}
+
+.projects-review-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid rgba(67, 47, 39, 0.16);
+  background: #161b22;
+  padding: 0.72rem 0.9rem;
+}
+
+.projects-review-avatar {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid #6e7681;
+  border-radius: 999px;
+  background: #f1ead8;
+  color: #352a24;
+  font-size: 0.62rem;
+  font-weight: 900;
+}
+
+.projects-review-status {
+  flex: 0 0 auto;
+  border: 1px solid #238636;
+  border-radius: 999px;
+  color: #7ee787;
+  font-size: 0.62rem;
+  font-weight: 800;
+  padding: 0.3rem 0.55rem;
+  text-transform: uppercase;
+}
+
+.projects-review-body {
+  background:
+    linear-gradient(rgba(72, 54, 37, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(72, 54, 37, 0.035) 1px, transparent 1px),
+    #fffaf2;
+  background-size: 24px 24px;
+  color: #352a24;
+  padding: 1.35rem;
+}
+
+.projects-review-eyebrow {
+  color: #9a6248;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.projects-review-intro {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.projects-review-intro p {
+  color: #6a5a51;
+}
+
+.projects-review-total {
+  display: flex;
+  max-width: 10rem;
+  flex: 0 0 auto;
+  flex-direction: column;
+  align-items: flex-end;
+  color: #806f65;
+  text-align: right;
+}
+
+.projects-review-total strong {
+  color: #2f2521;
+  font-size: 2.4rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.projects-review-total span {
+  margin-top: 0.3rem;
+  font-size: 0.65rem;
+  font-weight: 800;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+
+.projects-filter-panel {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+  border-top: 1px solid rgba(67, 47, 39, 0.12);
+  padding-top: 1rem;
+}
+
+.projects-filter-option {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  border: 1px solid rgba(67, 47, 39, 0.14);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.5);
+  color: #62534b;
+  font-size: 0.72rem;
+  font-weight: 850;
+  padding: 0.7rem 0.75rem;
+  transition:
+    background 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
+}
+
+.projects-filter-option:hover {
+  border-color: rgba(139, 91, 69, 0.32);
+  background: #fffdf8;
+  transform: translateY(-1px);
+}
+
+.projects-filter-option-active {
+  border-color: rgba(139, 91, 69, 0.38);
+  background: #f0e7d8;
+  box-shadow:
+    inset 3px 0 0 #d25f3f,
+    0 6px 14px rgba(74, 54, 38, 0.07);
+  color: #2f2521;
+}
+
+.projects-filter-accent {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 2px;
+  transform: rotate(45deg);
+}
+
+.projects-filter-option strong {
+  margin-left: auto;
+  border-radius: 999px;
+  background: rgba(67, 47, 39, 0.08);
+  color: #4f4038;
+  font-size: 0.65rem;
+  font-weight: 900;
+  padding: 0.18rem 0.38rem;
+}
+
+.projects-markets,
+.projects-markets-label,
+.projects-markets-flags {
+  display: flex;
+  align-items: center;
+}
+
+.projects-markets {
+  min-width: 0;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1rem;
+  border-top: 1px solid rgba(67, 47, 39, 0.12);
+  padding-top: 1rem;
+}
+
+.projects-markets-label {
+  gap: 0.42rem;
+  color: #806f65;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.66rem;
+}
+
+.projects-markets-label strong {
+  border-radius: 999px;
+  background: #2f2926;
+  color: #fffaf2;
+  padding: 0.16rem 0.4rem;
+}
+
+.projects-markets-flags {
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.projects-market-flag {
+  display: grid;
+  width: 1.65rem;
+  height: 1.15rem;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid rgba(67, 47, 39, 0.18);
+  border-radius: 4px;
+  background: #f0e7d8;
+  font-size: 0.72rem;
+}
+
+@media (min-width: 640px) {
+  .projects-filter-panel {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 639px) {
+  .projects-review-status {
+    display: none;
+  }
+
+  .projects-review-intro {
+    align-items: flex-start;
+  }
+
+  .projects-review-total {
+    display: none;
+  }
+}
+</style>
