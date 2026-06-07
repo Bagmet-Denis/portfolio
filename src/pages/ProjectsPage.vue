@@ -29,8 +29,7 @@ const categoryAccentClasses: Record<ProjectCategory, string> = {
 }
 
 const cloudSrc = publicAssetUrl('cloud.png')
-const paperOverlay = publicAssetUrl('paper_overlay.png')
-const gridPattern = publicAssetUrl('grid_pattern.svg')
+const profilePhoto = publicAssetUrl('profile/about-me.png')
 const cloudDecorations = [
   {
     className:
@@ -292,6 +291,10 @@ const categoryCounts = computed<Record<ProjectCategory, number>>(() => ({
   desktop: normalizedProjects.value.desktop.length,
   cybersecurity: normalizedProjects.value.cybersecurity.length,
 }))
+const activeCategoryMeta = computed(() => ({
+  eyebrow: t(`projects.categoryMeta.${activeCategory.value}.eyebrow`),
+  description: t(`projects.categoryMeta.${activeCategory.value}.description`),
+}))
 const isCybersecurityCategory = computed(() => activeCategory.value === 'cybersecurity')
 
 const lightboxProject = computed(() => {
@@ -320,30 +323,35 @@ const infoProject = computed(() => {
     <main class="relative z-10 w-full px-3 pt-2 pb-16 sm:px-4 sm:pt-3">
       <section
         class="projects-review-shell relative overflow-hidden rounded-[26px] p-2 sm:p-3">
-        <div class="absolute inset-0 opacity-18 mix-blend-multiply"
-          :style="{ backgroundImage: `url(${paperOverlay})`, backgroundSize: 'cover', backgroundPosition: 'center' }" />
-        <div class="absolute inset-0 opacity-8"
-          :style="{ backgroundImage: `url(${gridPattern})`, backgroundSize: '28px', backgroundPosition: 'center' }" />
-
         <div class="projects-review-window relative">
           <div class="projects-review-header">
             <div class="flex min-w-0 items-center gap-2">
-              <span class="projects-review-avatar">DB</span>
+              <img :src="profilePhoto" alt="Denis Bagmet" class="projects-review-avatar" />
               <p class="truncate text-xs text-[#9da7b3]">
                 <strong class="text-[#f0f3f6]">denis-bagmet</strong>
-                {{ locale.startsWith('ru') ? ' открыл каталог проектов' : ' opened project catalog' }}
+                {{ locale.startsWith('ru') ? ' открыл portfolio repository' : ' opened portfolio repository' }}
               </p>
             </div>
             <span class="projects-review-status">
-              {{ categoryCounts[activeCategory] }} {{ locale.startsWith('ru') ? 'в выборке' : 'selected' }}
+              {{ locale.startsWith('ru') ? 'готов к просмотру' : 'ready to explore' }}
             </span>
           </div>
 
           <div class="projects-review-body">
-            <div class="projects-review-intro">
-              <div>
+            <div class="projects-review-main">
+              <div class="projects-review-copy">
+                <div class="projects-review-branch">
+                  <span class="projects-review-branch-icon">
+                    <svg viewBox="0 0 16 16" aria-hidden="true">
+                      <circle cx="4" cy="3" r="2" />
+                      <circle cx="12" cy="13" r="2" />
+                      <path d="M4 5v2.2A2.8 2.8 0 0 0 6.8 10H9a3 3 0 0 1 3 3" />
+                    </svg>
+                  </span>
+                  portfolio / projects / {{ activeCategory }}
+                </div>
                 <p class="projects-review-eyebrow">
-                  {{ locale.startsWith('ru') ? 'Каталог выпущенных решений' : 'Shipped solutions catalog' }}
+                  {{ locale.startsWith('ru') ? 'Каталог реализованных решений' : 'Shipped solutions catalog' }}
                 </p>
                 <h1 class="mt-2 text-3xl font-black tracking-tight sm:text-5xl">
                   {{ t('projects.title') }}
@@ -351,49 +359,105 @@ const infoProject = computed(() => {
                 <p class="mt-3 max-w-2xl text-sm leading-6 sm:text-base">
                   {{ t('projects.subtitle') }}
                 </p>
+                <div class="projects-active-collection">
+                  <span :class="categoryAccentClasses[activeCategory]"></span>
+                  <div>
+                    <strong>{{ activeCategoryMeta.eyebrow }}</strong>
+                    <p>{{ activeCategoryMeta.description }}</p>
+                  </div>
+                </div>
               </div>
-              <div class="projects-review-total">
-                <strong>{{ categoryCounts[activeCategory] }}</strong>
-                <span>{{ t('projects.activeCategoryCountSuffix') }}</span>
+
+              <div class="projects-manifest">
+                <div class="projects-manifest-header">
+                  <span class="projects-manifest-dots"><i></i><i></i><i></i></span>
+                  <code>release.manifest</code>
+                  <span class="projects-manifest-valid">valid</span>
+                </div>
+                <div class="projects-manifest-lines">
+                  <div>
+                    <span class="projects-manifest-number">1</span>
+                    <span class="projects-manifest-plus">+</span>
+                    <code>active_collection:</code>
+                    <strong>{{ activeCategory }}</strong>
+                  </div>
+                  <div>
+                    <span class="projects-manifest-number">2</span>
+                    <span class="projects-manifest-plus">+</span>
+                    <code>projects_available:</code>
+                    <strong>{{ categoryCounts[activeCategory] }}</strong>
+                  </div>
+                  <div>
+                    <span class="projects-manifest-number">3</span>
+                    <span class="projects-manifest-plus">+</span>
+                    <code>implementation_details:</code>
+                    <strong>enabled</strong>
+                  </div>
+                  <div>
+                    <span class="projects-manifest-number">4</span>
+                    <span class="projects-manifest-plus">+</span>
+                    <code>production_status:</code>
+                    <strong>shipped</strong>
+                  </div>
+                </div>
               </div>
             </div>
 
             <div class="projects-filter-panel">
+              <p class="projects-filter-label">
+                {{ locale.startsWith('ru') ? 'Выберите коллекцию — карточки ниже обновятся' : 'Choose a collection — cards below will update' }}
+              </p>
               <button
                 v-for="category in categoryOptions"
                 :key="category.key"
                 type="button"
                 class="projects-filter-option"
                 :class="{ 'projects-filter-option-active': activeCategory === category.key }"
+                :aria-pressed="activeCategory === category.key"
                 @click="activeCategory = category.key"
               >
-                <span class="projects-filter-accent" :class="categoryAccentClasses[category.key]"></span>
-                <span>{{ t(category.labelKey) }}</span>
-                <strong>{{ categoryCounts[category.key] }}</strong>
+                <span class="projects-filter-file">
+                  <span class="projects-filter-accent" :class="categoryAccentClasses[category.key]"></span>
+                  <span>
+                    <small>{{ t(`projects.categoryMeta.${category.key}.eyebrow`) }}</small>
+                    <strong>{{ t(category.labelKey) }}</strong>
+                  </span>
+                </span>
+                <span class="projects-filter-count">{{ categoryCounts[category.key] }}</span>
+                <span class="projects-filter-action">
+                  {{ activeCategory === category.key
+                    ? (locale.startsWith('ru') ? 'Открыто' : 'Opened')
+                    : (locale.startsWith('ru') ? 'Открыть' : 'Open') }}
+                  <svg viewBox="0 0 12 12" aria-hidden="true">
+                    <path d="M2 6h8M7 3l3 3-3 3" />
+                  </svg>
+                </span>
               </button>
             </div>
 
             <div v-if="activeCategory === 'mobile'" class="projects-markets">
-              <span class="projects-markets-label">
-                {{ locale.startsWith('ru') ? 'Проекты выпущены для рынков' : 'Projects shipped for markets' }}
-                <strong>{{ mobileProjectCountries.length }}</strong>
-              </span>
-              <span class="projects-markets-flags">
+              <div class="projects-markets-heading">
+                <span class="projects-markets-status-dot"></span>
+                <strong>Deployments</strong>
+                <code>markets:</code>
+              </div>
+              <div class="projects-markets-list">
                 <span
                   v-for="country in mobileProjectCountries"
                   :key="country.name"
-                  :title="country.name"
-                  class="projects-market-flag"
+                  class="projects-market-country"
                 >
                   <img
                     v-if="country.flagUrl"
                     :src="country.flagUrl"
                     :alt="country.name"
-                    class="h-full w-full rounded-[3px] object-contain"
+                    class="projects-market-flag"
                   >
-                  <span v-else>{{ country.flagEmoji }}</span>
+                  <span v-else class="projects-market-emoji">{{ country.flagEmoji }}</span>
+                  <strong>{{ country.name }}</strong>
                 </span>
-              </span>
+              </div>
+              <span class="projects-markets-count">+{{ mobileProjectCountries.length }}</span>
             </div>
           </div>
         </div>
@@ -554,8 +618,12 @@ const infoProject = computed(() => {
 
 <style scoped>
 .projects-review-shell {
-  border: 1px solid rgba(67, 47, 39, 0.16);
-  background: rgba(255, 250, 242, 0.62);
+  border: 1px solid rgba(67, 47, 39, 0.18);
+  background:
+    linear-gradient(rgba(72, 54, 37, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(72, 54, 37, 0.05) 1px, transparent 1px),
+    rgba(255, 250, 242, 0.72);
+  background-size: 24px 24px;
   box-shadow:
     0 20px 52px rgba(74, 54, 38, 0.12),
     inset 0 0 0 1px rgba(255, 255, 255, 0.56);
@@ -563,12 +631,12 @@ const infoProject = computed(() => {
 
 .projects-review-window {
   overflow: hidden;
-  border: 1px solid rgba(67, 47, 39, 0.16);
+  border: 1px solid #30363d;
   border-radius: 18px;
-  background: #fffaf2;
+  background: #0d1117;
   box-shadow:
-    10px 10px 0 rgba(210, 95, 63, 0.1),
-    0 20px 42px rgba(74, 54, 38, 0.12);
+    12px 12px 0 rgba(36, 24, 19, 0.16),
+    0 24px 48px rgba(36, 24, 19, 0.2);
 }
 
 .projects-review-header {
@@ -582,17 +650,13 @@ const infoProject = computed(() => {
 }
 
 .projects-review-avatar {
-  display: grid;
   width: 2rem;
   height: 2rem;
   flex: 0 0 auto;
-  place-items: center;
-  border: 1px solid #6e7681;
+  border: 2px solid rgba(255, 255, 255, 0.18);
   border-radius: 999px;
-  background: #f1ead8;
-  color: #352a24;
-  font-size: 0.62rem;
-  font-weight: 900;
+  object-fit: cover;
+  object-position: center 20%;
 }
 
 .projects-review-status {
@@ -608,78 +672,214 @@ const infoProject = computed(() => {
 
 .projects-review-body {
   background:
-    linear-gradient(rgba(72, 54, 37, 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(72, 54, 37, 0.035) 1px, transparent 1px),
-    #fffaf2;
+    linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+    #0d1117;
   background-size: 24px 24px;
-  color: #352a24;
-  padding: 1.35rem;
+  color: #f0f3f6;
+  padding: 1.25rem;
 }
 
 .projects-review-eyebrow {
-  color: #9a6248;
+  margin-top: 1.2rem;
+  color: #7ee787;
   font-size: 0.68rem;
   font-weight: 900;
   letter-spacing: 0.16em;
   text-transform: uppercase;
 }
 
-.projects-review-intro {
-  display: flex;
-  align-items: end;
-  justify-content: space-between;
-  gap: 1.5rem;
+.projects-review-main {
+  display: grid;
+  gap: 1.25rem;
 }
 
-.projects-review-intro p {
-  color: #6a5a51;
+.projects-review-copy > p {
+  color: #9da7b3;
 }
 
-.projects-review-total {
+.projects-review-branch {
   display: flex;
-  max-width: 10rem;
+  width: fit-content;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid #30363d;
+  border-radius: 999px;
+  background: #161b22;
+  color: #79c0ff;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.68rem;
+  padding: 0.4rem 0.65rem;
+}
+
+.projects-review-branch-icon,
+.projects-review-branch-icon svg {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+.projects-review-branch-icon svg {
+  display: block;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.4;
+}
+
+.projects-active-collection {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  border-left: 2px solid #30363d;
+  padding-left: 0.9rem;
+}
+
+.projects-active-collection > span {
+  width: 0.55rem;
+  height: 0.55rem;
   flex: 0 0 auto;
-  flex-direction: column;
-  align-items: flex-end;
-  color: #806f65;
+  margin-top: 0.35rem;
+  border-radius: 2px;
+  transform: rotate(45deg);
+}
+
+.projects-active-collection strong {
+  color: #f0f3f6;
+  font-size: 0.76rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.projects-active-collection p {
+  max-width: 44rem;
+  margin-top: 0.3rem;
+  color: #9da7b3;
+  font-size: 0.75rem;
+  line-height: 1.55;
+}
+
+.projects-manifest {
+  align-self: end;
+  overflow: hidden;
+  border: 1px solid #347d39;
+  border-radius: 10px;
+  background: #13231a;
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.18);
+}
+
+.projects-manifest-header {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.65rem;
+  border-bottom: 1px solid rgba(70, 149, 74, 0.35);
+  background: #172b1e;
+  color: #8b949e;
+  font-size: 0.66rem;
+  padding: 0.55rem 0.7rem;
+}
+
+.projects-manifest-dots {
+  display: flex;
+  align-items: center;
+  gap: 0.28rem;
+}
+
+.projects-manifest-dots i {
+  width: 0.58rem;
+  height: 0.58rem;
+  min-width: 0.58rem;
+  flex: 0 0 0.58rem;
+  aspect-ratio: 1;
+  border-radius: 999px;
+  background: #6e7681;
+}
+
+.projects-manifest-dots i:first-child {
+  background: #d25f3f;
+}
+
+.projects-manifest-dots i:nth-child(2) {
+  background: #e2c96b;
+}
+
+.projects-manifest-dots i:last-child {
+  background: #3fb950;
+}
+
+.projects-manifest-valid {
+  color: #7ee787;
+  font-size: 0.58rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.projects-manifest-lines > div {
+  display: grid;
+  grid-template-columns: 1.5rem 0.8rem auto minmax(0, 1fr);
+  gap: 0.35rem;
+  border-bottom: 1px solid rgba(70, 149, 74, 0.2);
+  color: #c5d1c8;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.7rem;
+  line-height: 1.5;
+  padding: 0.48rem 0.7rem 0.48rem 0;
+}
+
+.projects-manifest-lines > div:last-child {
+  border-bottom: 0;
+}
+
+.projects-manifest-number {
+  color: #768b79;
   text-align: right;
 }
 
-.projects-review-total strong {
-  color: #2f2521;
-  font-size: 2.4rem;
-  font-weight: 900;
-  line-height: 1;
+.projects-manifest-plus,
+.projects-manifest-lines strong {
+  color: #7ee787;
 }
 
-.projects-review-total span {
-  margin-top: 0.3rem;
-  font-size: 0.65rem;
-  font-weight: 800;
-  line-height: 1.25;
-  text-transform: uppercase;
+.projects-manifest-lines strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .projects-filter-panel {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.5rem;
+  gap: 0.55rem;
   margin-top: 1.25rem;
-  border-top: 1px solid rgba(67, 47, 39, 0.12);
+  border-top: 1px solid #30363d;
   padding-top: 1rem;
 }
 
+.projects-filter-label {
+  margin-bottom: 0.15rem;
+  color: #8b949e;
+  font-size: 0.67rem;
+  font-weight: 700;
+}
+
 .projects-filter-option {
-  display: flex;
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
   align-items: center;
-  gap: 0.6rem;
-  border: 1px solid rgba(67, 47, 39, 0.14);
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.5);
-  color: #62534b;
-  font-size: 0.72rem;
-  font-weight: 850;
-  padding: 0.7rem 0.75rem;
+  gap: 0.75rem;
+  cursor: pointer;
+  border: 1px solid #57606a;
+  border-radius: 11px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.035), transparent 55%),
+    #242a32;
+  color: #c5ccd3;
+  padding: 0.82rem 0.85rem;
+  text-align: left;
   transition:
     background 180ms ease,
     border-color 180ms ease,
@@ -688,85 +888,233 @@ const infoProject = computed(() => {
 }
 
 .projects-filter-option:hover {
-  border-color: rgba(139, 91, 69, 0.32);
-  background: #fffdf8;
-  transform: translateY(-1px);
+  border-color: #8c959f;
+  background: #30363d;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
+  transform: translateY(-2px);
 }
 
 .projects-filter-option-active {
-  border-color: rgba(139, 91, 69, 0.38);
-  background: #f0e7d8;
+  border-color: #46954a;
+  background:
+    linear-gradient(135deg, rgba(63, 185, 80, 0.12), transparent 58%),
+    #1b2a20;
   box-shadow:
-    inset 3px 0 0 #d25f3f,
-    0 6px 14px rgba(74, 54, 38, 0.07);
-  color: #2f2521;
+    inset 4px 0 0 #3fb950,
+    0 10px 24px rgba(0, 0, 0, 0.22),
+    0 0 0 1px rgba(63, 185, 80, 0.08);
+}
+
+.projects-filter-option:focus-visible {
+  outline: 2px solid #58a6ff;
+  outline-offset: 3px;
+}
+
+.projects-filter-file {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.7rem;
 }
 
 .projects-filter-accent {
-  width: 0.45rem;
-  height: 0.45rem;
+  width: 0.68rem;
+  height: 0.68rem;
+  flex: 0 0 auto;
   border-radius: 2px;
   transform: rotate(45deg);
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.04);
 }
 
-.projects-filter-option strong {
-  margin-left: auto;
+.projects-filter-file small,
+.projects-filter-file strong {
+  display: block;
+}
+
+.projects-filter-file small {
+  overflow: hidden;
+  color: #8b949e;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.projects-filter-file strong {
+  margin-top: 0.12rem;
+  color: #f0f3f6;
+  font-size: 0.8rem;
+  font-weight: 850;
+}
+
+.projects-filter-count {
+  min-width: 1.8rem;
+  text-align: center;
   border-radius: 999px;
-  background: rgba(67, 47, 39, 0.08);
-  color: #4f4038;
-  font-size: 0.65rem;
+  background: #0d1117;
+  color: #f0f3f6;
+  font-size: 0.68rem;
   font-weight: 900;
-  padding: 0.18rem 0.38rem;
+  padding: 0.28rem 0.48rem;
+  box-shadow: inset 0 0 0 1px #444c56;
 }
 
-.projects-markets,
-.projects-markets-label,
-.projects-markets-flags {
+.projects-filter-action {
   display: flex;
   align-items: center;
+  gap: 0.35rem;
+  border: 1px solid rgba(88, 166, 255, 0.42);
+  border-radius: 6px;
+  background: rgba(56, 139, 253, 0.12);
+  color: #79c0ff;
+  font-size: 0.66rem;
+  font-weight: 900;
+  padding: 0.36rem 0.48rem;
+}
+
+.projects-filter-option-active .projects-filter-action {
+  border-color: rgba(63, 185, 80, 0.48);
+  background: rgba(46, 160, 67, 0.14);
+  color: #7ee787;
+}
+
+.projects-filter-action svg {
+  width: 0.7rem;
+  height: 0.7rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.6;
+  transition: transform 180ms ease;
+}
+
+.projects-filter-option:hover .projects-filter-action svg {
+  transform: translateX(2px);
 }
 
 .projects-markets {
+  display: flex;
   min-width: 0;
-  flex-wrap: wrap;
-  gap: 0.6rem;
-  margin-top: 1rem;
-  border-top: 1px solid rgba(67, 47, 39, 0.12);
-  padding-top: 1rem;
-}
-
-.projects-markets-label {
-  gap: 0.42rem;
-  color: #806f65;
+  align-items: center;
+  gap: 0.65rem;
+  margin-top: 0.85rem;
+  border-top: 1px solid #30363d;
+  padding-top: 0.75rem;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 0.66rem;
 }
 
-.projects-markets-label strong {
+.projects-markets-heading {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.projects-markets-heading strong {
+  color: #c9d1d9;
+  font-size: 0.68rem;
+}
+
+.projects-markets-heading code {
+  color: #8b949e;
+  font-size: 0.64rem;
+}
+
+.projects-markets-status-dot {
+  width: 0.48rem;
+  height: 0.48rem;
+  flex: 0 0 0.48rem;
   border-radius: 999px;
-  background: #2f2926;
-  color: #fffaf2;
-  padding: 0.16rem 0.4rem;
+  background: #3fb950;
+  box-shadow: 0 0 0 3px rgba(63, 185, 80, 0.12);
 }
 
-.projects-markets-flags {
-  flex-wrap: wrap;
-  gap: 0.3rem;
+.projects-markets-list {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 auto;
+  flex-wrap: nowrap;
+  gap: 0.7rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.projects-markets-list::-webkit-scrollbar {
+  display: none;
+}
+
+.projects-market-country {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.32rem;
+  color: #8b949e;
+  opacity: 0.82;
+}
+
+.projects-market-country strong {
+  font-size: 0.61rem;
+  font-weight: 700;
+  white-space: nowrap;
 }
 
 .projects-market-flag {
-  display: grid;
-  width: 1.65rem;
-  height: 1.15rem;
-  place-items: center;
-  overflow: hidden;
-  border: 1px solid rgba(67, 47, 39, 0.18);
-  border-radius: 4px;
-  background: #f0e7d8;
-  font-size: 0.72rem;
+  width: 1.25rem;
+  height: 0.8rem;
+  flex: 0 0 auto;
+  border-radius: 2px;
+  object-fit: contain;
+  filter: saturate(0.82);
+}
+
+.projects-market-emoji {
+  width: 1.25rem;
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+.projects-markets-count {
+  flex: 0 0 auto;
+  border: 1px solid #30363d;
+  border-radius: 999px;
+  background: #161b22;
+  color: #8b949e;
+  font-size: 0.58rem;
+  font-weight: 900;
+  padding: 0.18rem 0.42rem;
 }
 
 @media (min-width: 640px) {
+  .projects-filter-panel {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .projects-filter-label {
+    grid-column: 1 / -1;
+  }
+
+}
+
+@media (min-width: 1024px) {
+  .projects-review-body {
+    padding: 1.5rem;
+  }
+
+  .projects-review-main {
+    grid-template-columns: minmax(0, 1.08fr) minmax(24rem, 0.92fr);
+    align-items: end;
+  }
+
+  .projects-filter-panel {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+@media (min-width: 1400px) {
   .projects-filter-panel {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
@@ -777,12 +1125,155 @@ const infoProject = computed(() => {
     display: none;
   }
 
-  .projects-review-intro {
-    align-items: flex-start;
+  .projects-review-body {
+    padding: 1rem;
   }
 
-  .projects-review-total {
+  .projects-filter-option {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    gap: 0.5rem;
+  }
+
+  .projects-filter-action {
+    grid-column: auto;
+    justify-content: flex-start;
+    border-top: 0;
+    padding-top: 0;
+  }
+
+  .projects-manifest-lines > div {
+    grid-template-columns: 1.2rem 0.7rem minmax(0, auto) minmax(0, 1fr);
+    font-size: 0.62rem;
+  }
+
+  .projects-markets {
+    gap: 0.5rem;
+  }
+
+  .projects-markets-heading code {
     display: none;
+  }
+
+  .projects-markets-list {
+    gap: 0.65rem;
+  }
+}
+
+@media (min-width: 1600px) {
+  .projects-review-shell {
+    padding: 1rem;
+  }
+
+  .projects-review-header {
+    padding: 0.95rem 1.15rem;
+  }
+
+  .projects-review-avatar {
+    width: 2.35rem;
+    height: 2.35rem;
+  }
+
+  .projects-review-header p {
+    font-size: 0.88rem;
+  }
+
+  .projects-review-status {
+    font-size: 0.72rem;
+    padding: 0.38rem 0.7rem;
+  }
+
+  .projects-review-body {
+    padding: 2rem;
+  }
+
+  .projects-review-main {
+    grid-template-columns: minmax(0, 1.06fr) minmax(31rem, 0.94fr);
+    gap: 2rem;
+  }
+
+  .projects-review-branch {
+    font-size: 0.82rem;
+    padding: 0.52rem 0.8rem;
+  }
+
+  .projects-review-eyebrow {
+    font-size: 0.8rem;
+  }
+
+  .projects-review-copy h1 {
+    font-size: 3.75rem;
+  }
+
+  .projects-review-copy > p {
+    font-size: 1.08rem;
+    line-height: 1.75;
+  }
+
+  .projects-active-collection strong {
+    font-size: 0.9rem;
+  }
+
+  .projects-active-collection p {
+    font-size: 0.9rem;
+    line-height: 1.65;
+  }
+
+  .projects-manifest-header {
+    font-size: 0.8rem;
+    padding: 0.72rem 0.9rem;
+  }
+
+  .projects-manifest-dots i {
+    width: 0.56rem;
+    height: 0.56rem;
+    min-width: 0.56rem;
+    flex-basis: 0.56rem;
+  }
+
+  .projects-manifest-lines > div {
+    grid-template-columns: 1.8rem 1rem auto minmax(0, 1fr);
+    font-size: 0.88rem;
+    padding: 0.62rem 0.9rem 0.62rem 0;
+  }
+
+  .projects-filter-panel {
+    gap: 0.75rem;
+    margin-top: 1.7rem;
+    padding-top: 1.35rem;
+  }
+
+  .projects-filter-label {
+    font-size: 0.82rem;
+  }
+
+  .projects-filter-option {
+    padding: 1rem;
+  }
+
+  .projects-filter-file small {
+    font-size: 0.7rem;
+  }
+
+  .projects-filter-file strong {
+    font-size: 0.95rem;
+  }
+
+  .projects-filter-count,
+  .projects-filter-action {
+    font-size: 0.78rem;
+  }
+
+  .projects-markets {
+    margin-top: 1rem;
+    padding-top: 0.9rem;
+  }
+
+  .projects-markets-heading strong {
+    font-size: 0.76rem;
+  }
+
+  .projects-market-country strong {
+    font-size: 0.68rem;
   }
 }
 </style>

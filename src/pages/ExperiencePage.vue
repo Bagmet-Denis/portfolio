@@ -45,7 +45,6 @@ interface HighlightedTextSegment {
 }
 
 const cloudSrc = publicAssetUrl('cloud.png')
-const paperOverlay = publicAssetUrl('paper_overlay.png')
 const profilePhoto = publicAssetUrl('profile/about-me.png')
 
 const experienceItems = computed(() => tm('experience.items') as ExperienceItem[])
@@ -96,7 +95,7 @@ const experienceHeroStats = computed(() => [
     value: completedProjectsCount.value,
     unit: locale.value === 'ru' ? 'работ' : 'shipped',
     label: locale.value === 'ru' ? 'Приложения, backend, панели и интеграции' : 'Apps, backend, panels, integrations',
-    eyebrow: locale.value === 'ru' ? 'Доставлено' : 'Shipped',
+    eyebrow: locale.value === 'ru' ? 'Создано' : 'Shipped',
     accent: 'bg-[#C98466]',
   },
 ])
@@ -443,12 +442,9 @@ function highlightedTextSegments(value: string): HighlightedTextSegment[] {
 
     <section class="relative z-10 mx-auto max-w-[1480px] px-4 pt-4 sm:px-6 sm:pt-6 xl:px-8">
       <article class="experience-hero-card relative overflow-hidden px-5 py-6 sm:px-7 sm:py-8 lg:px-10 lg:py-10">
-        <div class="pointer-events-none absolute inset-0 opacity-75 mix-blend-multiply">
-          <img :src="paperOverlay" alt="" class="h-full w-full object-cover" />
-        </div>
         <div class="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(72,54,37,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(72,54,37,0.08)_1px,transparent_1px)] bg-[length:28px_28px] opacity-70"></div>
-        <div class="pointer-events-none absolute right-0 top-0 hidden h-[72%] w-[24%] overflow-hidden opacity-80 sm:block">
-          <div class="experience-corner-stripes absolute -bottom-64 -right-5 -top-64 w-[6.5rem] rotate-[24deg] lg:right-2 lg:w-[7.5rem]">
+        <div class="pointer-events-none absolute inset-y-0 right-0 hidden w-[28%] overflow-hidden opacity-80 sm:block">
+          <div class="experience-corner-stripes absolute -bottom-64 -right-5 -top-64 w-[8rem] rotate-[24deg] lg:right-2 lg:w-[9.5rem]">
             <span v-for="stripe in 6" :key="stripe" :class="`experience-corner-stripe experience-corner-stripe-${stripe}`"></span>
           </div>
         </div>
@@ -615,7 +611,6 @@ function highlightedTextSegments(value: string): HighlightedTextSegment[] {
                   </span>
                 </div>
               </div>
-              <span class="experience-stack-module-arrow">↗</span>
             </div>
           </div>
         </div>
@@ -754,7 +749,11 @@ function highlightedTextSegments(value: string): HighlightedTextSegment[] {
                   <span
                     class="experience-commit-toggle-arrow"
                     :class="isExperienceCardExpanded(experienceCardKey(item, index)) ? 'rotate-180' : 'rotate-0'"
-                  >⌄</span>
+                  >
+                    <svg viewBox="0 0 12 8" aria-hidden="true">
+                      <path d="M1 1.25 6 6.25 11 1.25" />
+                    </svg>
+                  </span>
                 </button>
               </div>
 
@@ -885,15 +884,6 @@ function highlightedTextSegments(value: string): HighlightedTextSegment[] {
   gap: 1rem;
   border-bottom: 1px dashed rgba(67, 47, 39, 0.2);
   padding: 1rem 0;
-  transition:
-    background-color 180ms ease,
-    padding 180ms ease;
-}
-
-.stack-row:hover {
-  background: rgba(255, 250, 242, 0.72);
-  padding-left: 0.75rem;
-  padding-right: 0.75rem;
 }
 
 .stack-row:last-child {
@@ -1010,34 +1000,14 @@ function highlightedTextSegments(value: string): HighlightedTextSegment[] {
 
 .experience-stack-module {
   position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 1rem;
+  display: block;
   min-height: 7.2rem;
   border-bottom: 1px solid rgba(67, 47, 39, 0.14);
   padding: 1rem;
-  transition:
-    background-color 180ms ease,
-    box-shadow 180ms ease;
 }
 
 .experience-stack-module:last-child {
   border-bottom: 0;
-}
-
-.experience-stack-module:hover {
-  z-index: 1;
-  background: rgba(255, 250, 242, 0.82);
-  box-shadow: inset 4px 0 0 #d25f3f;
-}
-
-.experience-stack-module:nth-child(3n + 2):hover {
-  box-shadow: inset 4px 0 0 #73bda8;
-}
-
-.experience-stack-module:nth-child(3n + 3):hover {
-  box-shadow: inset 4px 0 0 #e2c96b;
 }
 
 .experience-stack-module h3 {
@@ -1091,17 +1061,6 @@ function highlightedTextSegments(value: string): HighlightedTextSegment[] {
 .experience-stack-module-tools .experience-stack-module-more {
   background: #2f2521;
   color: #fffaf2;
-}
-
-.experience-stack-module-arrow {
-  display: grid;
-  width: 1.8rem;
-  height: 1.8rem;
-  place-items: center;
-  border: 1px solid rgba(67, 47, 39, 0.18);
-  border-radius: 999px;
-  color: #8b5b45;
-  font-size: 0.82rem;
 }
 
 .experience-stack-details {
@@ -1194,7 +1153,7 @@ function highlightedTextSegments(value: string): HighlightedTextSegment[] {
   overflow: hidden;
   border-right: 1px solid rgba(67, 47, 39, 0.11);
   border-bottom: 1px solid rgba(67, 47, 39, 0.11);
-  padding: 1rem 1.1rem;
+  padding: 1.35rem 1.1rem 1rem;
 }
 
 .experience-proof-ticket:nth-child(2n) {
@@ -1322,7 +1281,7 @@ function highlightedTextSegments(value: string): HighlightedTextSegment[] {
   border-radius: 12px;
   background: #0d1117;
   box-shadow:
-    14px 14px 0 rgba(210, 95, 63, 0.14),
+    14px 14px 0 rgba(36, 24, 19, 0.16),
     0 24px 50px rgba(36, 24, 19, 0.2);
   animation: experienceFadeRise 1400ms ease 520ms both;
 }
@@ -1755,10 +1714,27 @@ function highlightedTextSegments(value: string): HighlightedTextSegment[] {
 }
 
 .experience-commit-toggle-arrow {
+  display: grid;
+  width: 1rem;
+  height: 1rem;
+  place-items: center;
   color: #57606a;
-  font-size: 1rem;
-  line-height: 1;
   transition: transform 180ms ease;
+}
+
+.experience-commit-toggle-arrow svg {
+  display: block;
+  width: 0.7rem;
+  height: 0.45rem;
+  overflow: visible;
+}
+
+.experience-commit-toggle-arrow path {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.75;
 }
 
 .experience-detail-line {
