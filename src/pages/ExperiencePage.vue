@@ -146,37 +146,47 @@ onBeforeUnmount(() => {
 
 const experienceHighlightPhrases: Record<string, string[]> = {
   ru: [
-    'Разработал и выпустил более 30 мобильных',
-    'выручкой более 1 млн ₽ в месяц',
-    'реализовал full-stack решение',
-    'Участвовал в запуске стартапов',
-    'выпустил более 20 Flutter-приложений',
-    'для рынков США, ОАЭ и России',
-    'Решал сложные инженерные задачи',
-    'выпустил более 8 Flutter-приложений',
-    'Участвовал в полном цикле разработки',
+    'более 30 mobile-продуктов',
+    'более 8 production mobile-приложений',
+    'crash-free users с ~80% до 99%+',
+    'единственного Flutter-разработчика',
+    'более 1000+ SKU',
+    'по всей территории ОАЭ',
+    'Полностью разработал mobile-приложение',
+    'real-time просмотр видеопотока',
+    'нативную iOS-версию',
+    'RAW-видеопотока',
+    'native decoder для H.264/H.265',
+    'The Tone of Victory',
+    'TAG Heuer',
+    'Louis Vuitton (LVMH)',
+    '400+ владельцев автомобилей',
     'Проводил исследование безопасности Android/iOS-приложений',
     'Документировал найденные уязвимости',
     'Обнаружил уязвимость в Telegram',
-    'получал подтверждения и вознаграждения через HackerOne.',
-    'помог найти и идентифицировать более 400 владельцев автомобилей в рамках отзывных кампаний крупных автопроизводителей.',
+    'подтверждения и вознаграждения через bug bounty / HackerOne',
     'Получил сертификацию WAPT',
   ],
   en: [
-    'Shipped 30+ mobile products',
-    'monthly revenue above 1M RUB',
-    'implemented a full-stack solution',
-    'Contributed to startup launches',
-    'Shipped 20+ Flutter applications',
-    'for the US, UAE, and Russian markets',
-    'Solved complex engineering tasks',
-    'Shipped 8+ Flutter applications',
-    'Worked across the full product cycle',
+    '30+ mobile products',
+    '8+ production mobile applications',
+    'crash-free users from ~80% to 99%+',
+    'sole Flutter developer',
+    '1,000+ SKUs',
+    'across the UAE',
+    'Built the complete mobile application',
+    'real-time video streaming',
+    'native iOS application',
+    'RAW video stream',
+    'native H.264/H.265 decoder',
+    'The Tone of Victory',
+    'TAG Heuer',
+    'Louis Vuitton (LVMH)',
+    '400+ vehicle owners',
     'Researched Android/iOS app security',
     'Documented discovered vulnerabilities',
     'Discovered a Telegram vulnerability',
-    'received confirmations and rewards through HackerOne.',
-    'Helped identify 400+ vehicle owners for major automaker recall campaigns using custom OSINT tooling.',
+    'bug bounty / HackerOne',
     'Earned WAPT',
   ],
 }
@@ -356,7 +366,7 @@ function commitHash(item: ExperienceItem, index: number): string {
 
 function commitPreviewLines(item: ExperienceItem): string[] {
   const source = item.achievements?.length ? item.achievements : item.bullets
-  return source?.slice(0, 2) ?? []
+  return source?.slice(0, 5) ?? []
 }
 
 function changeCount(item: ExperienceItem): number {
@@ -702,6 +712,21 @@ function highlightedTextSegments(value: string): HighlightedTextSegment[] {
                   <p v-if="item.description" class="experience-work-description mt-3 max-w-[850px] text-sm leading-6 sm:text-[15px]">
                     {{ item.description }}
                   </p>
+                  <div v-if="item.stack?.length" class="experience-card-stack mt-4">
+                    <span v-for="technology in item.stack.slice(0, 9)" :key="technology">
+                      <img
+                        v-if="technologyIconFor(technology)"
+                        :src="technologyIconFor(technology)"
+                        :alt="technology"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                      {{ technology }}
+                    </span>
+                    <span v-if="item.stack.length > 9" class="experience-card-stack-more">
+                      +{{ item.stack.length - 9 }}
+                    </span>
+                  </div>
                 </div>
 
                 <div class="flex flex-col items-start gap-3 sm:items-end">
@@ -726,6 +751,26 @@ function highlightedTextSegments(value: string): HighlightedTextSegment[] {
                       :key="`${segment.text}-${segmentIndex}`"
                     >
                       <strong v-if="segment.highlighted" class="experience-key-phrase">{{ segment.text }}</strong>
+                      <template v-else>{{ segment.text }}</template>
+                    </template>
+                  </span>
+                </div>
+              </div>
+
+              <div
+                v-if="item.highlight"
+                class="experience-highlight-diff mt-3"
+              >
+                <div class="experience-diff-line experience-diff-line-highlight">
+                  <span class="experience-diff-number">{{ commitPreviewLines(item).length + 1 }}</span>
+                  <span class="experience-diff-plus">+</span>
+                  <span>
+                    <strong class="experience-highlight-label">{{ item.highlight.label }}:</strong>
+                    <template
+                      v-for="(segment, segmentIndex) in highlightedTextSegments(item.highlight.text)"
+                      :key="`${segment.text}-${segmentIndex}`"
+                    >
+                      <strong v-if="segment.highlighted" class="experience-key-phrase experience-key-phrase-gold">{{ segment.text }}</strong>
                       <template v-else>{{ segment.text }}</template>
                     </template>
                   </span>
@@ -761,7 +806,7 @@ function highlightedTextSegments(value: string): HighlightedTextSegment[] {
                 <div v-if="isExperienceCardExpanded(experienceCardKey(item, index))" class="overflow-hidden">
                   <ul v-if="item.bullets?.length" class="mt-4 space-y-2.5">
                     <li v-for="bullet in item.bullets" :key="bullet" class="experience-detail-line flex gap-3 text-[15px] leading-7 lg:text-base lg:leading-8">
-                      <span class="experience-detail-bullet mt-[0.8rem] text-sm font-black">+</span>
+                      <span class="experience-detail-bullet text-sm font-black">+</span>
                       <span>
                         <template
                           v-for="(segment, segmentIndex) in highlightedTextSegments(bullet)"
@@ -787,7 +832,7 @@ function highlightedTextSegments(value: string): HighlightedTextSegment[] {
                         :key="achievement"
                         class="experience-detail-line flex gap-3 text-[15px] leading-7 lg:text-base lg:leading-8"
                       >
-                        <span class="experience-detail-bullet mt-[0.8rem] text-sm font-black">+</span>
+                        <span class="experience-detail-bullet text-sm font-black">+</span>
                         <span>
                           <template
                             v-for="(segment, segmentIndex) in highlightedTextSegments(achievement)"
@@ -799,18 +844,6 @@ function highlightedTextSegments(value: string): HighlightedTextSegment[] {
                         </span>
                       </li>
                     </ul>
-                  </div>
-
-                  <div
-                    v-if="item.highlight"
-                    class="experience-highlight-panel mt-4 rounded-[10px] p-4"
-                  >
-                    <p class="experience-highlight-label text-[11px] font-semibold uppercase tracking-[0.18em]">
-                      {{ item.highlight.label }}
-                    </p>
-                    <p class="experience-highlight-copy mt-2 text-[15px] leading-7 lg:text-base lg:leading-8">
-                      {{ item.highlight.text }}
-                    </p>
                   </div>
 
                   <div v-if="item.links?.length" class="mt-4 flex flex-wrap gap-3">
@@ -1655,6 +1688,43 @@ function highlightedTextSegments(value: string): HighlightedTextSegment[] {
   box-shadow: inset 0 -0.3em rgba(46, 160, 67, 0.2);
 }
 
+.experience-key-phrase-gold {
+  color: #f0d276;
+  box-shadow: inset 0 -0.3em rgba(212, 167, 44, 0.2);
+}
+
+.experience-card-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.experience-card-stack > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.38rem;
+  border: 1px solid #444c56;
+  border-radius: 999px;
+  background: #2d333b;
+  color: #c5ccd3;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.66rem;
+  font-weight: 750;
+  padding: 0.34rem 0.58rem;
+}
+
+.experience-card-stack img {
+  width: 0.9rem;
+  height: 0.9rem;
+  object-fit: contain;
+}
+
+.experience-card-stack > .experience-card-stack-more {
+  border-color: #347d39;
+  background: #1b2a20;
+  color: #7ee787;
+}
+
 .experience-commit-toggle {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto auto;
@@ -1746,22 +1816,47 @@ function highlightedTextSegments(value: string): HighlightedTextSegment[] {
   color: #6bc46d;
 }
 
+.experience-detail-bullet {
+  display: inline-flex;
+  min-width: 0.8rem;
+  align-items: baseline;
+  justify-content: center;
+  padding-top: 0.18rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  line-height: inherit;
+}
+
 .experience-achievement-panel {
   border: 1px solid #347d39;
   background: #1b2a20;
 }
 
-.experience-highlight-panel {
+.experience-highlight-diff {
+  overflow: hidden;
   border: 1px solid #8c7424;
+  border-radius: 8px;
   background: #332d18;
 }
 
-.experience-highlight-label {
+.experience-diff-line-highlight {
+  border-bottom: 0;
+  color: #e4d4a2;
+  background: #332d18;
+}
+
+.experience-diff-line-highlight .experience-diff-number {
+  color: #9c8b55;
+}
+
+.experience-diff-line-highlight .experience-diff-plus {
   color: #d4a72c;
 }
 
-.experience-highlight-copy {
-  color: #e4d4a2;
+.experience-highlight-label {
+  margin-right: 0.35rem;
+  color: #d4a72c;
+  font-size: inherit;
+  font-weight: 850;
 }
 
 .experience-work-link {

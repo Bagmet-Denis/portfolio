@@ -3,13 +3,6 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { publicAssetUrl } from '@/utils/resolveAssetUrl'
 
-type ContactItem = {
-  key: string
-  label: string
-  value: string
-  href: string
-}
-
 type FactCountry = {
   name: string
   flag?: string
@@ -33,18 +26,10 @@ type ExpandedLabels = {
 
 const { t, tm } = useI18n()
 
-const contacts = tm('home.contactCard.items') as ContactItem[]
 const facts = tm('experience.factsCard.items') as FactItem[]
 const expandedLabels = tm('experience.factsCard.expanded') as ExpandedLabels
 const travelFact = computed(() => facts.find((fact) => fact.key === 'travel') ?? facts[0])
 const countriesCount = computed(() => travelFact.value?.countries?.length ?? 0)
-
-const contactIcons: Record<string, string> = {
-  telegram: publicAssetUrl('socials/telegram.svg'),
-  instagram: publicAssetUrl('socials/instagram.svg'),
-  vk: publicAssetUrl('socials/vk.svg'),
-  email: publicAssetUrl('socials/gmail.svg'),
-}
 
 const mapBackground = publicAssetUrl('map_background.png')
 const instagramIcon = publicAssetUrl('socials/instagram.svg')
@@ -129,24 +114,5 @@ const countryChipStyles = [
       </div>
     </div>
 
-    <aside class="mt-5 flex justify-start sm:justify-end">
-      <div class="inline-flex max-w-full items-center gap-3 rounded-full bg-[#2f2521] px-3 py-3 shadow-[0_16px_34px_rgba(47,37,33,0.18)] sm:px-4">
-        <span class="px-2 text-[11px] font-black uppercase tracking-[0.16em] text-[#FFFDF8]/86 sm:text-xs">
-          {{ t('home.socialsTitle') }}
-        </span>
-        <nav class="flex items-center gap-2">
-          <a
-            v-for="item in contacts"
-            :key="item.key"
-            :href="item.href"
-            :aria-label="item.label"
-            :title="`${item.label}: ${item.value}`"
-            class="flex h-11 w-11 items-center justify-center rounded-full bg-[#FFFDF8] transition duration-200 hover:-translate-y-0.5 hover:bg-[#F7F0E7]"
-          >
-            <img :src="contactIcons[item.key]" :alt="item.label" class="h-6 w-6" />
-          </a>
-        </nav>
-      </div>
-    </aside>
   </section>
 </template>

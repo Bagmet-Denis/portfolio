@@ -51,6 +51,15 @@ function closeCvMenu() {
 <template>
   <header class="site-header sticky top-0 z-[1000]">
     <div class="browser-bar">
+      <div class="mac-window-identity" aria-hidden="true">
+        <div class="mac-traffic-lights">
+          <span class="mac-traffic-light mac-traffic-light-close"></span>
+          <span class="mac-traffic-light mac-traffic-light-minimize"></span>
+          <span class="mac-traffic-light mac-traffic-light-expand"></span>
+        </div>
+        <span class="mac-window-title">Denis.portfolio</span>
+      </div>
+
       <nav class="browser-tabs" :aria-label="locale === 'ru' ? 'Основная навигация' : 'Main navigation'">
         <ul>
           <li v-for="item in navigationItems" :key="item.key">
@@ -125,110 +134,135 @@ summary::-webkit-details-marker {
 }
 
 .browser-bar {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(8rem, 1fr) auto minmax(8rem, 1fr);
   min-width: 0;
-  align-items: flex-end;
-  justify-content: space-between;
+  align-items: center;
   gap: 0.75rem;
   border-bottom: 1px solid rgba(74, 54, 38, 0.24);
   background:
-    linear-gradient(180deg, rgba(255, 248, 238, 0.035), transparent 52%),
-    #282522;
-  padding: 0.55rem 0.75rem 0;
+    linear-gradient(180deg, rgba(255, 255, 255, 0.055), transparent 70%),
+    #292624;
+  padding: 0.52rem 0.75rem;
   box-shadow: 0 10px 24px rgba(41, 29, 24, 0.16);
+}
+
+.mac-window-identity {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.mac-traffic-lights {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.48rem;
+}
+
+.mac-traffic-light {
+  width: 0.72rem;
+  height: 0.72rem;
+  border: 1px solid rgba(0, 0, 0, 0.22);
+  border-radius: 999px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.24);
+}
+
+.mac-traffic-light-close {
+  background: #ff5f57;
+}
+
+.mac-traffic-light-minimize {
+  background: #febc2e;
+}
+
+.mac-traffic-light-expand {
+  background: #28c840;
+}
+
+.mac-window-title {
+  overflow: hidden;
+  color: rgba(255, 245, 239, 0.48);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .browser-tabs {
   min-width: 0;
-  align-self: stretch;
+  justify-self: center;
 }
 
 .browser-tabs ul {
   display: flex;
-  height: 100%;
-  align-items: flex-end;
-  gap: 0.34rem;
+  align-items: center;
+  gap: 0.18rem;
+  border: 1px solid rgba(255, 248, 238, 0.1);
+  border-radius: 10px;
+  background: rgba(8, 7, 7, 0.24);
+  padding: 0.2rem;
+  box-shadow:
+    inset 0 1px 3px rgba(0, 0, 0, 0.28),
+    0 1px 0 rgba(255, 255, 255, 0.035);
 }
 
 .browser-tab {
   position: relative;
   display: inline-flex;
-  min-width: 7.25rem;
+  min-width: 6.8rem;
+  justify-content: center;
   align-items: center;
-  gap: 0.55rem;
-  border: 1px solid rgba(255, 248, 238, 0.07);
-  border-bottom-color: rgba(0, 0, 0, 0.14);
-  border-radius: 10px 10px 0 0;
-  background: rgba(255, 248, 238, 0.025);
+  gap: 0.45rem;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  background: transparent;
   color: rgba(255, 245, 239, 0.64);
   cursor: pointer;
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   font-weight: 750;
-  padding: 0.68rem 0.85rem 0.66rem;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 248, 238, 0.045),
-    0 -1px 0 rgba(0, 0, 0, 0.14);
+  padding: 0.48rem 0.72rem;
   transition:
     background 180ms ease,
     border-color 180ms ease,
+    box-shadow 180ms ease,
     color 180ms ease,
-    transform 180ms ease;
+    transform 120ms ease;
 }
 
 .browser-tab:hover {
-  border-color: rgba(255, 248, 238, 0.12);
-  background: rgba(255, 248, 238, 0.065);
+  background: rgba(255, 248, 238, 0.08);
   color: #fff5ef;
-  transform: translateY(-1px);
 }
 
 .browser-tab-active {
-  z-index: 2;
-  border-color: rgba(74, 54, 38, 0.16);
-  border-bottom-color: #ebe2d5;
+  border-color: rgba(255, 255, 255, 0.1);
   background:
-    linear-gradient(rgba(72, 54, 37, 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(72, 54, 37, 0.035) 1px, transparent 1px),
-    #ebe2d5;
-  background-size: 12px 12px;
-  color: #2f2521;
+    linear-gradient(180deg, rgba(255, 255, 255, 0.12), transparent),
+    #4a4642;
+  color: #fffaf2;
   box-shadow:
-    inset 0 1px 0 rgba(255, 250, 242, 0.64),
-    inset 0 -1px 0 rgba(74, 54, 38, 0.08),
-    0 -5px 14px rgba(41, 29, 24, 0.09);
-  transform: translateY(0);
-}
-
-.browser-tab-active::after {
-  content: '';
-  position: absolute;
-  bottom: -1px;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: #ebe2d5;
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 1px 3px rgba(0, 0, 0, 0.28);
 }
 
 .browser-tab-icon {
   display: grid;
-  width: 1.35rem;
-  height: 1.35rem;
+  width: 1.1rem;
+  height: 1.1rem;
   flex: 0 0 auto;
   place-items: center;
-  border: 1px solid rgba(255, 248, 238, 0.08);
-  border-radius: 6px;
-  background: rgba(255, 250, 242, 0.055);
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
   color: #e2c96b;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .browser-tab-active .browser-tab-icon {
-  border-color: rgba(134, 55, 36, 0.24);
-  background: #d25f3f;
-  color: #fff8ee;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 248, 238, 0.2),
-    2px 2px 0 rgba(95, 129, 113, 0.2);
+  color: #73bda8;
 }
 
 .browser-tab-icon-experience {
@@ -252,9 +286,9 @@ summary::-webkit-details-marker {
 .header-controls {
   display: flex;
   flex: 0 0 auto;
+  justify-self: end;
   align-items: center;
   gap: 0.55rem;
-  padding-bottom: 0.5rem;
 }
 
 .locale-switcher {
@@ -398,9 +432,20 @@ details[open] > .cv-trigger {
 
 @media (max-width: 720px) {
   .browser-bar {
+    grid-template-columns: minmax(0, 1fr) auto;
     gap: 0.35rem;
+    padding-bottom: 0.42rem;
+    padding-top: 0.42rem;
     padding-left: 0.35rem;
     padding-right: 0.35rem;
+  }
+
+  .mac-window-identity {
+    display: none;
+  }
+
+  .browser-tabs {
+    justify-self: start;
   }
 
   .browser-tabs ul {
@@ -411,12 +456,12 @@ details[open] > .cv-trigger {
     min-width: 0;
     gap: 0.32rem;
     font-size: 0.66rem;
-    padding: 0.68rem 0.5rem 0.62rem;
+    padding: 0.42rem 0.5rem;
   }
 
   .browser-tab-icon {
-    width: 1.15rem;
-    height: 1.15rem;
+    width: 1rem;
+    height: 1rem;
   }
 
   .header-controls {

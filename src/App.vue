@@ -5,6 +5,7 @@ import { RouterView } from 'vue-router'
 import { saveLocale, type AppLocale } from './i18n'
 import SeasonsFalling from 'vue-seasons-falling'
 import NavBar from './components/NavBar.vue'
+import GlobalContactSection from './components/GlobalContactSection.vue'
 import { publicAssetUrl } from './utils/resolveAssetUrl'
 
 const { locale } = useI18n()
@@ -43,6 +44,7 @@ const paperOverlay = publicAssetUrl('paper_overlay.png')
         class="relative z-10 min-h-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-contain [scrollbar-gutter:stable]">
         <div class="relative z-10">
           <RouterView />
+          <GlobalContactSection />
         </div>
       </div>
     </div>
