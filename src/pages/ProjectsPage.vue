@@ -89,7 +89,6 @@ const prioritizedProjectTitles = [
   'Складолог',
   'ProStor.ae',
   'Город Курорт',
-  '585Gold - золотые изделия',
   'Транспондер',
   'Главная дорога',
   'Главная дорога. RFID',
@@ -103,6 +102,8 @@ const prioritizedProjectTitles = [
 const fullWidthProjectTitles = new Set([
   'ProStor.ae',
   'Teleprompter Automatic',
+  'Тренировки. Блин да Гриф',
+  '585Gold - золотые изделия',
   'M-Alien',
   'The Tone of Victory',
   'Алло - Запись звонков',
@@ -210,6 +211,13 @@ const mobileProjectCards = computed<ProjectCard[]>(() =>
           label: 'VK',
         })
       }
+      if (project.title === 'Teleprompter Automatic') {
+        storeLinks.push({
+          type: 'website',
+          url: 'https://teleprompter.pw/',
+          label: 'Сайт',
+        })
+      }
       return {
         card: {
           id: `mobile-${project.id}-${project.title}`,
@@ -239,6 +247,9 @@ const mobileProjectCards = computed<ProjectCard[]>(() =>
       }
     })
     .sort((left, right) => {
+      if (left.card.title === '585Gold - золотые изделия') return 1
+      if (right.card.title === '585Gold - золотые изделия') return -1
+
       const leftPriority = prioritizedProjectIndex.get(left.card.title)
       const rightPriority = prioritizedProjectIndex.get(right.card.title)
 

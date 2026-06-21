@@ -9,6 +9,7 @@ const projectDescriptionKeys: Record<string, string> = {
   'Countdown Widget Timer': 'projects.descriptions.countdownWidget',
   'Boxing Timer Interval': 'projects.descriptions.boxingTimer',
   'Teleprompter Automatic': 'projects.descriptions.teleprompterAutomatic',
+  'M-Alien': 'projects.descriptions.mAlien',
   'PartyDay: I Have Never': 'projects.descriptions.partyDay',
   'Truth or Dare - Super Party': 'projects.descriptions.truthOrDare',
   'Truth or Dare 2': 'projects.descriptions.truthOrDare2',

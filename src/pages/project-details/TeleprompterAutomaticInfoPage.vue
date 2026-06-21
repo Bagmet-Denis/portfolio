@@ -86,6 +86,7 @@ const capabilitySections = [
     items: [
       'projects.teleprompter.info.watch.items.0',
       'projects.teleprompter.info.watch.items.1',
+      'projects.teleprompter.info.watch.items.2',
     ],
   },
 ]

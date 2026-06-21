@@ -39,6 +39,13 @@ const latestProjects = computed<ProjectCard[]>(() => {
         label: 'VK',
       })
     }
+    if (project.title === 'Teleprompter Automatic') {
+      storeLinks.push({
+        type: 'website' as const,
+        url: 'https://teleprompter.pw/',
+        label: 'Сайт',
+      })
+    }
 
     return {
       id: `mobile-${project.id}-${project.title}`,
@@ -142,7 +149,7 @@ function closeLightbox() {
         <article
           v-for="(project, index) in latestProjects"
           :key="project.id"
-          :class="project.id === 'mobile-insentry-raw-decoder' || project.title === 'Teleprompter Automatic' ? 'lg:col-span-2' : ''"
+          :class="project.id === 'mobile-insentry-raw-decoder' || project.title === 'Teleprompter Automatic' || project.title === 'Тренировки. Блин да Гриф' ? 'lg:col-span-2' : ''"
         >
           <div v-motion :initial="{
             opacity: 0,

@@ -32,7 +32,7 @@ const paperOverlay = publicAssetUrl('paper_overlay.png')
         :style="{ backgroundImage: `url(${paperOverlay})`, backgroundRepeat: 'repeat', backgroundSize: 'auto' }">
       </div>
 
-      <div aria-hidden="true" class="pointer-events-none absolute inset-0 z-20 overflow-hidden">
+      <div aria-hidden="true" class="pointer-events-none absolute inset-0 z-[1] overflow-hidden">
         <SeasonsFalling season="summer" :amount="100" :wind="0.12" :mouseInteraction="true" />
       </div>
 
