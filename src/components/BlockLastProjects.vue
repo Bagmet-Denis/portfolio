@@ -147,28 +147,12 @@ function closeLightbox() {
 
       <div class="mt-6 grid gap-4 lg:grid-cols-2 lg:items-start">
         <article
-          v-for="(project, index) in latestProjects"
+          v-for="project in latestProjects"
           :key="project.id"
           :class="project.id === 'mobile-insentry-raw-decoder' || project.title === 'Teleprompter Automatic' || project.title === 'Тренировки. Блин да Гриф' ? 'lg:col-span-2' : ''"
         >
-          <div v-motion :initial="{
-            opacity: 0,
-            x: index % 2 === 0 ? 120 : -120,
-            rotate: index % 2 === 0 ? 6 : -6,
-            scale: 0.95
-          }" :visibleOnce="{
-            opacity: 1,
-            x: 0,
-            rotate: 0,
-            scale: 1
-          }" :transition="{
-            type: 'spring',
-            stiffness: 120,
-            damping: 18
-          }" :viewport="{ margin: '-120px' }" :delay="400">
-            <ProjectTicketCard :project="project" :store-badge-src="storeBadgeSrc"
-              :open-lightbox="openLatestProjectLightbox" :no-images-text="t('projects.noImages')" />
-          </div>
+          <ProjectTicketCard :project="project" :store-badge-src="storeBadgeSrc"
+            :open-lightbox="openLatestProjectLightbox" :no-images-text="t('projects.noImages')" reduce-effects />
         </article>
       </div>
     </div>

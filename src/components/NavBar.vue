@@ -52,12 +52,7 @@ function closeCvMenu() {
   <header class="site-header sticky top-0 z-[1000]">
     <div class="browser-bar">
       <div class="mac-window-identity" aria-hidden="true">
-        <div class="mac-traffic-lights">
-          <span class="mac-traffic-light mac-traffic-light-close"></span>
-          <span class="mac-traffic-light mac-traffic-light-minimize"></span>
-          <span class="mac-traffic-light mac-traffic-light-expand"></span>
-        </div>
-        <span class="mac-window-title">Denis.portfolio</span>
+        <span class="mac-window-title">Denis Bagmet</span>
       </div>
 
       <nav class="browser-tabs" :aria-label="locale === 'ru' ? 'Основная навигация' : 'Main navigation'">
@@ -65,17 +60,6 @@ function closeCvMenu() {
           <li v-for="item in navigationItems" :key="item.key">
             <RouterLink :to="item.to" v-slot="{ isActive }">
               <span class="browser-tab" :class="{ 'browser-tab-active': isActive }">
-                <span class="browser-tab-icon" :class="`browser-tab-icon-${item.key}`">
-                  <svg v-if="item.key === 'home'" viewBox="0 0 16 16" aria-hidden="true">
-                    <path d="m2.5 7 5.5-4.5L13.5 7v6H9.8V9.5H6.2V13H2.5Z" />
-                  </svg>
-                  <svg v-else-if="item.key === 'experience'" viewBox="0 0 16 16" aria-hidden="true">
-                    <path d="M2.2 5.2h11.6v7.6H2.2zM5.5 5.2V3.4h5v1.8M2.2 8h11.6M6.5 8v1h3V8" />
-                  </svg>
-                  <svg v-else viewBox="0 0 16 16" aria-hidden="true">
-                    <path d="M2 4.2h4l1.1 1.3H14v7.3H2z" />
-                  </svg>
-                </span>
                 <span class="browser-tab-label">{{ t(item.labelKey) }}</span>
               </span>
             </RouterLink>
@@ -130,64 +114,37 @@ summary::-webkit-details-marker {
 }
 
 .site-header {
-  background: #2b2724;
+  background: rgba(32, 30, 28, 0.94);
+  backdrop-filter: blur(18px);
 }
 
 .browser-bar {
   display: grid;
-  grid-template-columns: minmax(8rem, 1fr) auto minmax(8rem, 1fr);
+  grid-template-columns: minmax(10rem, 1fr) auto minmax(10rem, 1fr);
   min-width: 0;
   align-items: center;
-  gap: 0.75rem;
-  border-bottom: 1px solid rgba(74, 54, 38, 0.24);
+  gap: 1rem;
+  border-bottom: 1px solid rgba(255, 245, 239, 0.08);
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.055), transparent 70%),
-    #292624;
-  padding: 0.52rem 0.75rem;
-  box-shadow: 0 10px 24px rgba(41, 29, 24, 0.16);
+    linear-gradient(180deg, rgba(255, 245, 239, 0.045), transparent 100%),
+    rgba(31, 29, 27, 0.96);
+  padding: 0.68rem 0.9rem;
+  box-shadow: 0 8px 22px rgba(20, 18, 16, 0.16);
 }
 
 .mac-window-identity {
   display: flex;
   min-width: 0;
   align-items: center;
-  gap: 0.8rem;
-}
-
-.mac-traffic-lights {
-  display: flex;
-  flex: 0 0 auto;
-  align-items: center;
-  gap: 0.48rem;
-}
-
-.mac-traffic-light {
-  width: 0.72rem;
-  height: 0.72rem;
-  border: 1px solid rgba(0, 0, 0, 0.22);
-  border-radius: 999px;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.24);
-}
-
-.mac-traffic-light-close {
-  background: #ff5f57;
-}
-
-.mac-traffic-light-minimize {
-  background: #febc2e;
-}
-
-.mac-traffic-light-expand {
-  background: #28c840;
+  gap: 0.65rem;
 }
 
 .mac-window-title {
   overflow: hidden;
-  color: rgba(255, 245, 239, 0.48);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 0.64rem;
-  font-weight: 700;
-  letter-spacing: 0.03em;
+  color: rgba(255, 247, 239, 0.86);
+  font-size: 0.78rem;
+  font-weight: 760;
+  letter-spacing: 0.01em;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -200,87 +157,57 @@ summary::-webkit-details-marker {
 .browser-tabs ul {
   display: flex;
   align-items: center;
-  gap: 0.18rem;
-  border: 1px solid rgba(255, 248, 238, 0.1);
-  border-radius: 10px;
-  background: rgba(8, 7, 7, 0.24);
-  padding: 0.2rem;
-  box-shadow:
-    inset 0 1px 3px rgba(0, 0, 0, 0.28),
-    0 1px 0 rgba(255, 255, 255, 0.035);
+  gap: 1.35rem;
+  background: transparent;
+  padding: 0;
 }
 
 .browser-tab {
   position: relative;
   display: inline-flex;
-  min-width: 6.8rem;
+  min-width: 0;
   justify-content: center;
   align-items: center;
-  gap: 0.45rem;
-  border: 1px solid transparent;
-  border-radius: 7px;
+  border: 0;
+  border-radius: 0;
   background: transparent;
-  color: rgba(255, 245, 239, 0.64);
+  color: rgba(255, 245, 239, 0.54);
   cursor: pointer;
-  font-size: 0.72rem;
-  font-weight: 750;
-  padding: 0.48rem 0.72rem;
+  font-size: 0.73rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  padding: 0.32rem 0;
   transition:
-    background 180ms ease,
-    border-color 180ms ease,
-    box-shadow 180ms ease,
-    color 180ms ease,
-    transform 120ms ease;
+    color 180ms ease;
+}
+
+.browser-tab::after {
+  position: absolute;
+  right: 0;
+  bottom: -0.32rem;
+  left: 0;
+  height: 1px;
+  border-radius: 999px;
+  background: #d8c8b6;
+  content: "";
+  opacity: 0;
+  transform: scaleX(0.62);
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease;
 }
 
 .browser-tab:hover {
-  background: rgba(255, 248, 238, 0.08);
-  color: #fff5ef;
+  color: rgba(255, 245, 239, 0.84);
 }
 
 .browser-tab-active {
-  border-color: rgba(255, 255, 255, 0.1);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.12), transparent),
-    #4a4642;
-  color: #fffaf2;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.1),
-    0 1px 3px rgba(0, 0, 0, 0.28);
+  color: #fff7ef;
 }
 
-.browser-tab-icon {
-  display: grid;
-  width: 1.1rem;
-  height: 1.1rem;
-  flex: 0 0 auto;
-  place-items: center;
-  border: 0;
-  border-radius: 4px;
-  background: transparent;
-  color: #e2c96b;
-}
-
-.browser-tab-active .browser-tab-icon {
-  color: #73bda8;
-}
-
-.browser-tab-icon-experience {
-  color: #73bda8;
-}
-
-.browser-tab-icon-projects {
-  color: #c98466;
-}
-
-.browser-tab-icon svg {
-  width: 0.9rem;
-  height: 0.9rem;
-  fill: none;
-  stroke: currentColor;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-width: 1.5;
+.browser-tab-active::after {
+  opacity: 0.72;
+  transform: scaleX(1);
 }
 
 .header-controls {
@@ -294,11 +221,11 @@ summary::-webkit-details-marker {
 .locale-switcher {
   display: flex;
   align-items: center;
-  gap: 0.18rem;
-  border: 1px solid rgba(255, 245, 239, 0.16);
-  border-radius: 9px;
-  background: rgba(255, 250, 242, 0.06);
-  padding: 0.18rem;
+  gap: 0;
+  border: 1px solid rgba(255, 245, 239, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 250, 242, 0.035);
+  padding: 0.16rem;
 }
 
 .locale-switcher button {
@@ -306,10 +233,10 @@ summary::-webkit-details-marker {
   align-items: center;
   gap: 0.28rem;
   cursor: pointer;
-  border-radius: 6px;
-  color: rgba(255, 245, 239, 0.58);
+  border-radius: 999px;
+  color: rgba(255, 245, 239, 0.52);
   font-size: 0.62rem;
-  padding: 0.38rem 0.45rem;
+  padding: 0.36rem 0.5rem;
   transition:
     background 180ms ease,
     color 180ms ease;
@@ -320,9 +247,9 @@ summary::-webkit-details-marker {
 }
 
 .locale-switcher .locale-option-active {
-  background: #f1ead8;
-  color: #352a24;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.16);
+  background: rgba(255, 245, 239, 0.9);
+  color: #2f2925;
+  box-shadow: none;
 }
 
 .cv-trigger {
@@ -330,43 +257,35 @@ summary::-webkit-details-marker {
   align-items: center;
   gap: 0.45rem;
   cursor: pointer;
-  border: 1px solid #7f3438;
-  border-radius: 9px;
-  background: #b0464a;
-  color: #fff5ef;
+  border: 1px solid rgba(255, 245, 239, 0.16);
+  border-radius: 999px;
+  background: rgba(255, 245, 239, 0.075);
+  color: rgba(255, 245, 239, 0.88);
   font-size: 0.72rem;
-  font-weight: 850;
-  padding: 0.55rem 0.7rem;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 245, 239, 0.18),
-    3px 3px 0 rgba(226, 201, 107, 0.22),
-    0 7px 14px rgba(61, 28, 29, 0.2);
+  font-weight: 760;
+  padding: 0.48rem 0.68rem;
+  box-shadow: none;
   transition:
     background 180ms ease,
-    box-shadow 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease,
     transform 120ms ease;
 }
 
 .cv-trigger:hover {
-  background: #bb5054;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 245, 239, 0.2),
-    2px 2px 0 rgba(226, 201, 107, 0.26),
-    0 8px 16px rgba(61, 28, 29, 0.22);
-  transform: translateY(-1px);
+  border-color: rgba(255, 245, 239, 0.28);
+  background: rgba(255, 245, 239, 0.11);
+  color: #fff7ef;
 }
 
 .cv-trigger:active,
 details[open] > .cv-trigger {
-  background: #973b3f;
-  box-shadow:
-    inset 0 2px 4px rgba(70, 24, 26, 0.3),
-    1px 1px 0 rgba(226, 201, 107, 0.16);
+  background: rgba(255, 245, 239, 0.14);
   transform: translateY(1px);
 }
 
 .cv-trigger > svg {
-  color: #ffe4d8;
+  color: rgba(255, 245, 239, 0.78);
 }
 
 .cv-trigger svg,
@@ -381,8 +300,8 @@ details[open] > .cv-trigger {
 }
 
 .cv-trigger-locale {
-  border-left: 1px solid rgba(255, 245, 239, 0.26);
-  color: rgba(255, 245, 239, 0.72);
+  border-left: 1px solid rgba(255, 245, 239, 0.18);
+  color: rgba(255, 245, 239, 0.58);
   font-size: 0.58rem;
   padding-left: 0.45rem;
 }
@@ -449,19 +368,14 @@ details[open] > .cv-trigger {
   }
 
   .browser-tabs ul {
-    gap: 0.12rem;
+    gap: 0.52rem;
   }
 
   .browser-tab {
     min-width: 0;
     gap: 0.32rem;
     font-size: 0.66rem;
-    padding: 0.42rem 0.5rem;
-  }
-
-  .browser-tab-icon {
-    width: 1rem;
-    height: 1rem;
+    padding: 0.42rem 0.1rem;
   }
 
   .header-controls {
@@ -491,13 +405,14 @@ details[open] > .cv-trigger {
 }
 
 @media (max-width: 420px) {
-  .browser-tab-icon {
-    display: none;
+  .browser-tab {
+    padding-left: 0.1rem;
+    padding-right: 0.1rem;
   }
 
-  .browser-tab {
-    padding-left: 0.42rem;
-    padding-right: 0.42rem;
+  .browser-tab::after {
+    right: 0;
+    left: 0;
   }
 }
 </style>

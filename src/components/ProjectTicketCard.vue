@@ -9,6 +9,7 @@ import { publicAssetUrl, resolveAssetUrl, resolveAssetUrls } from '@/utils/resol
 const [emblaRef, emblaApi] = emblaCarouselVue({
   align: 'start',
   containScroll: 'trimSnaps',
+  duration: 32,
   loop: false,
 } satisfies EmblaOptionsType)
 void emblaRef
@@ -32,6 +33,7 @@ const props = defineProps<{
   openInfoModal?: (projectId: string) => void
   noImagesText: string
   infoButtonText?: string
+  reduceEffects?: boolean
 }>()
 
 function isTeleprompterAutomaticProject(project: ProjectCard) {
@@ -99,13 +101,13 @@ const teleprompterSystemTitle = computed(() =>
 )
 const teleprompterRevenueStat = computed(() =>
   locale.value === 'ru'
-    ? { value: '$20K+', label: 'оценочная выручка / мес' }
-    : { value: '$20K+', label: 'estimated revenue / mo' },
+    ? { value: '$50K+', label: 'выручка / мес, 2 платформы' }
+    : { value: '$50K+', label: 'revenue / mo, 2 platforms' },
 )
 const teleprompterDownloadsStat = computed(() =>
   locale.value === 'ru'
-    ? { value: '200K+', label: 'загрузок продукта / год' }
-    : { value: '200K+', label: 'product downloads / yr' },
+    ? { value: '100K+', label: 'скачиваний / мес, 2 платформы' }
+    : { value: '100K+', label: 'downloads / mo, 2 platforms' },
 )
 const teleprompterRatingStat = computed(() =>
   locale.value === 'ru'
@@ -117,36 +119,26 @@ const teleprompterStats = computed(() => [
   teleprompterDownloadsStat.value,
   teleprompterRatingStat.value,
 ])
-const gold585Stats = computed(() =>
+const gold585RetailProof = computed(() =>
   locale.value === 'ru'
-    ? [
-        { value: '250+', label: 'магазинов во всех федеральных округах России' },
-        { value: 'E-com', label: 'каталог, акции, оплата, доставка и trade-in в одном сценарии' },
-        { value: 'UX', label: 'крупные фото, понятные условия и быстрый путь к покупке' },
-      ]
-    : [
-        { value: '250+', label: 'stores across every federal district of Russia' },
-        { value: 'E-com', label: 'catalog, offers, payment, delivery, and trade-in in one flow' },
-        { value: 'UX', label: 'large imagery, clear terms, and a fast path to purchase' },
-      ],
+    ? {
+        value: '250+ магазинов',
+        label: 'во всех федеральных округах России',
+      }
+    : {
+        value: '250+ stores',
+        label: 'across every federal district of Russia',
+      },
 )
-const gold585RetailFlow = computed(() =>
+const gold585StoreStory = computed(() =>
   locale.value === 'ru'
-    ? [
-        { label: 'Каталог', text: 'золото, серебро, бриллианты, камни, кольца, серьги, цепи и подвески' },
-        { label: 'Покупка', text: 'акции, рассрочка, подарочные сертификаты, бонусная лояльность и оплата' },
-        { label: 'Сервис', text: 'доставка, карта магазинов, trade-in и офлайн-точки как слой доверия' },
-      ]
-    : [
-        { label: 'Catalog', text: 'gold, silver, diamonds, stones, rings, earrings, chains, and pendants' },
-        { label: 'Purchase', text: 'offers, installments, gift certificates, loyalty bonuses, and payment' },
-        { label: 'Service', text: 'delivery, store map, trade-in, and offline locations as a trust layer' },
-      ],
+    ? '<strong>585Gold</strong> — российская ювелирная сеть с украшениями из золота и серебра, бриллиантами, камнями, акциями, бонусной лояльностью и trade-in. Приложение переводит офлайн-витрину федеральной сети в мобильный сценарий: от выбора изделия и проверки наличия до заказа, оплаты и получения.'
+    : '<strong>585Gold</strong> is a Russian jewelry network with gold and silver pieces, diamonds, gemstones, offers, loyalty, and trade-in. The app turns the federal offline retail presence into a mobile journey: from choosing a piece and checking availability to order, payment, and pickup.',
 )
 const gold585FeaturePills = computed(() =>
   locale.value === 'ru'
-    ? ['Swift', 'SwiftUI', 'UIKit', 'MapKit', 'Mindbox', 'Yandex Metrica', 'ЮKassa', 'Каталог', 'Карточки товаров', 'Акции', 'Доставка', 'Рассрочка', 'Сертификаты', 'Trade-in']
-    : ['Swift', 'SwiftUI', 'UIKit', 'MapKit', 'Mindbox', 'Yandex Metrica', 'YooKassa', 'Catalog', 'Product Cards', 'Offers', 'Delivery', 'Installments', 'Certificates', 'Trade-in'],
+    ? ['Swift', 'SwiftUI', 'UIKit', 'MVVM', 'Combine', 'REST API', 'Yandex Maps', 'Mindbox', 'Yandex Metrica', 'ЮKassa', 'Deep links', 'Push Notifications']
+    : ['Swift', 'SwiftUI', 'UIKit', 'MVVM', 'Combine', 'REST API', 'Yandex Maps', 'Mindbox', 'Yandex Metrica', 'YooKassa', 'Deep links', 'Push Notifications'],
 )
 const teleprompterCapabilityLine = computed(() =>
   locale.value === 'ru'
@@ -381,24 +373,24 @@ const gold585ShowcaseItems = computed(() => {
 const visibleTechnologies = computed(() => props.project.technologies.slice(0, 8))
 const hiddenTechnologyCount = computed(() => Math.max(props.project.technologies.length - visibleTechnologies.value.length, 0))
 const ticketStubWidth = computed(() => {
-  if (isToneOfVictoryProject(props.project)) return 360
-  if (isTeleprompterAutomaticProject(props.project)) return 500
-  if (isMAlienProject(props.project)) return 420
-  if (isPlatesProject(props.project)) return 420
-  if (isInsentryCase.value) return 320
-  if (isClosedOsintCase.value) return 300
-  if (isCybersecurityCard.value) return 260
-  return 280
+  if (isToneOfVictoryProject(props.project)) return 432
+  if (isTeleprompterAutomaticProject(props.project)) return 600
+  if (isMAlienProject(props.project)) return 504
+  if (isPlatesProject(props.project)) return 504
+  if (isInsentryCase.value) return 384
+  if (isClosedOsintCase.value) return 360
+  if (isCybersecurityCard.value) return 312
+  return 336
 })
 const ticketCardHeight = computed(() => {
   if (isToneOfVictoryProject(props.project)) return 720
   if (isTeleprompterAutomaticProject(props.project)) return 760
   if (isMAlienProject(props.project)) return 650
   if (isPlatesProject(props.project)) return 650
-  if (props.project.title === 'Армира') return 510
-  if (isInsentryCase.value) return 380
-  if (isCybersecurityCard.value) return 340
-  return 420
+  if (props.project.title === 'Армира') return 540
+  if (isInsentryCase.value) return 410
+  if (isCybersecurityCard.value) return 365
+  return 460
 })
 const holographicOverlay = publicAssetUrl('holographic.svg')
 const backgroundPaperUrl = `url("${publicAssetUrl('background_paper.png')}")`
@@ -477,168 +469,172 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <article ref="articleRef" class="h-full min-w-0 w-full overflow-visible">
+  <article ref="articleRef" class="h-full min-w-0 w-full overflow-visible" :class="{ 'project-ticket-card--reduced-effects': reduceEffects }">
     <div
       v-if="isGold585Project(project)"
-      class="gold585-case-card relative mx-auto w-full overflow-hidden rounded-[30px] border border-[#f4d889]/28 p-2.5 text-white shadow-[0_30px_78px_rgba(58,33,7,0.32)] sm:p-3"
+      class="gold585-case-card relative mx-auto w-full overflow-hidden rounded-[30px] border border-[#b8944e]/25 p-2 text-[#f8edda] shadow-[0_30px_78px_rgba(31,5,9,0.44)] sm:p-2.5"
     >
       <div class="pointer-events-none absolute inset-0 gold585-case-surface"></div>
-      <div class="pointer-events-none absolute inset-x-0 top-0 h-px bg-[#ffe7a5]/38"></div>
+      <div class="pointer-events-none absolute inset-x-6 top-0 h-px bg-[#f2c86d]/45"></div>
 
       <div class="relative z-10">
         <section
-          class="gold585-hero relative overflow-hidden rounded-[26px] px-4 py-5 sm:px-6"
-          :style="{ '--gold585-hero-bg': `url(${gold585BackgroundUrl})` }"
+          class="gold585-hero relative overflow-hidden rounded-[26px] px-4 pb-4 pt-5 sm:px-6 sm:pb-5"
         >
+          <div
+            class="pointer-events-none absolute inset-y-0 left-0 hidden w-[68%] gold585-store-backdrop sm:block"
+            :style="{ '--gold585-store-bg': `url(${gold585BackgroundUrl})` }"
+          ></div>
           <div class="pointer-events-none absolute inset-0 gold585-hero-shade"></div>
+          <div class="pointer-events-none absolute inset-y-0 left-0 w-[0.45rem] bg-[#d4061c]"></div>
 
-          <div class="relative z-10 grid gap-5 min-[1120px]:grid-cols-[minmax(0,0.9fr)_minmax(420px,0.62fr)] min-[1120px]:items-center">
-            <div class="gold585-hero-copy min-w-0">
-              <div class="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-start">
+          <div class="relative z-10 grid gap-6 min-[1120px]:grid-cols-[minmax(0,1fr)_minmax(430px,480px)] min-[1120px]:items-stretch">
+            <div class="gold585-hero-copy flex h-full min-w-0 flex-col">
+              <div class="flex min-w-0 items-start gap-3.5">
                 <img
                   v-if="project.iconUrl"
                   :src="project.iconUrl"
                   alt=""
-                  class="h-14 w-14 shrink-0 rounded-[20px] border border-[#ffe7a5]/26 object-cover shadow-[0_0_38px_rgba(255,211,106,0.34)]"
+                  class="h-14 w-14 shrink-0 rounded-[18px] object-cover shadow-[0_18px_36px_rgba(0,0,0,0.34)]"
                   loading="lazy"
                   decoding="async"
                 />
                 <div class="min-w-0">
-                  <p class="text-[10px] font-black uppercase tracking-[0.28em] text-[#ffe7a5]">
-                    Jewelry retail mobile app
+                  <p class="gold585-kicker text-[10px] font-black uppercase">
+                    {{ locale.startsWith('ru') ? 'Россия / jewelry retail / Swift iOS' : 'Russia / jewelry retail / Swift iOS' }}
                   </p>
-                  <h2 class="mt-2 text-[2.25rem] font-black leading-[0.98] text-white sm:text-[3.25rem]">
+                  <h2 class="mt-2 text-[2.75rem] font-black leading-[0.9] text-white sm:text-[4rem]">
                     585Gold
                   </h2>
-                  <p class="mt-2 max-w-3xl text-sm font-semibold leading-6 text-[#fff0c5]/88">
-                    {{ locale.startsWith('ru') ? 'E-commerce приложение для ювелирной сети 250+ магазинов: каталог, акции, доставка и покупка в телефоне' : 'An e-commerce app for a 250+ store jewelry network: catalog, offers, delivery, and mobile purchasing' }}
-                  </p>
                 </div>
               </div>
 
               <p
-                class="mt-5 max-w-3xl text-[13px] font-semibold leading-6 text-[#fff8e5]/90 [&_strong]:text-white"
-                v-html="project.description"
+                class="gold585-store-story mt-4 max-w-3xl text-[13px] font-semibold leading-6 text-[#f7e6c5]/88 [&_strong]:text-white"
+                v-html="gold585StoreStory"
               ></p>
 
-              <div class="mt-5 grid gap-2 sm:grid-cols-3">
+              <div class="gold585-retail-proof mt-5">
+                <div class="flex flex-wrap items-end gap-x-3 gap-y-1">
+                  <p class="gold585-retail-proof-value text-[2rem] font-black leading-none text-white sm:text-[2.65rem]">
+                    {{ gold585RetailProof.value }}
+                  </p>
+                  <p class="max-w-sm pb-1 text-[13px] font-bold leading-5 text-[#f7dfad]">
+                    {{ gold585RetailProof.label }}
+                  </p>
+                </div>
+              </div>
+
+              <div class="gold585-proof-strip relative z-10 mt-auto overflow-hidden px-0 pb-0 pt-5">
+                <p class="mb-2 text-[12px] font-bold leading-5 text-[#f8edda]/86">
+                  {{ locale.startsWith('ru') ? 'Стек и интеграции' : 'Stack and integrations' }}
+                </p>
+                <div class="flex flex-wrap items-center gap-1.5">
+                  <span
+                    v-for="pill in gold585FeaturePills"
+                    :key="pill"
+                    class="gold585-tech-chip text-[11px] font-semibold leading-none text-[#fff1d1]"
+                  >
+                    {{ pill }}
+                  </span>
+                </div>
+
                 <div
-                  v-for="stat in gold585Stats"
-                  :key="`${stat.value}-${stat.label}`"
-                  class="gold585-stat-tile rounded-[18px] border border-[#ffe7a5]/18 p-3"
+                  v-if="project.storeLinks.length"
+                  class="mt-3 flex flex-wrap items-center gap-2 border-t border-[#f0c36b]/20 pt-3"
                 >
-                  <p class="text-[1.75rem] font-black leading-none text-white">
-                    {{ stat.value }}
-                  </p>
-                  <p class="mt-1 text-[10px] font-bold uppercase tracking-[0.12em] text-[#ffe7a5]/78">
-                    {{ stat.label }}
-                  </p>
+                  <a
+                    v-for="link in project.storeLinks"
+                    :key="`${link.type}-${link.url}`"
+                    :href="link.url"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-flex min-h-[48px] items-center justify-center rounded-[14px] border border-[#f0c36b]/24 bg-white px-2 py-1.5 shadow-[0_14px_30px_rgba(0,0,0,0.22)] transition duration-200 hover:-translate-y-0.5 hover:bg-[#fff7ea]"
+                    :title="link.type"
+                  >
+                    <img
+                      v-if="storeBadgeSrc[link.type]"
+                      :src="storeBadgeSrc[link.type]"
+                      alt=""
+                      class="h-10 object-contain"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    <span v-else class="px-2 py-1 text-xs font-bold text-[#74202a]">{{ link.label ?? link.type }}</span>
+                  </a>
                 </div>
               </div>
             </div>
 
-            <aside class="gold585-commerce-panel relative min-h-[360px] overflow-hidden rounded-[28px] border border-[#ffe7a5]/16 p-4 sm:p-5">
-              <div class="absolute inset-0 gold585-jewel-glow"></div>
-              <div class="relative z-10 flex min-h-[326px] flex-col justify-between gap-5">
-                <div>
-                  <p class="text-[10px] font-black uppercase tracking-[0.22em] text-[#ffe7a5]">
-                    Retail product scope
-                  </p>
-                  <h3 class="mt-3 max-w-sm text-[2.05rem] font-black leading-[0.98] text-white">
-                    {{ locale.startsWith('ru') ? 'Приложение для сети 250+ магазинов' : 'App for a 250+ store network' }}
-                  </h3>
-                  <p class="mt-3 max-w-sm text-[12px] font-semibold leading-5 text-[#fff1c9]/82">
-                    {{ locale.startsWith('ru') ? 'Не промо-витрина, а рабочий commerce-слой: каталог, покупка, доставка и сервисные сценарии собраны в мобильный продукт.' : 'Not a promo showcase, but a working commerce layer: catalog, purchase, delivery, and service flows in one mobile product.' }}
-                  </p>
+            <aside class="gold585-gallery-panel relative min-h-[520px] w-full max-w-[480px] justify-self-end overflow-visible p-0">
+              <div class="absolute right-0 top-0 z-20 flex justify-end">
+                <span class="shrink-0 rounded-full border border-[#f0c36b]/18 bg-black/16 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.18em] text-[#d9bc77]">
+                  {{ selectedIndex + 1 }} / {{ gold585ShowcaseItems.length }}
+                </span>
+              </div>
+
+              <div class="gold585-gallery-shell relative min-h-0">
+                <div class="h-full w-full overflow-hidden" ref="emblaRef">
+                  <div class="flex h-full">
+                    <button
+                      v-for="item in gold585ShowcaseItems"
+                      :key="`${project.id}-gold585-gallery-${item.galleryIndex}`"
+                      type="button"
+                      class="gold585-gallery-slide flex h-full min-w-full flex-[0_0_100%] items-center justify-center border-0 bg-transparent p-0"
+                      @click="openLightbox(project.id, item.galleryIndex)"
+                    >
+                      <img
+                        v-if="shouldRenderGalleryImage(item.galleryIndex)"
+                        :src="item.src"
+                        :alt="item.label"
+                        class="h-full w-full object-contain drop-shadow-[0_30px_36px_rgba(0,0,0,0.48)] transition duration-300 hover:scale-[1.015]"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                      <div v-else class="h-full w-full" aria-hidden="true"></div>
+                    </button>
+                  </div>
                 </div>
 
-                <div class="grid gap-2">
-                  <article
-                    v-for="item in gold585RetailFlow"
-                    :key="item.label"
-                    class="gold585-commerce-step rounded-[18px] border border-[#ffe7a5]/14 p-3"
+                <div
+                  v-if="gold585ShowcaseItems.length > 1"
+                  class="pointer-events-none absolute inset-x-2 top-1/2 z-20 flex -translate-y-1/2 items-center justify-between"
+                >
+                  <button
+                    type="button"
+                    class="pointer-events-auto grid h-9 w-9 place-items-center rounded-full border border-[#f0c36b]/20 bg-[#170306]/70 text-xl leading-none text-[#f8edda] backdrop-blur transition hover:bg-[#3d070e]/84"
+                    :class="{ 'opacity-35': !canScrollPrev }"
+                    aria-label="Previous"
+                    @click.stop="scrollPrev"
                   >
-                    <p class="text-[10px] font-black uppercase tracking-[0.16em] text-[#ffe7a5]">
-                      {{ item.label }}
-                    </p>
-                    <p class="mt-1.5 text-[12px] font-semibold leading-5 text-[#fff6dc]/84">
-                      {{ item.text }}
-                    </p>
-                  </article>
+                    ‹
+                  </button>
+                  <button
+                    type="button"
+                    class="pointer-events-auto grid h-9 w-9 place-items-center rounded-full border border-[#f0c36b]/20 bg-[#170306]/70 text-xl leading-none text-[#f8edda] backdrop-blur transition hover:bg-[#3d070e]/84"
+                    :class="{ 'opacity-35': !canScrollNext }"
+                    aria-label="Next"
+                    @click.stop="scrollNext"
+                  >
+                    ›
+                  </button>
                 </div>
+              </div>
+
+              <div
+                v-if="gold585ShowcaseItems.length > 1"
+                class="mt-3 flex items-center justify-center gap-1.5"
+              >
+                <span
+                  v-for="item in gold585ShowcaseItems"
+                  :key="`${project.id}-gold585-dot-${item.galleryIndex}`"
+                  class="h-1.5 rounded-full transition"
+                  :class="selectedIndex === item.galleryIndex ? 'w-6 bg-[#d4061c]' : 'w-1.5 bg-[#f0c36b]/34'"
+                ></span>
               </div>
             </aside>
           </div>
-        </section>
 
-        <section class="gold585-proof-strip relative mt-3 overflow-hidden rounded-[28px] border border-[#ffe7a5]/14 p-3 sm:p-4">
-          <div class="flex flex-wrap gap-1.5">
-            <span
-              v-for="pill in gold585FeaturePills"
-              :key="pill"
-              class="rounded-full border border-[#ffe7a5]/14 bg-[#ffe7a5]/10 px-2.5 py-1 text-[10px] font-bold text-[#fff4d4]"
-            >
-              {{ pill }}
-            </span>
-          </div>
-
-          <div
-            v-if="project.storeLinks.length"
-            class="mt-4 flex flex-wrap items-center gap-2 border-t border-[#ffe7a5]/10 pt-4"
-          >
-            <a
-              v-for="link in project.storeLinks"
-              :key="`${link.type}-${link.url}`"
-              :href="link.url"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="inline-flex min-h-[52px] items-center justify-center rounded-2xl border border-[#ffe7a5]/20 bg-white px-2 py-1.5 transition duration-200 hover:-translate-y-0.5 hover:bg-[#fff8e8]"
-              :title="link.type"
-            >
-              <img
-                v-if="storeBadgeSrc[link.type]"
-                :src="storeBadgeSrc[link.type]"
-                alt=""
-                class="h-10 object-contain"
-                loading="lazy"
-                decoding="async"
-              />
-              <span v-else class="px-2 py-1 text-xs font-bold text-[#553912]">{{ link.label ?? link.type }}</span>
-            </a>
-          </div>
-        </section>
-
-        <section class="gold585-screen-strip relative mt-3 overflow-hidden rounded-[28px] border border-[#ffe7a5]/14 p-3 sm:p-4">
-          <div class="mb-2 flex items-center justify-between gap-2">
-            <div class="min-w-0">
-              <p class="text-[10px] font-black uppercase tracking-[0.24em] text-[#ffe7a5]">
-                {{ locale.startsWith('ru') ? 'Экраны витрины' : 'Showcase screens' }}
-              </p>
-            </div>
-            <span class="w-fit rounded-full border border-[#ffe7a5]/16 bg-[#ffe7a5]/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.14em] text-[#fff4d4]">
-              {{ gold585ShowcaseItems.length }} screens
-            </span>
-          </div>
-
-          <div class="gold585-screen-row flex gap-0 overflow-x-auto pb-2 pt-1">
-            <button
-              v-for="item in gold585ShowcaseItems"
-              :key="`${project.id}-gold585-screen-${item.galleryIndex}`"
-              type="button"
-              class="gold585-screen-card group w-[188px] shrink-0 rounded-[24px] border-0 p-0 text-left transition sm:w-[230px] min-[1180px]:w-[208px]"
-              @click="openLightbox(project.id, item.galleryIndex)"
-            >
-              <div class="gold585-screen-frame flex h-[360px] items-center justify-center rounded-[22px] sm:h-[420px] min-[1180px]:h-[402px]">
-                <img
-                  :src="item.src"
-                  :alt="item.label"
-                  class="h-full w-full object-contain drop-shadow-[0_26px_34px_rgba(0,0,0,0.40)] transition duration-300 group-hover:scale-[1.025]"
-                  loading="lazy"
-                  decoding="async"
-                />
-              </div>
-            </button>
-          </div>
         </section>
       </div>
     </div>
@@ -1986,15 +1982,15 @@ onBeforeUnmount(() => {
 <style scoped>
 .gold585-case-card {
   background:
-    radial-gradient(ellipse 70% 58% at 14% 14%, rgba(231, 171, 64, 0.34), rgba(82, 48, 10, 0.22) 42%, transparent 72%),
-    radial-gradient(ellipse 52% 44% at 88% 8%, rgba(255, 233, 171, 0.18), transparent 70%),
-    radial-gradient(ellipse 56% 44% at 76% 86%, rgba(175, 93, 22, 0.18), transparent 74%),
-    linear-gradient(145deg, #1c1004 0%, #2a1705 46%, #090502 100%);
+    radial-gradient(ellipse 62% 52% at 18% 0%, rgba(212, 6, 28, 0.28), transparent 62%),
+    radial-gradient(ellipse 34% 70% at 100% 28%, rgba(185, 137, 54, 0.16), transparent 70%),
+    linear-gradient(126deg, #190407 0%, #3a050c 43%, #090204 100%);
+  border-radius: 30px;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.11),
-    inset 0 0 0 1px rgba(255, 232, 170, 0.055),
-    inset 0 -140px 190px rgba(0, 0, 0, 0.56),
-    0 30px 78px rgba(58, 33, 7, 0.32);
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 0 0 1px rgba(240, 195, 107, 0.08),
+    inset 0 -140px 180px rgba(0, 0, 0, 0.36),
+    0 30px 78px rgba(31, 5, 9, 0.44);
 }
 
 .gold585-case-card::before,
@@ -2005,166 +2001,125 @@ onBeforeUnmount(() => {
 }
 
 .gold585-case-card::before {
-  inset: 6% -20% auto 30%;
-  height: 11rem;
-  transform: rotate(-12deg);
+  inset: -24% auto auto 52%;
+  width: 19rem;
+  height: 150%;
+  transform: rotate(14deg);
   background:
-    linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.16), transparent 62%),
-    linear-gradient(90deg, transparent 10%, rgba(255, 216, 124, 0.30) 28%, rgba(255, 174, 61, 0.16) 48%, transparent 74%);
-  filter: blur(0.4px);
+    linear-gradient(180deg, rgba(240, 195, 107, 0.12), rgba(212, 6, 28, 0.22), rgba(0, 0, 0, 0.18)),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.075) 0 1px, transparent 1px 22px);
+  opacity: 0.78;
 }
 
 .gold585-case-card::after {
-  right: -9rem;
+  right: -7rem;
   bottom: 10rem;
-  width: 28rem;
-  height: 28rem;
+  width: 22rem;
+  height: 22rem;
   border-radius: 999px;
-  background: radial-gradient(circle, rgba(255, 216, 124, 0.16), transparent 68%);
+  background:
+    radial-gradient(circle, rgba(240, 195, 107, 0.12), rgba(212, 6, 28, 0.08) 36%, transparent 70%);
 }
 
 .gold585-case-surface {
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.052), transparent 18%),
-    linear-gradient(122deg, transparent 0%, rgba(255, 255, 255, 0.034) 34%, transparent 58%),
-    radial-gradient(ellipse 74% 42% at 74% 20%, rgba(255, 216, 124, 0.16), transparent 64%),
-    radial-gradient(ellipse 74% 48% at 16% 88%, rgba(201, 117, 30, 0.16), transparent 70%),
-    linear-gradient(300deg, rgba(0, 0, 0, 0.36), transparent 45%);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.07), transparent 23%),
+    linear-gradient(115deg, transparent 0%, rgba(255, 255, 255, 0.045) 34%, transparent 58%),
+    linear-gradient(300deg, rgba(0, 0, 0, 0.26), transparent 52%);
 }
 
 .gold585-hero {
-  min-height: 500px;
+  min-height: 560px;
   background:
-    var(--gold585-hero-bg) right center / cover no-repeat,
-    linear-gradient(145deg, #211307, #080402);
+    radial-gradient(ellipse 68% 50% at 78% 16%, rgba(212, 6, 28, 0.24), transparent 66%),
+    radial-gradient(ellipse 56% 48% at 22% 6%, rgba(240, 195, 107, 0.13), transparent 64%),
+    linear-gradient(145deg, #180306 0%, #3f060d 48%, #0a0203 100%);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    inset 0 -120px 190px rgba(0, 0, 0, 0.52);
+    inset 0 1px 0 rgba(255, 255, 255, 0.11),
+    inset 0 -110px 150px rgba(0, 0, 0, 0.34);
 }
 
 .gold585-hero-shade {
   background:
-    linear-gradient(90deg, rgba(10, 5, 2, 0.94) 0%, rgba(17, 9, 3, 0.85) 34%, rgba(35, 18, 4, 0.50) 64%, rgba(12, 6, 2, 0.44) 100%),
-    radial-gradient(ellipse 90% 70% at 96% 12%, rgba(255, 211, 106, 0.18), transparent 62%),
-    linear-gradient(180deg, rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.68));
+    linear-gradient(115deg, rgba(255, 255, 255, 0.05), transparent 42%, rgba(0, 0, 0, 0.32)),
+    repeating-linear-gradient(90deg, transparent 0 76px, rgba(240, 195, 107, 0.04) 76px 77px, transparent 77px 152px),
+    repeating-linear-gradient(0deg, transparent 0 76px, rgba(240, 195, 107, 0.026) 76px 77px, transparent 77px 152px),
+    linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.30));
+}
+
+.gold585-store-backdrop {
+  background:
+    linear-gradient(90deg, rgba(24, 3, 7, 0.30), rgba(24, 3, 7, 0.60) 42%, rgba(24, 3, 7, 0.94) 100%),
+    linear-gradient(180deg, rgba(24, 3, 7, 0.28), rgba(24, 3, 7, 0.82)),
+    var(--gold585-store-bg) center center / cover no-repeat;
+  opacity: 0.72;
+  -webkit-mask-image: linear-gradient(90deg, #000 0%, #000 54%, transparent 100%);
+  mask-image: linear-gradient(90deg, #000 0%, #000 54%, transparent 100%);
+}
+
+.gold585-store-backdrop::after {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 44% 40% at 20% 18%, rgba(240, 195, 107, 0.13), transparent 70%),
+    repeating-linear-gradient(135deg, rgba(240, 195, 107, 0.055) 0 1px, transparent 1px 18px);
+  content: "";
 }
 
 .gold585-hero-copy {
-  text-shadow: 0 4px 26px rgba(0, 0, 0, 0.48);
+  text-shadow: 0 14px 34px rgba(0, 0, 0, 0.32);
 }
 
-.gold585-stat-tile,
-.gold585-commerce-panel,
-.gold585-commerce-step,
-.gold585-screen-strip {
+.gold585-kicker {
+  letter-spacing: 0.32em;
+  color: #f0c36b;
+}
+
+.gold585-store-story {
+  border-left: 1px solid rgba(240, 195, 107, 0.34);
+  padding-left: 0.95rem;
+  text-shadow: 0 10px 26px rgba(0, 0, 0, 0.36);
+}
+
+.gold585-retail-proof {
+  max-width: 46rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(240, 195, 107, 0.28);
+}
+
+.gold585-retail-proof-value {
+  text-shadow:
+    0 0 26px rgba(212, 6, 28, 0.30),
+    0 18px 34px rgba(0, 0, 0, 0.42);
+}
+
+.gold585-gallery-panel {
+  filter: drop-shadow(0 30px 42px rgba(0, 0, 0, 0.38));
+}
+
+.gold585-gallery-shell {
+  height: 32rem;
   background:
-    linear-gradient(145deg, rgba(255, 255, 255, 0.095), rgba(255, 255, 255, 0.026) 42%, rgba(255, 214, 116, 0.09)),
-    rgba(0, 0, 0, 0.20);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.09),
-    inset 0 -30px 66px rgba(0, 0, 0, 0.20);
-  backdrop-filter: blur(10px);
+    radial-gradient(ellipse 58% 16% at 50% 91%, rgba(240, 195, 107, 0.11), transparent 70%);
 }
 
-.gold585-jewel-glow {
-  background:
-    radial-gradient(ellipse 60% 42% at 50% 42%, rgba(255, 219, 133, 0.28), transparent 70%),
-    radial-gradient(ellipse 90% 24% at 50% 92%, rgba(255, 180, 60, 0.20), transparent 72%),
-    linear-gradient(145deg, rgba(255, 255, 255, 0.08), transparent 42%);
-}
-
-.gold585-commerce-panel {
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.11),
-    inset 0 -42px 88px rgba(0, 0, 0, 0.24),
-    0 22px 54px rgba(0, 0, 0, 0.24);
-}
-
-.gold585-commerce-step {
-  background:
-    linear-gradient(90deg, rgba(255, 216, 124, 0.10), rgba(255, 255, 255, 0.035)),
-    rgba(0, 0, 0, 0.18);
+.gold585-gallery-slide {
+  cursor: zoom-in;
 }
 
 .gold585-proof-strip {
-  background:
-    radial-gradient(ellipse 86% 64% at 60% 16%, rgba(255, 216, 124, 0.12), transparent 68%),
-    linear-gradient(90deg, rgba(255, 216, 124, 0.08), transparent 20%, transparent 80%, rgba(255, 216, 124, 0.08)),
-    rgba(25, 12, 3, 0.50);
+  border-top: 1px solid rgba(240, 195, 107, 0.18);
 }
 
-.gold585-screen-strip {
-  background:
-    radial-gradient(ellipse 86% 64% at 60% 16%, rgba(255, 216, 124, 0.13), transparent 68%),
-    linear-gradient(90deg, rgba(255, 216, 124, 0.08), transparent 20%, transparent 80%, rgba(255, 216, 124, 0.08)),
-    rgba(18, 9, 3, 0.52);
-}
-
-.gold585-screen-strip::before {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  content: "";
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.055), transparent 34%),
-    repeating-linear-gradient(90deg, transparent 0 72px, rgba(255, 216, 124, 0.045) 72px 73px, transparent 73px 144px);
-  opacity: 0.48;
-}
-
-.gold585-screen-row {
-  position: relative;
-  z-index: 1;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255, 216, 124, 0.34) rgba(255, 255, 255, 0.05);
-}
-
-.gold585-screen-row::-webkit-scrollbar {
-  height: 8px;
-}
-
-.gold585-screen-row::-webkit-scrollbar-track {
+.gold585-tech-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.65rem;
+  padding: 0.42rem 0.62rem;
+  border: 1px solid rgba(240, 195, 107, 0.16);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.045);
-}
-
-.gold585-screen-row::-webkit-scrollbar-thumb {
-  border-radius: 999px;
-  background: rgba(255, 216, 124, 0.34);
-}
-
-.gold585-screen-card {
-  position: relative;
-  z-index: 1;
-  background: transparent;
-  box-shadow: none;
-  filter: drop-shadow(0 28px 28px rgba(0, 0, 0, 0.32));
-}
-
-.gold585-screen-card + .gold585-screen-card {
-  margin-left: -2.15rem;
-}
-
-.gold585-screen-card:hover {
-  z-index: 8;
-  transform: translateY(-0.55rem) scale(1.03);
-  filter: drop-shadow(0 34px 30px rgba(0, 0, 0, 0.38)) drop-shadow(0 0 22px rgba(255, 216, 124, 0.18));
-}
-
-.gold585-screen-frame {
-  background:
-    radial-gradient(ellipse 72% 12% at 50% 100%, rgba(255, 216, 124, 0.16), transparent 70%);
-}
-
-@media (min-width: 1180px) {
-  .gold585-screen-row {
-    overflow-x: auto;
-    padding-left: 1.1rem;
-    padding-right: 1.1rem;
-  }
-
-  .gold585-screen-card + .gold585-screen-card {
-    margin-left: -2.65rem;
-  }
+  background: rgba(255, 244, 216, 0.08);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.055);
 }
 
 @media (max-width: 640px) {
@@ -2173,8 +2128,8 @@ onBeforeUnmount(() => {
     background-position: 66% center;
   }
 
-  .gold585-screen-card + .gold585-screen-card {
-    margin-left: -1.65rem;
+  .gold585-gallery-shell {
+    height: 27rem;
   }
 }
 
@@ -3300,6 +3255,108 @@ onBeforeUnmount(() => {
   background:
     linear-gradient(145deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.035) 36%, rgba(111, 231, 255, 0.08)),
     rgba(0, 0, 0, 0.3);
+}
+
+.project-ticket-card--reduced-effects {
+  content-visibility: auto;
+  contain-intrinsic-size: 720px;
+}
+
+.project-ticket-card--reduced-effects,
+.project-ticket-card--reduced-effects * {
+  animation: none !important;
+  scroll-behavior: auto !important;
+}
+
+.project-ticket-card--reduced-effects :is(
+  .gold585-case-card,
+  .gold585-hero,
+  .gold585-gallery-panel,
+  .teleprompter-case-card,
+  .teleprompter-showcase-stage,
+  .teleprompter-showcase-frame,
+  .teleprompter-hero,
+  .teleprompter-proof-panel,
+  .teleprompter-screen-card,
+  .tone-case-card,
+  .tone-event-hero,
+  .tone-hero-side,
+  .tone-hero-stage,
+  .tone-device-stage,
+  .tone-race-strip,
+  .tone-stand-strip,
+  .tone-stand-photo,
+  .plates-case-card,
+  .plates-stat-tile,
+  .plates-performance-console,
+  .plates-screen-card,
+  .m-alien-case-card,
+  .m-alien-mission-card,
+  .m-alien-flow-map,
+  .m-alien-orbit-console,
+  .m-alien-screen-strip,
+  .m-alien-stack-tile,
+  .m-alien-screen-card,
+  .m-alien-mothership,
+  .m-alien-orbit-tech,
+  .project-ticket-shell,
+  .project-ticket-gallery-panel,
+  .teleprompter-icon-glass,
+  .teleprompter-hard-problem,
+  .m-alien-architecture-panel,
+  .m-alien-hard-problem,
+  .teleprompter-showcase-main,
+  .m-alien-phone-stage,
+  img,
+  a,
+  button,
+  span
+) {
+  box-shadow: none !important;
+  filter: none !important;
+  text-shadow: none !important;
+}
+
+.project-ticket-card--reduced-effects :is(
+  .tone-device-stage,
+  .plates-performance-console,
+  .m-alien-mothership,
+  .m-alien-orbit-tech,
+  .teleprompter-hard-problem,
+  .m-alien-hard-problem,
+  button,
+  a,
+  span
+) {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+.project-ticket-card--reduced-effects :is(
+  .gold585-case-card,
+  .tone-case-card,
+  .plates-case-card,
+  .m-alien-case-card,
+  .teleprompter-hero,
+  .teleprompter-proof-panel,
+  .teleprompter-screen-strip,
+  .tone-case-card,
+  .tone-event-pulse,
+  .tone-race-strip,
+  .tone-stand-strip,
+  .plates-performance-console,
+  .m-alien-flow-map,
+  .m-alien-orbit-console,
+  .m-alien-screen-strip
+)::before,
+.project-ticket-card--reduced-effects :is(
+  .gold585-case-card,
+  .tone-case-card,
+  .plates-case-card,
+  .m-alien-case-card,
+  .m-alien-orbit-console
+)::after {
+  opacity: 0 !important;
 }
 
 @media (min-width: 900px) {

@@ -61,8 +61,7 @@ const homeCloudDecorations = [
             </div>
           </div>
 
-          <div
-            class="grid gap-3 sm:gap-4">
+          <div class="grid gap-3 sm:gap-4">
             <CardInfoAboutMe class="min-w-0" />
           </div>
         </div>
@@ -82,10 +81,8 @@ const homeCloudDecorations = [
 
       <section
         class="relative overflow-hidden border-t border-black/10 bg-[radial-gradient(circle_at_top_left,#531818_0%,#1d1716_45%,#121212_100%)]">
-        <div
-          class="absolute inset-0 opacity-18 mix-blend-screen"
-          :style="{ backgroundImage: `url(${gridPattern})`, backgroundSize: '28px', backgroundPosition: 'center' }"
-        />
+        <div class="absolute inset-0 opacity-18 mix-blend-screen"
+          :style="{ backgroundImage: `url(${gridPattern})`, backgroundSize: '28px', backgroundPosition: 'center' }" />
         <div class="absolute -left-10 top-6 h-36 w-36 rounded-full bg-[#d7342a]/20 blur-3xl" />
         <div class="absolute right-0 top-0 h-44 w-44 rounded-full bg-[#f3d0b6]/10 blur-3xl" />
         <div class="relative z-10">
@@ -93,9 +90,11 @@ const homeCloudDecorations = [
         </div>
       </section>
 
-      <section class="relative -mt-px overflow-hidden bg-[linear-gradient(180deg,#121212_0%,#19120f_82%,#19120f_100%)] pt-14 lg:pt-16">
+      <section
+        class="relative -mt-px overflow-hidden bg-[linear-gradient(180deg,#121212_0%,#19120f_82%,#19120f_100%)] pt-14 lg:pt-16">
         <div class="pointer-events-none absolute inset-x-0 top-0 h-16 lg:h-20">
-          <div class="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,18,18,0)_0%,rgba(18,18,18,0.58)_58%,#121212_100%)]" />
+          <div
+            class="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,18,18,0)_0%,rgba(18,18,18,0.58)_58%,#121212_100%)]" />
         </div>
         <div class="relative z-10">
           <BlockLastProjects />

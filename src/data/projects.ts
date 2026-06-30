@@ -399,7 +399,7 @@ export const mobileProjects: MobileProjectModel[] = [
     3,
     'src/assets/projects/teleprompter/1024x1024.jpg',
     'Teleprompter Automatic',
-    'Нативный iOS teleprompter-продукт, в котором я реализовал запись видео, движок прокрутки сценариев, встроенный видеоредактор, web-панель управления и связанный backend.',
+    'Full-stack teleprompter-продукт для iOS и Android: запись видео с автоматической прокруткой сценария, импорт и папки для текстов, cue indicator, 4K-съемка, сетка кадрирования, countdown, встроенный видеоредактор, авто-субтитры с переводом, логотипы, замена фона, ресайз под соцсети, web-панель, backend и подписки. Масштаб по двум платформам: $50K+ выручки в месяц и 100K+ скачиваний в месяц.',
     [
       'src/assets/projects/teleprompter/teleprompter0.png',
       'src/assets/projects/teleprompter/teleprompter1.png',
@@ -698,7 +698,7 @@ export const mobileProjects: MobileProjectModel[] = [
     13,
     'src/assets/projects/gold585/1024x1024.jpg',
     '585Gold - золотые изделия',
-    'E-commerce приложение ювелирной сети 585Gold для 250+ магазинов во всех федеральных округах России. Внутри: каталог украшений, карточки товаров, акции, доставка, рассрочка, подарочные сертификаты, бонусная лояльность и trade-in старых украшений.',
+    'Нативное iOS e-commerce приложение 585Gold: на странице App Store бренд представлен как более 250 демократичных ювелирных магазинов во всех федеральных округах России. Внутри: каталог, поиск и фильтры, карточки изделий, наличие в магазинах, корзина, оформление заказа, оплата, доставка, ПВЗ, бонусная лояльность, push/CRM и trade-in старых украшений.',
     [
       'src/assets/projects/gold585/gold5850.png',
       'src/assets/projects/gold585/gold5851.png',
@@ -707,7 +707,7 @@ export const mobileProjects: MobileProjectModel[] = [
       'src/assets/projects/gold585/gold5854.png',
       'src/assets/projects/gold585/gold5855.png',
     ],
-    ['Swift', 'SwiftUI 2.0', 'UIKit', 'YandexMobileMetrica', 'Mindbox', 'MapKit', 'Yookassa', 'E-commerce'],
+    ['Swift', 'SwiftUI 2.0', 'UIKit', 'MVVM', 'Combine', 'REST API', 'Yandex Maps', 'Yandex Mobile Metrica', 'Mindbox', 'YooKassa', 'Deep Links', 'Push Notifications'],
     'https://apps.apple.com/us/app/585gold-%D0%B7%D0%BE%D0%BB%D0%BE%D1%82%D1%8B%D0%B5-%D0%B8%D0%B7%D0%B4%D0%B5%D0%BB%D0%B8%D1%8F/id1571238481',
     '',
     '',

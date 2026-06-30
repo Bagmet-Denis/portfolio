@@ -121,7 +121,7 @@ export default {
         {
           key: 'mobile',
           label: 'Mobile Development',
-          items: ['Swift', 'SwiftUI', 'UIKit', 'Flutter', 'Dart', 'iOS SDK', 'Android SDK']
+          items: ['Swift', 'SwiftUI', 'UIKit', 'Flutter', 'Dart', 'Kotlin', 'Jetpack Compose', 'iOS SDK', 'Android SDK']
         },
         {
           key: 'programmingLanguages',
@@ -131,17 +131,22 @@ export default {
         {
           key: 'frameworks',
           label: 'Frameworks & Patterns',
-          items: ['SwiftUI', 'UIKit', 'Flutter', 'Combine', 'async/await', 'MVVM', 'BLoC', 'REST API']
+          items: ['SwiftUI', 'UIKit', 'Flutter', 'AVFoundation', 'StoreKit', 'Combine', 'async/await', 'MVVM', 'BLoC', 'Riverpod', 'REST API', 'GraphQL']
+        },
+        {
+          key: 'backendPayments',
+          label: 'Backend & Payments',
+          items: ['Node.js', 'Express.js', 'TypeScript', 'REST API', 'WebSocket', 'Stripe', 'YooKassa', 'In-App Purchases', 'Google Play Billing']
         },
         {
           key: 'databases',
           label: 'Databases & Storage',
-          items: ['SQLite', 'Core Data', 'Hive', 'Firebase', 'PostgreSQL', 'MongoDB']
+          items: ['SQLite', 'Core Data', 'Hive', 'Drift', 'Firebase', 'PostgreSQL', 'MongoDB', 'Redis']
         },
         {
           key: 'toolsDev',
           label: 'Development Tools',
-          items: ['Xcode', 'Android Studio', 'Visual Studio Code', 'Cursor', 'PyCharm', 'Git', 'Postman', 'Figma', 'Proxyman']
+          items: ['Xcode', 'Android Studio', 'Visual Studio Code', 'Cursor', 'PyCharm', 'Git', 'GitLab', 'Docker', 'Postman', 'Figma', 'TestFlight', 'App Store Connect', 'Proxyman']
         },
         {
           key: 'toolsTraffic',
@@ -223,7 +228,7 @@ export default {
           'Prepared and shipped production releases through TestFlight, App Store Connect, and Google Play; contributed to CI/CD and technical design.',
         ],
         achievements: [
-          'Built and shipped 8+ production mobile applications for iOS and Android across luxury, sport, BLE/IoT, inventory management, and service products.',
+          'Built and shipped 10+ production mobile applications for iOS and Android across luxury, sport, BLE/IoT, inventory management, and service products.',
           'Improved crash-free users from ~80% to 99%+ through Crashlytics, post-release monitoring, and systematic work on critical failures.',
           'Implemented BLE and native Android/iOS integrations through MethodChannel / Platform Channels.',
           'Improved architecture and code maintainability through refactoring and technical-debt reduction.',
@@ -233,6 +238,36 @@ export default {
           text: 'The Tone of Victory is an iOS project for TAG Heuer, a Louis Vuitton (LVMH) brand, tied to Formula 1 and a limited TAG Heuer Connected edition. The offline presentation-stand app launched in several countries, including South Korea.',
         },
         links: [{ label: 'Portfolio (projects)', href: '/projects' }],
+      },
+      {
+        company: 'APP BOX EOOD',
+        title: 'Full-stack Developer',
+        period: 'September 2023 — March 2026',
+        duration: '2 years 7 months',
+        description:
+          'Led Teleprompter Automatic as a full-stack developer across iOS, Android, backend, web panel, payments, internal libraries, testing, integrations, and releases.',
+        stack: ['Swift', 'SwiftUI', 'UIKit', 'AVFoundation', 'StoreKit', 'Kotlin', 'Jetpack Compose', 'Node.js', 'Express.js', 'TypeScript', 'PostgreSQL', 'MongoDB', 'Redis', 'Docker', 'Vue.js', 'Stripe', 'YooKassa', 'Firebase', 'Flask'],
+        bullets: [
+          'Developed a commercial video recording and editing product with a teleprompter, subscriptions, backend services, and a web panel for an international audience.',
+          'Built iOS media workflows with AVFoundation / AVKit: recording, preview, playback, video processing, export, editing tools, animated text, and the teleprompter engine.',
+          'Optimized heavy capture scenarios: smooth high-FPS text scrolling during 4K recording, real-time filters, and background segmentation.',
+          'Integrated StoreKit / In-App Purchases and Google Play Billing for subscriptions, lifetime access, purchase restoration, entitlement checks, and premium-status synchronization with the backend.',
+          'Built the backend with Node.js / Express.js / TypeScript: REST APIs, authentication, file uploads, user sessions, purchases, subscriptions, Apple Server Notifications, and payment webhooks.',
+          'Connected web payments through Stripe and YooKassa: checkout, payment account, renewals, subscription cancellation, and payment-status handling.',
+          'Developed a Vue.js web panel and a separate Flask backend for a feedback, error-reporting, and user-support library.',
+        ],
+        achievements: [
+          'Grew the product into a complete ecosystem: iOS, Android, iPad, Apple Watch, web panel, and backend.',
+          'Published the app in the App Store and Google Play as a commercial subscription-based product.',
+          'Reached tens of thousands of downloads per month and hundreds of thousands per year; the Android version passed 100,000+ installs with an approximately 4.6 rating.',
+          'Implemented the product payment infrastructure: in-app purchases, web payments, webhooks, renewals, purchase restoration, and subscription synchronization.',
+          'Delivered the complex media layer: 4K recording, smooth teleprompter playback, video editor, real-time filters, segmentation, animated text, and video export.',
+        ],
+        highlight: {
+          label: 'Product full-stack',
+          text: 'Teleprompter Automatic became a commercial subscription ecosystem with mobile apps, a web/backend platform, payments, a media pipeline, and international localization across 30 languages.',
+        },
+        links: [{ label: 'Teleprompter Automatic case', href: '/projects' }],
       },
       {
         company: 'Independent Contractor / Startup & Product Projects',
@@ -294,11 +329,38 @@ export default {
           'Optimized UI, networking, and release stability while collaborating with backend, design, and product stakeholders.',
         ],
         achievements: [
-          'Maintained and developed a production e-commerce application with 1,000+ SKUs and delivery across the UAE.',
+          'Maintained and developed a production e-commerce application with 3,000+ SKUs and delivery across the UAE.',
           'As the sole Flutter developer, owned the full mobile delivery lifecycle from implementation to App Store and Google Play releases.',
           'Evolved the mobile architecture and reduced product technical debt.',
         ],
         links: [{ label: 'Portfolio project', href: '/projects' }],
+      },
+      {
+        company: 'TAG Heuer / LVMH — The Tone of Victory',
+        title: 'iOS Developer',
+        period: 'January 2025 — March 2025',
+        duration: '3 months',
+        description:
+          'Built the native iPadOS application The Tone of Victory for TAG Heuer Formula 1 events, combining local media content, multilingual flows, interactive behavior, and kiosk-style operation.',
+        stack: ['Swift', 'SwiftUI', 'AVFoundation', 'AVKit', 'AVAudioSession', 'Combine', 'XCTest', 'XCUITest', 'String Catalogs', 'LocalizedStringKey', 'MDM / Single App Mode'],
+        bullets: [
+          'Designed the main application flow: navigation, animated transitions, media-content control, and playback-state handling.',
+          'Worked with AVFoundation / AVKit on play, pause, replay, transitions between media, state restoration, and correct behavior across screen changes.',
+          'Handled AVAudioSession scenarios: different headphones, audio route changes, interruptions, and iOS limitations around selecting a specific output device.',
+          'Prepared a multilingual version for multiple markets, including Korean, Japanese, English, French, German, Spanish, Arabic, and Chinese.',
+          'Accounted for MDM / Single App Mode and offline usage: the app had to run in a restricted environment without network dependency during the event flow.',
+          'Ran integration testing for key scenarios and contributed to release-build preparation, bug fixing, and App Store publication.',
+        ],
+        achievements: [
+          'Published the app in the App Store under TAG Heuer Professional Timing / LVMH Swiss Manufactures SA.',
+          'The solution was used in an international TAG Heuer event series across multiple markets.',
+          'Closed key launch risks before release: media playback, external audio-device behavior, offline operation, and integration coverage for the main flows.',
+        ],
+        highlight: {
+          label: 'Premium brand experience',
+          text: 'The Tone of Victory combined racing video, sound, imagery, copy, multilingual content, and interactive behavior for TAG Heuer / LVMH iPad installations.',
+        },
+        links: [{ label: 'The Tone of Victory case', href: '/projects' }],
       },
       {
         company: 'Mobile Business Solutions (MobSolutions)',
@@ -406,7 +468,7 @@ export default {
       storekeeper: 'An app for tracking consumables, goods, and warehouse operations for property managers, offices, beauty salons, and small stockrooms.',
       countdownWidget: 'An app with countdown timers and widgets for tracking important events, dates, and personal deadlines right from the phone screen.',
       boxingTimer: 'A sports interval timer for boxing, MMA, CrossFit, and workouts. Users can configure rounds, rest periods, sound cues, and training scenarios.',
-      teleprompterAutomatic: '<strong>Teleprompter Automatic</strong> is a commercial product for recording video with a teleprompter, built-in editor, subscriptions, and a web/backend platform. I owned iOS, Android, payments, APIs, web panel, tests, integrations, and production releases.',
+      teleprompterAutomatic: '<strong>Teleprompter Automatic</strong> is a commercial product for recording and editing video with a teleprompter, automatic scrolling, script import and organization, auto subtitles, translations, logos, background replacement, social-media resizing, subscriptions, and a web/backend platform. I owned iOS, Android, payments, APIs, web panel, tests, integrations, and production releases.',
       mAlien: '<strong>M-Alien</strong> is a closed full-stack messenger for internal use by a company building AI-powered drones. The project is non-public and was delivered under NDA: I handled the Flutter mobile client, Node.js backend, realtime event exchange, media, notifications, local storage, and the glue between layers. The product includes direct and group chats, private auth without phone/email/social login, device and session management, QR flows, localization, themes, offline/cache logic, voice messages, and server infrastructure for events, files, and push notifications.',
       partyDay: 'A “Never Have I Ever” party game for groups and home parties. The app provides ready-made question packs, helps people start quickly, and keeps the flow lively with different categories, themes, and adult-party scenarios.',
       truthOrDare: 'A Truth or Dare party game for groups of friends. It includes multiple packs of tasks and questions for different moods, a bright game mechanic, and a quick way to start a party without setup friction.',
@@ -419,7 +481,7 @@ export default {
       prostor: 'An online grocery store for products from Russia and CIS countries in the UAE. The app lets users browse a large catalog, order home delivery across the UAE, and buy familiar groceries, dairy, meat, fish, drinks, sweets, and household goods.',
       skin: 'An iPhone customization app with widgets, icons, themes, and visual packs for personalizing the home screen.',
       iHaveNeverAdult: 'A “Never Have I Ever” game for adult groups with ready-made questions and a quick party-start flow.',
-      gold585: '<strong>585Gold</strong> is an e-commerce app for a large jewelry network: on its App Store page, the brand describes itself as <strong>250+ stores</strong> across every federal district of Russia. At that scale, the mobile product becomes an entry point into purchases, offers, delivery, and service flows across the network.<br><br>The app covers gold and silver jewelry, diamonds and gemstone pieces, product cards, offers, installments, gift certificates, loyalty bonuses, delivery, and jewelry trade-in. The core product challenge is to connect polished jewelry presentation with a strong shopping journey: help customers choose an item quickly, trust the details, understand the terms, and move toward purchase without friction.',
+      gold585: '<strong>585Gold</strong> is an e-commerce app for a large jewelry network: on its App Store page, the brand describes itself as a network with <strong>250+ accessible jewelry stores</strong> across every federal district of Russia. At that scale, the mobile product becomes an entry point into purchases, offers, delivery, payment, and service flows across the network.<br><br>The app covers gold and silver jewelry, diamond and gemstone pieces, search, filters, product cards, store availability, cart, promo codes, checkout, delivery, pickup points, loyalty bonuses, push/CRM integrations, analytics, and jewelry trade-in. The core product challenge is to connect polished jewelry presentation with a strong shopping journey: help customers choose an item quickly, trust the details, understand the terms, and move toward purchase without friction.',
       honeyWarehouse: 'An internal app for a honey supplier that helps track sales, warehouse stock, estimates, and related operations. It simplifies daily work with orders, calculations, and documents without scattered spreadsheets.',
       projectEstimator: 'A finance tracker for personal projects and everyday expenses. The app helps track spending and income, manage cash flow, keep operation history, and understand where money goes and how the financial result changes.',
       modPack: 'A mod catalog for Melon Playground where users can find, preview, and install new game modifications. The app simplifies the whole flow from choosing content to preparing it for use in Melon Playground.',
@@ -463,7 +525,7 @@ export default {
         roleTitle: 'Full-stack product development',
         roleLead: 'I led Teleprompter Automatic as a full-stack developer across iOS, Android, backend, web panel, payments, internal libraries, testing, integrations, and releases.',
         scopeLabel: 'Product scale',
-        scopeText: 'The product grew into an ecosystem: iOS, Android, iPad, Apple Watch, web panel, and backend. Current scale: tens of thousands of downloads per month, hundreds of thousands per year, and the Android version has 100,000+ installs with a rating around 4.6.',
+        scopeText: 'The product grew into an ecosystem: iOS, Android, iPad, Apple Watch, web panel, and backend. Current scale across App Store and Google Play: $50K+ revenue per month and 100K+ downloads per month, with the Android version rated around 4.6.',
         mobileGalleryEyebrow: 'iOS interface',
         mobileGalleryTitle: 'Mobile product screens',
         webGalleryEyebrow: 'Web + backend',
@@ -480,15 +542,15 @@ export default {
         teleprompter: {
           title: 'Teleprompter engine',
           items: [
-            'Built scroll speed, mirrored text, appearance settings, and script synchronization with video capture.',
+            'Built automatic scrolling, adjustable speed, mirrored text, cue indicator, appearance settings, and script synchronization with video capture.',
             'Tuned teleprompter behavior for smooth high-FPS operation while video recording is running in parallel.',
             'Prepared the product for an international audience, including 30 languages through String Catalogs / Localizable.strings.',
           ],
         },
         scripts: {
-          title: 'Android',
+          title: 'Android and scripts',
           items: [
-            'Implemented the main Android product flows with Kotlin / Jetpack Compose: video recording, script reading, saving results, and premium access.',
+            'Implemented the main Android product flows with Kotlin / Jetpack Compose: video recording, script reading, importing files, folder organization, saving results, and premium access.',
             'Integrated Google Play Billing: subscriptions, purchase validation, access restoration, and server-side status synchronization.',
             'Built the Android version of the library for collecting feedback, errors, and user requests.',
           ],
@@ -498,7 +560,7 @@ export default {
           items: [
             'Implemented trimming, rotation, mirroring, aspect-ratio changes, speed changes, clip merging, and final export.',
             'Built text, image, and logo overlays, background replacement, real-time filters, and segmentation-based scenarios.',
-            'Created animated text generation over video with configurable appearance, position, duration, and timeline behavior.',
+            'Created auto subtitles, translation flows, animated text generation, AirPlay playback, and export presets for social-media formats.',
           ],
         },
         web: {

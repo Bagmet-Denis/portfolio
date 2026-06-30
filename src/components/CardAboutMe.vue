@@ -24,16 +24,14 @@ const hasProfilePhoto = ref(true)
                         </h1>
 
                         <div class="w-fit bg-[#5F8171] px-2 skew-x-[-10deg]">
-                            <p
-                                class="text-xs leading-relaxed text-white/90 skew-x-10 sm:text-sm lg:text-base">
+                            <p class="text-xs leading-relaxed text-white/90 skew-x-10 sm:text-sm lg:text-base">
                                 {{ t('hero.role') }}
                             </p>
                         </div>
 
 
                         <div class="w-fit bg-[#D96138] px-2 skew-x-[-10deg]">
-                            <p
-                                class="text-xs leading-relaxed text-white/90 skew-x-10 sm:text-sm lg:text-base">
+                            <p class="text-xs leading-relaxed text-white/90 skew-x-10 sm:text-sm lg:text-base">
                                 {{ t('hero.secondaryRole') }}
                             </p>
                         </div>
@@ -57,7 +55,7 @@ const hasProfilePhoto = ref(true)
         </div>
 
         <div class="pointer-events-none absolute inset-0">
-            <img :src="plasticOverlay" class="w-full h-full object-cover opacity-80 sm:opacity-100" />
+            <img :src="plasticOverlay" class="w-full h-full rotate-180 object-cover opacity-80 sm:opacity-100" />
         </div>
     </div>
 </template>

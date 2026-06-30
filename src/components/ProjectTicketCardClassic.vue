@@ -25,6 +25,7 @@ const props = defineProps<{
   storeBadgeSrc: Record<StoreType, string>
   openLightbox: (projectId: string, index: number) => void
   noImagesText: string
+  reduceEffects?: boolean
 }>()
 
 function syncEmblaState(api?: EmblaCarouselType) {
@@ -82,7 +83,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <article ref="articleRef" class="ticket-card overflow-visible">
+  <article ref="articleRef" class="ticket-card overflow-visible" :class="{ 'ticket-card--reduced-effects': reduceEffects }">
     <div class="ticket-card__shell">
       <section class="ticket-card__info">
         <div class="ticket-card__content relative z-10">
@@ -277,6 +278,27 @@ onBeforeUnmount(() => {
   min-width: 100%;
   flex: 0 0 100%;
   height: 100%;
+}
+
+.ticket-card--reduced-effects {
+  content-visibility: auto;
+  contain-intrinsic-size: 460px;
+}
+
+.ticket-card--reduced-effects,
+.ticket-card--reduced-effects * {
+  animation: none !important;
+}
+
+.ticket-card--reduced-effects :is(.ticket-card__shell, img, a, button, span) {
+  box-shadow: none !important;
+  filter: none !important;
+  text-shadow: none !important;
+}
+
+.ticket-card--reduced-effects :is(button, a, span) {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
 }
 
 @media (min-width: 900px) {
