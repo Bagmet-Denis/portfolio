@@ -5,10 +5,11 @@ import { cyberSecurityProject, desktopProjects, mobileProjects } from '@/data/pr
 import { publicAssetUrl, resolveAssetUrl, resolveAssetUrls } from '@/utils/resolveAssetUrl'
 import { getProjectDescription } from '@/utils/projectDescriptions'
 import { projectClientCountriesForLocale, projectClientCountryForTitle } from '@/utils/projectClientCountry'
-import LegalNoticeBanner from '@/components/LegalNoticeBanner.vue'
 import AntiAIBanner from '@/components/AntiAIBanner.vue'
 import ProjectImageLightbox from '@/components/ProjectImageLightbox.vue'
 import ProjectTicketCard from '@/components/ProjectTicketCard.vue'
+import SecurityBoard from '@/components/security/SecurityBoard.vue'
+import SecurityResearchCard from '@/components/security/SecurityResearchCard.vue'
 import TeleprompterAutomaticInfoPage from '@/pages/project-details/TeleprompterAutomaticInfoPage.vue'
 import MAlienInfoPage from '@/pages/project-details/MAlienInfoPage.vue'
 import type { ProjectCard, ProjectCategory, StoreLink, StoreType } from '@/types/projectCard'
@@ -61,12 +62,6 @@ const storeBadgeSrc: Record<StoreType, string> = {
   rustore: resolveAssetUrl('src/assets/projects/icons/rustore.svg'),
   website: '',
 }
-
-const codebyProfileIconUrl =
-  resolveAssetUrl('src/assets/projects/security/codeby-profile.png') ||
-  resolveAssetUrl('src/assets/projects/security/codeby-profile.png.png')
-const hackerOneServicesIconUrl = resolveAssetUrl('src/assets/projects/security/hackerone-services.png')
-const telegramLogoUrl = publicAssetUrl('socials/telegram.svg')
 
 const fullStackProjectTitles = new Set([
   'Teleprompter Automatic',
@@ -129,6 +124,109 @@ const toneOfVictoryProjectTechnologies = [
   'Multimarket content',
 ]
 
+const cybersecurityProjectMeta = new Map<
+  string,
+  {
+    /** Ссылки на публикации: несколько частей одной статьи тоже поддерживаются. */
+    articleLinks?: { url: string; labelKey: string }[]
+    /** Ключ служебной пометки, например про архивную публикацию. */
+    noticeKey?: string
+    technologies: string[]
+  }
+>([
+  [
+    'Кража учетных данных браузеров c помощью Raspberry Pi Zero W',
+    {
+      articleLinks: [
+        {
+          url: 'https://codeby.net/resources/krazha-uchetnykh-dannykh-brauzerov-c-pomoshch-yu-raspberry-pi-zero-w-chast-1.349/',
+          labelKey: 'projects.articleLinks.part1',
+        },
+        {
+          url: 'https://codeby.net/resources/krazha-uchetnykh-dannykh-s-brauzerov-pomoshch-yu-raspberry-pi-zero-w-chast-2-podgotovka.351/',
+          labelKey: 'projects.articleLinks.part2',
+        },
+      ],
+      technologies: ['Raspberry Pi Zero W', 'USB HID', 'Browser security', 'Lab research'],
+    },
+  ],
+  [
+    'Получаем доступ к аккаунтам Meest Express',
+    {
+      articleLinks: [
+        {
+          url: 'https://codeby.net/threads/poluchaem-dostup-k-akkauntam-meest-express-moja-pervaja-najdennaja-ujazvimost.70233/',
+          labelKey: 'projects.articleLinks.read',
+        },
+      ],
+      technologies: ['Authorization logic', 'Web security', 'Bug bounty', 'Account access'],
+    },
+  ],
+  [
+    'Определяем кто дома с помощью ESP8266',
+    {
+      articleLinks: [
+        {
+          url: 'https://codeby.net/threads/opredelyayem-kto-doma-s-pomoshch-yu-esp8266.66662/',
+          labelKey: 'projects.articleLinks.read',
+        },
+      ],
+      technologies: ['ESP8266', 'Wi-Fi signals', 'IoT security', 'Presence detection'],
+    },
+  ],
+  [
+    'Детектор деаутентификации (диссоциации) клиентов.',
+    {
+      articleLinks: [
+        {
+          url: 'https://codeby.net/threads/detektor-deautentifikatsii-dissotsiatsii-kliyentov-chast-1.66349/',
+          labelKey: 'projects.articleLinks.part1',
+        },
+        {
+          url: 'https://codeby.net/threads/detektor-deautentifikatsii-dissotsiatsii-kliyentov-chast-2.66382/',
+          labelKey: 'projects.articleLinks.part2',
+        },
+      ],
+      technologies: ['Wi-Fi security', 'Deauth detection', '802.11', 'Monitoring'],
+    },
+  ],
+  [
+    'Пишем свой сигнатурный антивирус на C# (YARA)',
+    {
+      articleLinks: [
+        {
+          url: 'https://codeby.net/threads/pishem-svoi-signaturnyi-antivirus-na-c-chast-1-nebol-shoi-ekskurs-v-yara.66414/',
+          labelKey: 'projects.articleLinks.part1',
+        },
+        {
+          url: 'https://codeby.net/threads/pishem-svoi-signaturnyi-antivirus-na-c-chast-2-pishem-yara-pravila.66453/',
+          labelKey: 'projects.articleLinks.part2',
+        },
+      ],
+      technologies: ['C#', 'YARA', 'Signature scanning', 'Malware detection'],
+    },
+  ],
+  [
+    'Пишем RMS-Троян (Hellion)',
+    {
+      articleLinks: [
+        {
+          url: 'https://codeby.net/threads/rms-hellion-telegram.65938/',
+          labelKey: 'projects.articleLinks.archived',
+        },
+      ],
+      noticeKey: 'projects.notices.archivedArticle',
+      technologies: ['C#', 'RMS research', 'Remote control', 'Defensive analysis'],
+    },
+  ],
+  [
+    'Закрытый OSINT-инструмент для поиска цифрового следа',
+    {
+      technologies: ['Python', 'OSINT', 'Automation', 'Data aggregation'],
+    },
+  ],
+])
+
 const insentryContributionCard = computed<ProjectCard>(() => ({
   id: 'mobile-insentry-raw-decoder',
   category: 'mobile',
@@ -156,12 +254,22 @@ const insentryContributionCard = computed<ProjectCard>(() => ({
 }))
 
 const activeCategory = ref<ProjectCategory>('mobile')
+const filterViewMode = ref<'icons' | 'list'>('icons')
 const showAntiAIBanner = false
 
 const isLightboxOpen = ref(false)
 const lightboxProjectId = ref<string | null>(null)
 const lightboxIndex = ref(0)
 const infoProjectId = ref<string | null>(null)
+
+function selectCategory(category: ProjectCategory) {
+  const scrollY = typeof window === 'undefined' ? 0 : window.scrollY
+  activeCategory.value = category
+
+  if (typeof window !== 'undefined') {
+    requestAnimationFrame(() => window.scrollTo({ top: scrollY }))
+  }
+}
 
 function openInfoModal(projectId: string) {
   infoProjectId.value = projectId
@@ -276,16 +384,27 @@ const normalizedProjects = computed<Record<ProjectCategory, ProjectCard[]>>(() =
     galleryUrls: resolveAssetUrls(project.screenshots),
     storeLinks: [],
   })),
-  cybersecurity: cyberSecurityProject.map((project) => ({
-    id: `cyber-${project.id}-${project.title}`,
-    category: 'cybersecurity',
-    title: project.title,
-    description: getProjectDescription(t, project.title, project.description || t('projects.fallbackDescription')),
-    technologies: [],
-    iconUrl: '',
-    galleryUrls: resolveAssetUrls(project.imagePath ? [project.imagePath] : []),
-    storeLinks: [],
-  })),
+  cybersecurity: cyberSecurityProject.map((project) => {
+    const meta = cybersecurityProjectMeta.get(project.title)
+    const articleLinks: StoreLink[] = (meta?.articleLinks ?? []).map((link) => ({
+      type: 'website',
+      url: link.url,
+      label: t(link.labelKey),
+    }))
+
+    return {
+      id: `cyber-${project.id}-${project.title}`,
+      category: 'cybersecurity',
+      eyebrow: locale.value.startsWith('ru') ? 'Исследование' : 'Security research',
+      title: project.title,
+      description: getProjectDescription(t, project.title, project.description || t('projects.fallbackDescription')),
+      technologies: meta?.technologies ?? [],
+      iconUrl: resolveAssetUrl(project.imagePath),
+      galleryUrls: resolveAssetUrls(project.imagePath ? [project.imagePath] : []),
+      storeLinks: articleLinks,
+      notice: meta?.noticeKey ? t(meta.noticeKey) : undefined,
+    }
+  }),
 }))
 
 const visibleProjects = computed(() => normalizedProjects.value[activeCategory.value])
@@ -304,6 +423,30 @@ const activeCategoryLabel = computed(() => {
   const category = categoryOptions.find((option) => option.key === activeCategory.value)
   return category ? t(category.labelKey) : ''
 })
+const activePreviewProject = computed<ProjectCard | null>(() => visibleProjects.value[0] ?? null)
+const activePreviewTechnologies = computed(() => {
+  const technologies = new Set<string>()
+
+  visibleProjects.value.slice(0, 8).forEach((project) => {
+    project.technologies.forEach((technology) => {
+      const normalizedTechnology = technology.trim()
+      if (normalizedTechnology) technologies.add(normalizedTechnology)
+    })
+  })
+
+  return Array.from(technologies).slice(0, 6)
+})
+const activePreviewGalleryCount = computed(() =>
+  visibleProjects.value.reduce((total, project) => total + project.galleryUrls.length, 0),
+)
+const activePreviewStoreCount = computed(() =>
+  visibleProjects.value.reduce((total, project) => total + project.storeLinks.length, 0),
+)
+const activePathSegments = computed(() => [
+  'bagmet',
+  locale.value.startsWith('ru') ? 'Проекты' : 'Projects',
+  activeCategoryLabel.value,
+])
 const isCybersecurityCategory = computed(() => activeCategory.value === 'cybersecurity')
 
 const lightboxProject = computed(() => {
@@ -332,47 +475,91 @@ const infoProject = computed(() => {
     <main class="relative z-10 w-full px-3 pt-2 pb-16 sm:px-4 sm:pt-3">
       <section
         class="projects-review-shell relative overflow-hidden rounded-[26px] p-2 sm:p-3">
-              <div class="projects-filter-panel">
-              <div class="projects-filter-toolbar">
-                <div class="projects-filter-window-controls" aria-hidden="true">
-                  <img
-                    v-if="macosWindowControlsUrl"
-                    :src="macosWindowControlsUrl"
-                    alt=""
-                    class="projects-filter-window-controls-image"
-                  >
-                  <template v-else>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                  </template>
-                </div>
-                <div class="projects-filter-pathbar">
-                  <img
-                    v-if="finderFolderIconUrl"
-                    :src="finderFolderIconUrl"
-                    alt=""
-                    class="projects-filter-toolbar-folder"
-                    aria-hidden="true"
-                  >
-                  <span v-else class="projects-filter-toolbar-folder-fallback" aria-hidden="true"></span>
-                  <span>projects library / {{ activeCategoryLabel }}</span>
-                </div>
-                <strong class="projects-filter-toolbar-count">
-                  {{ categoryCounts[activeCategory] }}
-                  {{ locale.startsWith('ru') ? 'проектов' : 'projects' }}
-                </strong>
-              </div>
+        <div class="projects-filter-panel">
+          <div class="projects-filter-toolbar">
+            <div class="projects-filter-window-controls" aria-hidden="true">
+              <img
+                v-if="macosWindowControlsUrl"
+                :src="macosWindowControlsUrl"
+                alt=""
+                class="projects-filter-window-controls-image"
+              >
+              <template v-else>
+                <span></span>
+                <span></span>
+                <span></span>
+              </template>
+            </div>
 
-              <div class="projects-filter-body">
-                <div class="projects-filter-intro">
-                  <p>{{ locale.startsWith('ru') ? 'Библиотека проектов' : 'Projects Library' }}</p>
-                  <strong>{{ activeCategoryLabel }}</strong>
-                  <span>{{ activeCategoryMeta.description }}</span>
+            <div class="projects-filter-toolbar-nav" aria-hidden="true">
+              <span class="projects-filter-chevron projects-filter-chevron-left"></span>
+              <span class="projects-filter-toolbar-divider"></span>
+              <span class="projects-filter-chevron projects-filter-chevron-right"></span>
+            </div>
+
+            <div class="projects-filter-pathbar" aria-hidden="true">
+              <img
+                v-if="finderFolderIconUrl"
+                :src="finderFolderIconUrl"
+                alt=""
+                class="projects-filter-toolbar-folder"
+              >
+              <span v-else class="projects-filter-toolbar-folder-fallback" aria-hidden="true"></span>
+              <span>projects library / {{ activeCategoryLabel }}</span>
+            </div>
+
+            <div class="projects-filter-toolbar-actions">
+              <button
+                type="button"
+                class="projects-filter-icon-button projects-filter-icon-grid"
+                :class="{ 'projects-filter-icon-button-active': filterViewMode === 'icons' }"
+                :aria-label="locale.startsWith('ru') ? 'Вид значками' : 'Icon view'"
+                :aria-pressed="filterViewMode === 'icons'"
+                @click="filterViewMode = 'icons'"
+              >
+                <i></i><i></i><i></i><i></i>
+              </button>
+              <button
+                type="button"
+                class="projects-filter-icon-button projects-filter-icon-list"
+                :class="{ 'projects-filter-icon-button-active': filterViewMode === 'list' }"
+                :aria-label="locale.startsWith('ru') ? 'Вид списком' : 'List view'"
+                :aria-pressed="filterViewMode === 'list'"
+                @click="filterViewMode = 'list'"
+              >
+                <i></i><i></i><i></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="projects-filter-body">
+            <div class="projects-filter-content">
+              <div class="projects-filter-browser">
+                <div class="projects-filter-content-head">
+                  <div class="projects-filter-intro">
+                    <p>{{ locale.startsWith('ru') ? 'Библиотека проектов' : 'Projects Library' }}</p>
+                    <strong>{{ activeCategoryLabel }}</strong>
+                    <span>{{ activeCategoryMeta.description }}</span>
+                  </div>
+                  <strong class="projects-filter-toolbar-count">
+                    {{ categoryCounts[activeCategory] }}
+                    {{ locale.startsWith('ru') ? 'проектов' : 'projects' }}
+                  </strong>
+                </div>
+
+                <div class="projects-filter-pathline" aria-label="Project path">
+                  <span
+                    v-for="(segment, index) in activePathSegments"
+                    :key="`${segment}-${index}`"
+                    :class="{ 'projects-filter-pathline-current': index === activePathSegments.length - 1 }"
+                  >
+                    {{ segment }}
+                  </span>
                 </div>
 
                 <div
                   class="projects-filter-dock"
+                  :class="{ 'projects-filter-dock-list': filterViewMode === 'list' }"
                   role="tablist"
                   :aria-label="locale.startsWith('ru') ? 'Категории проектов' : 'Project categories'"
                 >
@@ -385,7 +572,8 @@ const infoProject = computed(() => {
                     role="tab"
                     :aria-selected="activeCategory === category.key"
                     :aria-pressed="activeCategory === category.key"
-                    @click="activeCategory = category.key"
+                    @mousedown.prevent
+                    @click="selectCategory(category.key)"
                   >
                     <span class="projects-filter-folder-frame" aria-hidden="true">
                       <img
@@ -411,137 +599,116 @@ const infoProject = computed(() => {
                 </div>
               </div>
 
-              <div class="projects-markets">
-                <div class="projects-markets-heading">
-                  <span class="projects-markets-status-dot"></span>
-                  <strong>{{ locale.startsWith('ru') ? 'География' : 'Markets' }}</strong>
-                  <code>{{ locale.startsWith('ru') ? 'релизы:' : 'deployments:' }}</code>
-                </div>
-                <div class="projects-markets-list">
-                  <span
-                    v-for="country in mobileProjectCountries"
-                    :key="country.name"
-                    class="projects-market-country"
-                  >
+              <aside class="projects-filter-preview" :aria-label="locale.startsWith('ru') ? 'Сведения о категории' : 'Category info'">
+                <div class="projects-filter-preview-visual" aria-hidden="true">
+                  <span class="projects-filter-preview-folder-frame">
                     <img
-                      v-if="country.flagUrl"
-                      :src="country.flagUrl"
-                      :alt="country.name"
-                      class="projects-market-flag"
+                      v-if="finderFolderIconUrl"
+                      :src="finderFolderIconUrl"
+                      alt=""
+                      class="projects-filter-preview-folder-image"
                     >
-                    <span v-else class="projects-market-emoji">{{ country.flagEmoji }}</span>
-                    <strong>{{ country.name }}</strong>
+                    <span
+                      v-else
+                      class="projects-filter-folder projects-filter-preview-folder-fallback"
+                    ></span>
                   </span>
                 </div>
-                <span class="projects-markets-count">
-                  {{ mobileProjectCountries.length }}
-                </span>
-              </div>
+
+                <p class="projects-filter-preview-kicker">{{ locale.startsWith('ru') ? 'Сведения' : 'Info' }}</p>
+                <strong class="projects-filter-preview-title">{{ activeCategoryLabel }}</strong>
+
+                <dl class="projects-filter-preview-stats">
+                  <div>
+                    <dt>{{ locale.startsWith('ru') ? 'Проекты' : 'Projects' }}</dt>
+                    <dd>{{ categoryCounts[activeCategory] }}</dd>
+                  </div>
+                  <div>
+                    <dt>{{ locale.startsWith('ru') ? 'Снимки' : 'Shots' }}</dt>
+                    <dd>{{ activePreviewGalleryCount }}</dd>
+                  </div>
+                  <div>
+                    <dt>{{ locale.startsWith('ru') ? 'Ссылки' : 'Links' }}</dt>
+                    <dd>{{ activePreviewStoreCount }}</dd>
+                  </div>
+                </dl>
+
+                <div v-if="activePreviewProject" class="projects-filter-preview-featured">
+                  <span>{{ locale.startsWith('ru') ? 'Первый в списке' : 'First item' }}</span>
+                  <strong>{{ activePreviewProject.title }}</strong>
+                </div>
+
+                <div v-if="activePreviewTechnologies.length" class="projects-filter-preview-tags">
+                  <span
+                    v-for="technology in activePreviewTechnologies"
+                    :key="technology"
+                  >
+                    {{ technology }}
+                  </span>
+                </div>
+              </aside>
             </div>
+          </div>
+
+          <div class="projects-markets">
+            <div class="projects-markets-heading">
+              <span class="projects-markets-status-dot"></span>
+              <strong>{{ locale.startsWith('ru') ? 'География' : 'Markets' }}</strong>
+              <code>{{ locale.startsWith('ru') ? 'релизы:' : 'deployments:' }}</code>
+            </div>
+            <div class="projects-markets-selection">
+              <span>{{ locale.startsWith('ru') ? 'Выбрано' : 'Selected' }}</span>
+              <strong>{{ activeCategoryLabel }}</strong>
+            </div>
+            <div class="projects-markets-list">
+              <span
+                v-for="country in mobileProjectCountries"
+                :key="country.name"
+                class="projects-market-country"
+              >
+                <img
+                  v-if="country.flagUrl"
+                  :src="country.flagUrl"
+                  :alt="country.name"
+                  class="projects-market-flag"
+                >
+                <span v-else class="projects-market-emoji">{{ country.flagEmoji }}</span>
+                <strong>{{ country.name }}</strong>
+              </span>
+            </div>
+            <span class="projects-markets-count">
+              {{ mobileProjectCountries.length }}
+            </span>
+          </div>
+        </div>
       </section>
 
       <div class="mt-6 space-y-4">
         <AntiAIBanner v-if="showAntiAIBanner && activeCategory === 'mobile'" class="max-w-[420px] md:ml-2 md:rotate-[1deg]" />
-        <div v-if="isCybersecurityCategory" class="grid gap-4 xl:grid-cols-[minmax(0,1fr)_360px] xl:items-start">
-          <div class="grid w-full gap-3 md:max-w-[360px]">
-            <div
-              class="group relative min-w-0 overflow-hidden rounded-[20px] border border-[#AC3F2B]/24 bg-[#0D0908] shadow-[0_18px_38px_rgba(0,0,0,0.24),0_14px_28px_rgba(172,63,43,0.10)] backdrop-blur transition duration-200 hover:-translate-y-0.5 hover:border-[#AC3F2B]/36">
-              <div class="absolute inset-x-0 top-0 h-1 bg-[#AC3F2B]"></div>
-              <div class="grid">
-                <div
-                  class="relative flex h-32 items-center justify-center overflow-hidden bg-[#F7EFE7] p-4">
-                  <img v-if="codebyProfileIconUrl" :src="codebyProfileIconUrl" alt=""
-                    class="h-full w-full object-contain" loading="lazy" decoding="async" />
-                  <span v-else class="text-xs font-black uppercase tracking-[0.14em] text-[#301B16]">Codeby</span>
-                  <div
-                    class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(255,255,255,0.74),transparent_32%),linear-gradient(90deg,transparent,rgba(172,63,43,0.08))]">
-                  </div>
-                </div>
-                <div
-                  class="min-w-0 border-t border-white/10 bg-[linear-gradient(135deg,rgba(32,20,18,0.96),rgba(43,27,24,0.92))] p-4">
-                  <p class="text-[11px] font-black uppercase tracking-[0.2em] text-[#F0BAAC]/76">
-                    Публикации и профиль
-                  </p>
-                  <div class="mt-2 flex flex-wrap gap-2">
-                    <span
-                      class="rounded-full border border-[#AC3F2B]/20 bg-[#AC3F2B]/12 px-3 py-1 text-xs font-bold text-[#FFEAE4]">Codeby.net</span>
-                  </div>
-                  <a href="https://codeby.net/members/debug.77915/" target="_blank" rel="noopener noreferrer"
-                    class="mt-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/7 px-3 py-2 text-sm font-bold text-[#F0BAAC] transition hover:-translate-y-0.5 hover:border-[#AC3F2B]/28 hover:bg-white/10 hover:text-[#FFF0E8]">
-                    Профиль на Codeby.net
-                    <span class="text-[#F8D1C6]/70 transition group-hover:translate-x-0.5">↗</span>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-          <LegalNoticeBanner class="max-w-[420px] xl:max-w-none xl:-rotate-[3deg]" />
-        </div>
       </div>
 
-      <section class="relative z-10 mt-8 grid gap-4 lg:grid-flow-dense lg:grid-cols-2 lg:items-start">
-        <article
-          v-if="isCybersecurityCategory"
-          class="group relative min-w-0 overflow-hidden rounded-[22px] border border-white/10 bg-[#080707] p-3 shadow-[0_16px_36px_rgba(0,0,0,0.28),0_14px_28px_rgba(172,63,43,0.08)] backdrop-blur transition duration-200 hover:-translate-y-0.5 hover:border-white/18 lg:col-span-2">
-          <div class="absolute inset-x-0 top-0 h-1 bg-[linear-gradient(90deg,#F06F35_0%,#F06F35_42%,#2AABEE_58%,#2AABEE_100%)]"></div>
-          <div class="grid gap-3 md:grid-cols-2">
-            <div class="relative min-w-0 rounded-[18px] border border-[#F06F35]/18 bg-[linear-gradient(135deg,rgba(24,18,16,0.96),rgba(17,14,13,0.98))] p-4">
-              <div class="flex items-start gap-4">
-                <div class="flex h-16 w-24 shrink-0 items-center justify-center overflow-hidden rounded-[12px] bg-[#F5EFE4] p-2">
-                  <img v-if="hackerOneServicesIconUrl" :src="hackerOneServicesIconUrl" alt=""
-                    class="max-h-full max-w-full object-contain" loading="lazy" decoding="async" />
-                  <span v-else class="text-xs font-black uppercase tracking-[0.14em] text-[#161616]">H1</span>
-                </div>
-                <div class="min-w-0">
-                  <p class="text-[11px] font-black uppercase tracking-[0.2em] text-[#FFD1B5]/76">
-                    Найдены уязвимости
-                  </p>
-                  <div class="mt-2 flex flex-wrap gap-2">
-                    <span
-                      class="rounded-full border border-[#F06F35]/18 bg-[#F06F35]/10 px-3 py-1 text-xs font-bold text-[#FFF0E8]">Mail.ru</span>
-                    <span
-                      class="rounded-full border border-[#F06F35]/18 bg-[#F06F35]/10 px-3 py-1 text-xs font-bold text-[#FFF0E8]">QIWI</span>
-                  </div>
-                </div>
-              </div>
-              <a href="https://hackerone.com/debug_denis" target="_blank" rel="noopener noreferrer"
-                class="mt-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/7 px-3 py-2 text-sm font-bold text-[#FFD1B5] transition hover:-translate-y-0.5 hover:border-[#F06F35]/28 hover:bg-white/10 hover:text-[#FFF0E8]">
-                Профиль на HackerOne
-                <span class="text-[#FFDCC9]/70 transition group-hover:translate-x-0.5">↗</span>
-              </a>
-            </div>
+      <SecurityBoard
+        v-if="isCybersecurityCategory"
+        class="relative z-10 mt-8"
+        :research-count="visibleProjects.length"
+      >
+        <SecurityResearchCard
+          v-for="(project, index) in visibleProjects"
+          :key="project.id"
+          :project="project"
+          :index="index"
+          :open-lightbox="openLightbox"
+        />
+      </SecurityBoard>
 
-            <div class="relative min-w-0 rounded-[18px] border border-[#2AABEE]/18 bg-[linear-gradient(135deg,rgba(8,20,30,0.96),rgba(12,23,31,0.98))] p-4">
-              <div class="flex items-start gap-4">
-                <img :src="telegramLogoUrl" alt=""
-                  class="mt-0.5 h-11 w-11 shrink-0 object-contain" loading="lazy" decoding="async" />
-                <div class="min-w-0">
-                  <p class="text-[11px] font-black uppercase tracking-[0.2em] text-[#A9E4FF]/76">
-                    Уязвимость в Telegram
-                  </p>
-                  <h3 class="mt-1 text-lg font-black leading-tight text-[#EAF8FF]">
-                    Закрытый research и поиск уязвимости
-                  </h3>
-                  <div class="mt-3 flex flex-wrap gap-2">
-                    <span
-                      class="rounded-full border border-[#2AABEE]/22 bg-[#2AABEE]/12 px-3 py-1 text-xs font-bold text-[#EAF8FF]">Поиск по заказу</span>
-                    <span
-                      class="rounded-full border border-[#2AABEE]/22 bg-[#2AABEE]/12 px-3 py-1 text-xs font-bold text-[#EAF8FF]">Уязвимость продана</span>
-                  </div>
-                  <p class="mt-3 text-sm leading-5 text-[#D8F2FF]/78">
-                    Была найдена уязвимость в Telegram. Публичных деталей по кейсу нет: это был закрытый research.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </article>
-
+      <section
+        v-else
+        class="relative z-10 mt-8 grid gap-4 lg:grid-cols-2 lg:grid-flow-dense lg:items-start"
+      >
         <ProjectTicketCard v-for="project in visibleProjects" :key="project.id" :project="project"
           :class="[
             fullWidthProjectTitles.has(project.title) ? 'lg:col-span-2' : '',
             project.id === 'mobile-insentry-raw-decoder' ? 'lg:col-span-2' : '',
-            project.title === 'Закрытый OSINT-инструмент для поиска цифрового следа' ? 'lg:col-span-2' : '',
           ]"
           :store-badge-src="storeBadgeSrc" :open-lightbox="openLightbox" :open-info-modal="openInfoModal"
           :no-images-text="t('projects.noImages')" :info-button-text="t('projects.showInfo')" />
@@ -595,15 +762,9 @@ const infoProject = computed(() => {
 
 <style scoped>
 .projects-review-shell {
-  border: 1px solid rgba(67, 47, 39, 0.18);
-  background:
-    linear-gradient(rgba(72, 54, 37, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(72, 54, 37, 0.05) 1px, transparent 1px),
-    rgba(255, 250, 242, 0.72);
-  background-size: 24px 24px;
-  box-shadow:
-    0 20px 52px rgba(74, 54, 38, 0.12),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.56);
+  border: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
 .projects-filter-panel {
@@ -611,18 +772,13 @@ const infoProject = computed(() => {
   isolation: isolate;
   overflow: hidden;
   margin-top: 0;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 18px;
-  background:
-    radial-gradient(ellipse at 16% 10%, rgba(79, 159, 255, 0.34), transparent 19rem),
-    radial-gradient(ellipse at 82% 18%, rgba(177, 118, 255, 0.24), transparent 20rem),
-    radial-gradient(ellipse at 62% 88%, rgba(69, 94, 132, 0.28), transparent 22rem),
-    linear-gradient(180deg, rgba(28, 29, 34, 0.98), rgba(12, 13, 17, 0.98)),
-    #0d0e12;
+  min-height: 23rem;
+  border: 1px solid rgba(154, 170, 184, 0.22);
+  border-radius: 26px;
+  background: #22272c;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.1),
-    0 22px 62px rgba(0, 0, 0, 0.34);
-  color: #f5f5f7;
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  color: #e8edf2;
 }
 
 .projects-filter-panel::before {
@@ -631,37 +787,23 @@ const infoProject = computed(() => {
   inset: 0;
   z-index: -1;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.07), transparent 34%),
-    radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.08), transparent 18rem),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.018) 0 1px, transparent 1px 3rem),
-    linear-gradient(rgba(255, 255, 255, 0.016) 0 1px, transparent 1px 3rem);
-  opacity: 0.86;
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 8rem),
+    radial-gradient(circle at 72% 12%, rgba(112, 131, 145, 0.14), transparent 18rem);
+  opacity: 1;
 }
 
 .projects-filter-panel::after {
-  content: "";
-  position: absolute;
-  right: 1rem;
-  bottom: 0.85rem;
-  z-index: -1;
-  width: 9rem;
-  height: 9rem;
-  background:
-    linear-gradient(45deg, transparent 0 44%, rgba(255, 69, 58, 0.2) 45% 55%, transparent 56%),
-    linear-gradient(-45deg, transparent 0 44%, rgba(255, 69, 58, 0.14) 45% 55%, transparent 56%);
-  background-size: 1.05rem 1.05rem;
-  opacity: 0.45;
-  transform: rotate(45deg);
+  content: none;
 }
 
 .projects-filter-toolbar {
   display: flex;
   align-items: center;
-  gap: 0.7rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.09);
-  background:
-    linear-gradient(180deg, rgba(42, 42, 46, 0.78), rgba(28, 28, 31, 0.72));
-  padding: 0.72rem 0.88rem;
+  gap: 1.05rem;
+  min-height: 4.65rem;
+  border-bottom: 1px solid rgba(9, 12, 14, 0.18);
+  background: linear-gradient(180deg, rgba(38, 45, 51, 0.98), rgba(33, 39, 45, 0.98));
+  padding: 0 1.32rem;
 }
 
 .projects-filter-window-controls {
@@ -669,7 +811,8 @@ const infoProject = computed(() => {
   align-items: center;
   gap: 0.42rem;
   flex: 0 0 auto;
-  min-width: 3.5rem;
+  width: 3.5rem;
+  transform: translateY(-0.18rem);
 }
 
 .projects-filter-window-controls-image {
@@ -700,25 +843,149 @@ const infoProject = computed(() => {
   background: #28c840;
 }
 
+.projects-filter-toolbar-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.58rem;
+  width: 5.05rem;
+  height: 2.58rem;
+  flex: 0 0 auto;
+  border: 1px solid rgba(149, 164, 180, 0.16);
+  border-radius: 999px;
+  background: rgba(33, 40, 47, 0.72);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.projects-filter-chevron {
+  display: block;
+  width: 0.74rem;
+  height: 0.74rem;
+  border-top: 0.18rem solid rgba(239, 244, 249, 0.9);
+  border-left: 0.18rem solid rgba(239, 244, 249, 0.9);
+}
+
+.projects-filter-chevron-left {
+  transform: rotate(-45deg);
+}
+
+.projects-filter-chevron-right {
+  border-color: rgba(239, 244, 249, 0.34);
+  transform: rotate(135deg);
+}
+
+.projects-filter-toolbar-divider {
+  width: 1px;
+  height: 1.45rem;
+  background: rgba(232, 237, 242, 0.13);
+}
+
 .projects-filter-pathbar {
   display: flex;
   min-width: 0;
+  max-width: 36rem;
   flex: 1 1 auto;
   align-items: center;
-  gap: 0.46rem;
-  border: 1px solid rgba(48, 54, 61, 0.9);
-  border-radius: 8px;
-  background: rgba(8, 8, 10, 0.64);
-  color: rgba(245, 245, 247, 0.62);
+  gap: 0.62rem;
+  height: 2.58rem;
+  border: 1px solid rgba(149, 164, 180, 0.2);
+  border-radius: 0.7rem;
+  background: rgba(13, 16, 20, 0.62);
+  color: rgba(235, 240, 245, 0.66);
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 0.72rem;
-  padding: 0.38rem 0.58rem;
+  padding: 0 0.9rem;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.18);
 }
 
 .projects-filter-pathbar span:last-child {
   overflow: hidden;
+  font-size: 0.9rem;
+  font-weight: 820;
+  line-height: 1;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.projects-filter-toolbar-actions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.22rem;
+  margin-left: auto;
+  border: 1px solid rgba(149, 164, 180, 0.16);
+  border-radius: 999px;
+  background: rgba(29, 35, 41, 0.62);
+  padding: 0.18rem;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.projects-filter-icon-button {
+  position: relative;
+  display: grid;
+  align-content: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  cursor: pointer;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(235, 240, 245, 0.78);
+  box-shadow: none;
+  transition:
+    background 170ms ease,
+    border-color 170ms ease,
+    color 170ms ease,
+    transform 170ms ease;
+}
+
+.projects-filter-icon-button:hover {
+  background: rgba(255, 255, 255, 0.075);
+  color: #ffffff;
+}
+
+.projects-filter-icon-button:focus-visible {
+  outline: 1px solid rgba(235, 240, 245, 0.34);
+  outline-offset: 1px;
+}
+
+.projects-filter-icon-button-active {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.projects-filter-icon-grid {
+  grid-template-columns: repeat(2, 0.36rem);
+  grid-template-rows: repeat(2, 0.36rem);
+  gap: 0.18rem;
+  align-content: center;
+  justify-content: center;
+}
+
+.projects-filter-icon-grid i {
+  display: block;
+  border: 1.8px solid currentColor;
+  border-radius: 0.1rem;
+}
+
+.projects-filter-icon-list {
+  grid-template-columns: 0.92rem;
+  grid-template-rows: repeat(3, 0.12rem);
+  gap: 0.18rem;
+  align-content: center;
+  justify-content: center;
+}
+
+.projects-filter-icon-list i {
+  display: block;
+  border: 0;
+  border-radius: 999px;
+  background: currentColor;
 }
 
 .projects-filter-toolbar-folder {
@@ -726,7 +993,7 @@ const infoProject = computed(() => {
   height: 1.18rem;
   flex: 0 0 auto;
   object-fit: contain;
-  filter: drop-shadow(0 0.12rem 0.22rem rgba(0, 0, 0, 0.32));
+  filter: drop-shadow(0 0.08rem 0.12rem rgba(22, 93, 154, 0.18));
 }
 
 .projects-filter-toolbar-folder-fallback {
@@ -751,32 +1018,57 @@ const infoProject = computed(() => {
 
 .projects-filter-toolbar-count {
   flex: 0 0 auto;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(149, 164, 180, 0.16);
   border-radius: 999px;
-  background: rgba(245, 245, 247, 0.06);
-  color: rgba(245, 245, 247, 0.82);
+  background: rgba(36, 43, 50, 0.76);
+  color: rgba(232, 237, 242, 0.78);
   font-size: 0.68rem;
   font-weight: 800;
-  padding: 0.28rem 0.55rem;
+  padding: 0.36rem 0.62rem;
 }
 
 .projects-filter-body {
   display: grid;
-  gap: 1.2rem;
-  justify-items: center;
-  padding: 1.45rem 1.15rem 1.55rem;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 64%);
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  min-height: 17rem;
+  background: #22272c;
+}
+
+.projects-filter-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
+  background:
+    radial-gradient(circle at 82% 8%, rgba(255, 255, 255, 0.045), transparent 18rem),
+    #22272c;
+}
+
+.projects-filter-browser {
+  min-width: 0;
+}
+
+.projects-filter-content-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 6.35rem;
+  padding: 1.05rem 1.45rem 0;
 }
 
 .projects-filter-intro {
   min-width: 0;
-  max-width: 35rem;
-  text-align: center;
+  max-width: 42rem;
+  border-bottom: 0;
+  background: transparent;
+  padding: 0;
+  text-align: left;
 }
 
 .projects-filter-intro p {
-  color: rgba(245, 245, 247, 0.62);
-  font-size: 0.72rem;
+  color: rgba(235, 240, 245, 0.48);
+  font-size: 0.64rem;
   font-weight: 900;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -784,42 +1076,92 @@ const infoProject = computed(() => {
 
 .projects-filter-intro strong {
   display: block;
-  margin-top: 0.28rem;
-  color: #f5f5f7;
-  font-size: 1.85rem;
+  margin-top: 0.22rem;
+  color: rgba(247, 250, 253, 0.96);
+  font-size: 1.12rem;
   font-weight: 900;
   line-height: 1.15;
 }
 
 .projects-filter-intro span {
   display: block;
-  max-width: 38rem;
-  margin-top: 0.5rem;
-  color: rgba(245, 245, 247, 0.64);
-  font-size: 0.86rem;
-  line-height: 1.55;
+  max-width: 42rem;
+  min-height: 2.25rem;
+  margin-top: 0.32rem;
+  color: rgba(232, 237, 242, 0.58);
+  font-size: 0.76rem;
+  line-height: 1.45;
+}
+
+.projects-filter-pathline {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0;
+  margin: 0 1.45rem;
+  border-top: 1px solid rgba(235, 240, 245, 0.055);
+  border-bottom: 1px solid rgba(9, 12, 14, 0.12);
+  color: rgba(235, 240, 245, 0.46);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.63rem;
+  font-weight: 820;
+  overflow: hidden;
+  padding: 0.42rem 0;
+  white-space: nowrap;
+}
+
+.projects-filter-pathline span {
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+}
+
+.projects-filter-pathline span + span::before {
+  content: "";
+  width: 0.34rem;
+  height: 0.34rem;
+  margin: 0 0.5rem;
+  border-top: 2px solid rgba(235, 240, 245, 0.22);
+  border-right: 2px solid rgba(235, 240, 245, 0.22);
+  transform: rotate(45deg);
+}
+
+.projects-filter-pathline-current {
+  overflow: hidden;
+  color: rgba(247, 250, 253, 0.78);
+  text-overflow: ellipsis;
 }
 
 .projects-filter-dock {
   display: grid;
   min-width: 0;
-  width: min(100%, 36rem);
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  justify-self: center;
-  gap: 0.42rem;
+  width: auto;
+  grid-template-columns: repeat(4, 8.5rem);
+  gap: 1.35rem 1.3rem;
+  align-content: start;
+  justify-content: start;
+  padding: 0.95rem 1.55rem 2.35rem;
+  background: transparent;
+}
+
+.projects-filter-dock-list {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.16rem;
+  padding-top: 0.72rem;
+  padding-right: 1.18rem;
 }
 
 .projects-filter-dock-item {
   position: relative;
   display: grid;
   justify-items: center;
-  gap: 0.52rem;
+  gap: 0.54rem;
   cursor: pointer;
   border: 1px solid transparent;
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0);
-  color: rgba(245, 245, 247, 0.86);
-  padding: 0.9rem 0.55rem 0.78rem;
+  border-radius: 8px;
+  background: transparent;
+  color: rgba(236, 241, 246, 0.84);
+  padding: 0;
   text-align: center;
   transition:
     background 180ms ease,
@@ -832,38 +1174,54 @@ const infoProject = computed(() => {
 .projects-filter-dock-item:hover {
   border-color: transparent;
   background: transparent;
-  color: #f5f5f7;
-  transform: translateY(-4px);
+  color: #ffffff;
+  transform: translateY(-2px);
 }
 
 .projects-filter-dock-item-active {
   border-color: transparent;
   background: transparent;
-  color: #f5f5f7;
+  color: #ffffff;
 }
 
 .projects-filter-dock-item-active::after {
-  content: "";
-  width: 0.32rem;
-  height: 0.32rem;
-  border-radius: 999px;
-  background: #f0f6fc;
-  box-shadow: 0 0 10px rgba(88, 166, 255, 0.6);
+  content: none;
 }
 
 .projects-filter-dock-item:focus-visible {
-  outline: 2px solid #58a6ff;
+  outline: 2px solid rgba(0, 122, 255, 0.8);
   outline-offset: 2px;
+}
+
+.projects-filter-dock-list .projects-filter-dock-item {
+  grid-template-columns: 2.35rem minmax(0, 1fr) auto;
+  justify-items: stretch;
+  align-items: center;
+  gap: 0.72rem;
+  width: 100%;
+  min-height: 2.7rem;
+  border-radius: 0.42rem;
+  padding: 0.16rem 0.56rem;
+  text-align: left;
+}
+
+.projects-filter-dock-list .projects-filter-dock-item:hover {
+  background: rgba(255, 255, 255, 0.045);
+  transform: none;
+}
+
+.projects-filter-dock-list .projects-filter-dock-item-active {
+  background: rgba(10, 132, 255, 0.92);
 }
 
 .projects-filter-folder-frame {
   display: flex;
-  width: 5.05rem;
-  height: 5.05rem;
+  width: 5.7rem;
+  height: 5rem;
   flex: 0 0 auto;
   align-items: center;
   justify-content: center;
-  border-radius: 20px;
+  border-radius: 12px;
   transition:
     filter 180ms ease,
     transform 180ms ease;
@@ -875,8 +1233,8 @@ const infoProject = computed(() => {
   height: 100%;
   object-fit: contain;
   filter:
-    drop-shadow(0 0.52rem 0.82rem rgba(0, 0, 0, 0.34))
-    drop-shadow(0 0.12rem 0.34rem rgba(88, 166, 255, 0.18));
+    drop-shadow(0 0.45rem 0.5rem rgba(0, 0, 0, 0.28))
+    drop-shadow(0 0.1rem 0.22rem rgba(47, 154, 215, 0.2));
 }
 
 .projects-filter-folder {
@@ -929,8 +1287,34 @@ const infoProject = computed(() => {
 .projects-filter-dock-item-active .projects-filter-folder,
 .projects-filter-dock-item:hover .projects-filter-folder-frame,
 .projects-filter-dock-item-active .projects-filter-folder-frame {
-  filter: saturate(1.1) brightness(1.06);
-  transform: scale(1.08);
+  filter: saturate(1.05) brightness(1.04);
+  transform: scale(1.03);
+}
+
+.projects-filter-dock-list .projects-filter-folder-frame,
+.projects-filter-dock-list .projects-filter-dock-item:hover .projects-filter-folder-frame,
+.projects-filter-dock-list .projects-filter-dock-item-active .projects-filter-folder-frame {
+  width: 2.3rem;
+  height: 2rem;
+  justify-self: start;
+  transform: none;
+}
+
+.projects-filter-dock-list .projects-filter-folder-image {
+  filter:
+    drop-shadow(0 0.18rem 0.22rem rgba(0, 0, 0, 0.26))
+    drop-shadow(0 0.08rem 0.16rem rgba(47, 154, 215, 0.18));
+}
+
+.projects-filter-dock-list .projects-filter-folder {
+  width: 2.05rem;
+  height: 1.45rem;
+}
+
+.projects-filter-dock-list .projects-filter-folder::before {
+  top: -0.22rem;
+  width: 0.9rem;
+  height: 0.42rem;
 }
 
 .projects-filter-dock-item-active .projects-filter-folder {
@@ -944,8 +1328,8 @@ const infoProject = computed(() => {
 
 .projects-filter-dock-item-active .projects-filter-folder-image {
   filter:
-    drop-shadow(0 0.62rem 0.95rem rgba(0, 0, 0, 0.36))
-    drop-shadow(0 0 1.25rem rgba(88, 166, 255, 0.38));
+    drop-shadow(0 0.48rem 0.54rem rgba(0, 0, 0, 0.3))
+    drop-shadow(0 0 0.8rem rgba(66, 174, 232, 0.22));
 }
 
 .projects-filter-dock-copy,
@@ -956,28 +1340,224 @@ const infoProject = computed(() => {
   max-width: 100%;
 }
 
+.projects-filter-dock-copy {
+  width: 100%;
+}
+
+.projects-filter-dock-list .projects-filter-dock-copy {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.75rem;
+}
+
 .projects-filter-dock-copy strong {
   display: block;
   overflow: visible;
   min-height: 0.8rem;
+  max-width: 8.5rem;
   color: inherit;
-  font-size: 0.68rem;
+  font-size: 0.74rem;
   font-weight: 850;
   line-height: 1.15;
+  text-overflow: clip;
+  white-space: normal;
+}
+
+.projects-filter-dock-list .projects-filter-dock-copy strong {
+  overflow: hidden;
+  max-width: none;
+  min-height: 0;
+  font-size: 0.78rem;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
+.projects-filter-dock-item-active .projects-filter-dock-copy strong {
+  border-radius: 0.24rem;
+  background: #0a84ff;
+  color: #ffffff;
+  padding: 0.1rem 0.28rem 0.12rem;
+}
+
+.projects-filter-dock-list .projects-filter-dock-item-active .projects-filter-dock-copy strong {
+  background: transparent;
+  padding: 0;
+}
+
 .projects-filter-dock-copy small {
-  margin-top: 0.12rem;
-  color: rgba(245, 245, 247, 0.55);
+  margin-top: 0.2rem;
+  color: rgba(236, 241, 246, 0.52);
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-size: 0.62rem;
   font-weight: 800;
   line-height: 1.1;
 }
 
+.projects-filter-dock-list .projects-filter-dock-copy small {
+  margin-top: 0;
+  justify-self: end;
+  color: rgba(236, 241, 246, 0.56);
+}
+
 .projects-filter-dock-item-active .projects-filter-dock-copy small {
-  color: #6bb8ff;
+  color: rgba(236, 241, 246, 0.76);
+}
+
+.projects-filter-dock-list .projects-filter-dock-item-active .projects-filter-dock-copy small {
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.projects-filter-preview {
+  display: none;
+  min-width: 0;
+  min-height: 0;
+  border-left: 1px solid rgba(149, 164, 180, 0.14);
+  background:
+    linear-gradient(180deg, rgba(30, 36, 41, 0.58), rgba(27, 32, 37, 0.44)),
+    rgba(24, 29, 34, 0.72);
+  overflow: hidden;
+  padding: 1rem 1rem 1.2rem;
+}
+
+.projects-filter-preview-visual {
+  display: grid;
+  min-height: 5.75rem;
+  place-items: center;
+}
+
+.projects-filter-preview-folder-frame {
+  display: flex;
+  width: 5.45rem;
+  height: 4.8rem;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 0.55rem 0.7rem rgba(0, 0, 0, 0.32));
+}
+
+.projects-filter-preview-folder-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter:
+    drop-shadow(0 0.16rem 0.16rem rgba(255, 255, 255, 0.12))
+    drop-shadow(0 0 0.85rem rgba(66, 174, 232, 0.12));
+}
+
+.projects-filter-preview-folder-fallback {
+  width: 4.5rem;
+  height: 3.18rem;
+}
+
+.projects-filter-preview-kicker {
+  margin: 0.25rem 0 0;
+  color: rgba(235, 240, 245, 0.42);
+  font-size: 0.62rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.projects-filter-preview-title {
+  display: block;
+  overflow: hidden;
+  margin-top: 0.28rem;
+  color: rgba(247, 250, 253, 0.94);
+  font-size: 0.92rem;
+  font-weight: 900;
+  line-height: 1.18;
+  text-align: center;
+  text-overflow: ellipsis;
+}
+
+.projects-filter-preview-stats {
+  display: grid;
+  gap: 0;
+  margin: 1rem 0 0;
+  border-top: 1px solid rgba(235, 240, 245, 0.08);
+}
+
+.projects-filter-preview-stats div {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  border-bottom: 1px solid rgba(235, 240, 245, 0.08);
+  padding: 0.48rem 0;
+}
+
+.projects-filter-preview-stats dt,
+.projects-filter-preview-stats dd {
+  margin: 0;
+}
+
+.projects-filter-preview-stats dt {
+  overflow: hidden;
+  color: rgba(235, 240, 245, 0.48);
+  font-size: 0.68rem;
+  font-weight: 780;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.projects-filter-preview-stats dd {
+  color: rgba(247, 250, 253, 0.88);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.68rem;
+  font-weight: 900;
+}
+
+.projects-filter-preview-featured {
+  min-width: 0;
+  margin-top: 1rem;
+}
+
+.projects-filter-preview-featured span {
+  display: block;
+  color: rgba(235, 240, 245, 0.42);
+  font-size: 0.62rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.projects-filter-preview-featured strong {
+  display: -webkit-box;
+  overflow: hidden;
+  margin-top: 0.28rem;
+  color: rgba(247, 250, 253, 0.9);
+  font-size: 0.78rem;
+  font-weight: 850;
+  line-height: 1.25;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.projects-filter-preview-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.36rem;
+  max-height: 4.05rem;
+  margin-top: 0.9rem;
+  overflow: hidden;
+}
+
+.projects-filter-preview-tags span {
+  max-width: 100%;
+  overflow: hidden;
+  border: 1px solid rgba(149, 164, 180, 0.13);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.055);
+  color: rgba(235, 240, 245, 0.66);
+  font-size: 0.6rem;
+  font-weight: 800;
+  line-height: 1.1;
+  padding: 0.24rem 0.42rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .projects-markets {
@@ -985,11 +1565,9 @@ const infoProject = computed(() => {
   min-width: 0;
   align-items: center;
   gap: 0.62rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.09);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.018)),
-    rgba(8, 8, 10, 0.58);
-  padding: 0.58rem 0.72rem;
+  border-top: 1px solid rgba(149, 164, 180, 0.14);
+  background: linear-gradient(180deg, #242b31, #20262c);
+  padding: 0.78rem 0.9rem;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
@@ -1001,13 +1579,39 @@ const infoProject = computed(() => {
 }
 
 .projects-markets-heading strong {
-  color: rgba(245, 245, 247, 0.88);
+  color: rgba(235, 240, 245, 0.76);
   font-size: 0.68rem;
 }
 
 .projects-markets-heading code {
-  color: rgba(245, 245, 247, 0.5);
+  color: rgba(235, 240, 245, 0.42);
   font-size: 0.64rem;
+}
+
+.projects-markets-selection {
+  display: flex;
+  min-width: 0;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.34rem;
+  border-left: 1px solid rgba(235, 240, 245, 0.08);
+  color: rgba(235, 240, 245, 0.46);
+  padding-left: 0.62rem;
+}
+
+.projects-markets-selection span {
+  font-size: 0.6rem;
+  font-weight: 850;
+}
+
+.projects-markets-selection strong {
+  overflow: hidden;
+  max-width: 8.5rem;
+  color: rgba(235, 240, 245, 0.72);
+  font-size: 0.62rem;
+  font-weight: 900;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .projects-markets-status-dot {
@@ -1040,10 +1644,10 @@ const infoProject = computed(() => {
   flex: 0 0 auto;
   align-items: center;
   gap: 0.36rem;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(149, 164, 180, 0.13);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.045);
-  color: rgba(245, 245, 247, 0.72);
+  background: rgba(255, 255, 255, 0.055);
+  color: rgba(235, 240, 245, 0.72);
   padding: 0.2rem 0.46rem 0.2rem 0.24rem;
 }
 
@@ -1057,9 +1661,9 @@ const infoProject = computed(() => {
   width: 1.25rem;
   height: 0.8rem;
   flex: 0 0 auto;
-  border-radius: 999px;
+  border-radius: 0.18rem;
   object-fit: contain;
-  filter: saturate(0.9);
+  filter: saturate(0.96);
 }
 
 .projects-market-emoji {
@@ -1070,30 +1674,34 @@ const infoProject = computed(() => {
 
 .projects-markets-count {
   flex: 0 0 auto;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(149, 164, 180, 0.13);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.06);
-  color: rgba(245, 245, 247, 0.6);
+  background: rgba(255, 255, 255, 0.055);
+  color: rgba(235, 240, 245, 0.52);
   font-size: 0.58rem;
   font-weight: 900;
   padding: 0.24rem 0.5rem;
 }
 
-@media (min-width: 1024px) {
-  .projects-filter-body {
-    grid-template-columns: minmax(14rem, 0.55fr) minmax(0, 1fr);
-    align-items: center;
-    justify-items: stretch;
-    gap: 1rem;
-    padding: 1rem 1.15rem 1.1rem;
+@media (min-width: 1280px) {
+  .projects-filter-content {
+    grid-template-columns: minmax(0, 1fr) 16.5rem;
+    height: 24.7rem;
   }
 
-  .projects-filter-intro {
-    text-align: left;
+  .projects-filter-preview {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+@media (min-width: 1024px) {
+  .projects-filter-body {
+    min-height: 18rem;
   }
 
   .projects-filter-intro strong {
-    font-size: 1.45rem;
+    font-size: 1.2rem;
   }
 
   .projects-filter-intro span {
@@ -1101,12 +1709,20 @@ const infoProject = computed(() => {
   }
 
   .projects-filter-dock {
-    width: min(100%, 30rem);
-    gap: 0.22rem;
+    grid-template-columns: repeat(4, 8.5rem);
+    gap: 1.35rem 1.3rem;
+    padding: 0.95rem 1.55rem 2.35rem;
+  }
+
+  .projects-filter-dock-list {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.16rem;
+    padding-top: 0.72rem;
+    padding-right: 1.18rem;
   }
 
   .projects-filter-dock-item {
-    padding: 0.62rem 0.32rem 0.52rem;
+    padding: 0;
   }
 
   .projects-filter-folder {
@@ -1115,8 +1731,8 @@ const infoProject = computed(() => {
   }
 
   .projects-filter-folder-frame {
-    width: 4.55rem;
-    height: 4.55rem;
+    width: 5.7rem;
+    height: 5rem;
   }
 
   .projects-filter-folder::before {
@@ -1133,39 +1749,116 @@ const infoProject = computed(() => {
 
 }
 
+@media (max-width: 1023px) {
+  .projects-filter-toolbar {
+    gap: 0.72rem;
+  }
+
+  .projects-filter-toolbar-actions {
+    gap: 0.42rem;
+  }
+
+  .projects-filter-body {
+    grid-template-columns: 13.5rem minmax(0, 1fr);
+  }
+
+  .projects-filter-content-head {
+    padding: 0.95rem 1rem 0;
+  }
+
+  .projects-filter-pathline {
+    margin-inline: 1rem;
+  }
+
+  .projects-filter-dock {
+    grid-template-columns: repeat(2, 7.1rem);
+    gap: 1.1rem 1.25rem;
+    padding: 1.1rem 1rem 1.45rem;
+  }
+
+  .projects-filter-dock-list {
+    grid-template-columns: minmax(0, 1fr);
+    padding-top: 0.75rem;
+  }
+}
+
 @media (max-width: 639px) {
+  .projects-review-shell {
+    border-radius: 20px;
+  }
+
+  .projects-filter-panel {
+    min-height: 0;
+    border-radius: 20px;
+  }
+
   .projects-filter-toolbar {
     flex-wrap: wrap;
-    gap: 0.58rem;
+    gap: 0.62rem;
+    min-height: 0;
+    padding: 0.82rem;
+  }
+
+  .projects-filter-window-controls {
+    width: 3.5rem;
+  }
+
+  .projects-filter-window-controls-image {
+    width: 3.5rem;
+  }
+
+  .projects-filter-toolbar-nav {
+    width: 4.55rem;
+    height: 2.35rem;
   }
 
   .projects-filter-pathbar {
     order: 3;
     flex-basis: 100%;
-    font-size: 0.62rem;
+    max-width: none;
+    height: 2.35rem;
+  }
+
+  .projects-filter-toolbar-actions {
+    display: none;
   }
 
   .projects-filter-toolbar-count {
-    margin-left: auto;
+    align-self: flex-start;
   }
 
   .projects-filter-body {
-    gap: 0.8rem;
-    padding: 0.8rem;
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .projects-filter-content-head {
+    display: grid;
+    padding: 0.82rem 0.82rem 0;
   }
 
   .projects-filter-intro strong {
-    font-size: 1.42rem;
+    font-size: 1.08rem;
+  }
+
+  .projects-filter-intro span {
+    font-size: 0.74rem;
+  }
+
+  .projects-filter-pathline {
+    margin-inline: 0.82rem;
+    font-size: 0.58rem;
   }
 
   .projects-filter-dock {
     width: 100%;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.65rem;
+    gap: 0.9rem 0.42rem;
+    padding: 1rem 0.78rem 1.2rem;
   }
 
   .projects-filter-dock-item {
-    padding: 0.72rem 0.35rem 0.62rem;
+    padding: 0;
   }
 
   .projects-filter-folder {
@@ -1174,8 +1867,8 @@ const infoProject = computed(() => {
   }
 
   .projects-filter-folder-frame {
-    width: 4.05rem;
-    height: 4.05rem;
+    width: 4rem;
+    height: 3.65rem;
   }
 
   .projects-filter-folder::before {
@@ -1191,7 +1884,7 @@ const infoProject = computed(() => {
   }
 
   .projects-filter-dock-copy strong {
-    font-size: 0.62rem;
+    font-size: 0.68rem;
   }
 
   .projects-filter-dock-copy small {
@@ -1200,6 +1893,11 @@ const infoProject = computed(() => {
 
   .projects-markets {
     gap: 0.5rem;
+    padding-inline: 0.58rem;
+  }
+
+  .projects-markets-selection {
+    display: none;
   }
 
   .projects-markets-heading code {
@@ -1213,25 +1911,31 @@ const infoProject = computed(() => {
 
 @media (min-width: 1600px) {
   .projects-review-shell {
-    padding: 1rem;
+    padding: 0.85rem;
   }
 
   .projects-filter-toolbar {
-    padding: 0.86rem 1rem;
+    padding: 0 1.38rem;
   }
 
   .projects-filter-body {
-    gap: 1.45rem;
-    padding: 1.65rem 1.45rem 1.8rem;
+    min-height: 19rem;
   }
 
   .projects-filter-intro strong {
-    font-size: 1.7rem;
+    font-size: 1.28rem;
   }
 
   .projects-filter-dock {
-    width: min(100%, 34rem);
-    gap: 0.3rem;
+    grid-template-columns: repeat(4, 9rem);
+    gap: 1.55rem 1.45rem;
+    padding: 1.08rem 1.7rem 2.55rem;
+  }
+
+  .projects-filter-dock-list {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.16rem;
+    padding: 0.72rem 1.18rem 2.55rem 1.7rem;
   }
 
   .projects-filter-folder {
@@ -1240,8 +1944,8 @@ const infoProject = computed(() => {
   }
 
   .projects-filter-folder-frame {
-    width: 5.45rem;
-    height: 5.45rem;
+    width: 6rem;
+    height: 5.25rem;
   }
 
   .projects-filter-dock-copy strong {
@@ -1249,8 +1953,7 @@ const infoProject = computed(() => {
   }
 
   .projects-markets {
-    margin-top: 1rem;
-    padding-top: 0.9rem;
+    padding-block: 0.88rem;
   }
 
   .projects-markets-heading strong {

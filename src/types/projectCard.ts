@@ -30,4 +30,6 @@ export interface ProjectCard {
   solvedTasks?: string[]
   solvedTasksTitle?: string
   infoModalKey?: string
+  /** Служебная пометка к кейсу, например «статья архивная». */
+  notice?: string
 }

@@ -140,6 +140,17 @@ const gold585FeaturePills = computed(() =>
     ? ['Swift', 'SwiftUI', 'UIKit', 'MVVM', 'Combine', 'REST API', 'Yandex Maps', 'Mindbox', 'Yandex Metrica', 'ЮKassa', 'Deep links', 'Push Notifications']
     : ['Swift', 'SwiftUI', 'UIKit', 'MVVM', 'Combine', 'REST API', 'Yandex Maps', 'Mindbox', 'Yandex Metrica', 'YooKassa', 'Deep links', 'Push Notifications'],
 )
+const securityArticleLinks = computed(() => props.project.storeLinks.filter((link) => link.type === 'website'))
+const researchCaseNumber = computed(() => {
+  const match = props.project.id.match(/^cyber-(\d+)-/)
+  return match ? String(Number(match[1]) + 1).padStart(2, '0') : '—'
+})
+const securityDescriptionHtml = computed(() =>
+  props.project.description
+    .replace(/<br\s*\/?>\s*<a\b[^>]*>.*?<\/a>/gis, '')
+    .replace(/<a\b[^>]*>(.*?)<\/a>/gis, '$1')
+    .replace(/(<br\s*\/?>\s*){3,}/gi, '<br><br>'),
+)
 const teleprompterCapabilityLine = computed(() =>
   locale.value === 'ru'
     ? ['4K-съемка', 'real-time фильтры', 'сегментация фона', 'анимированный текст', 'StoreKit / Billing', 'Stripe / ЮKassa']
@@ -470,8 +481,75 @@ onBeforeUnmount(() => {
 
 <template>
   <article ref="articleRef" class="h-full min-w-0 w-full overflow-visible" :class="{ 'project-ticket-card--reduced-effects': reduceEffects }">
+    <article
+      v-if="isCybersecurityCard"
+      class="rcard"
+      :class="project.notice ? 'rcard--archive' : ''"
+    >
+      <div class="rcard-leading">
+        <span class="rcard-id">{{ researchCaseNumber }}</span>
+        <img
+          v-if="project.galleryUrls[0]"
+          :src="project.galleryUrls[0]"
+          :alt="project.title"
+          class="rcard-thumb"
+          loading="lazy"
+          decoding="async"
+        >
+      </div>
+
+      <div class="rcard-body">
+        <div class="rcard-head">
+          <span class="rcard-eyebrow">
+            {{ project.eyebrow || t('projects.researchCard.eyebrow') }}
+            <i v-if="project.notice">{{ t('projects.researchCard.archive') }}</i>
+            <i v-else-if="securityArticleLinks.length > 1">
+              {{ t('projects.researchCard.parts', { n: securityArticleLinks.length }) }}
+            </i>
+          </span>
+          <h2 class="rcard-title">{{ project.title }}</h2>
+        </div>
+
+        <p class="rcard-text" v-html="securityDescriptionHtml"></p>
+
+        <p v-if="project.notice" class="rcard-warn">
+          <b aria-hidden="true">!</b>
+          <span>{{ project.notice }}</span>
+        </p>
+
+        <div v-if="project.technologies.length" class="rcard-tags">
+          <span v-for="tech in visibleTechnologies" :key="tech">{{ tech }}</span>
+        </div>
+      </div>
+
+      <div class="rcard-actions">
+        <a
+          v-for="link in securityArticleLinks"
+          :key="link.url"
+          class="rcard-link"
+          :href="link.url"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {{ link.label ?? t('projects.articleLinks.read') }}
+          <span aria-hidden="true">↗</span>
+        </a>
+
+        <button
+          v-if="!securityArticleLinks.length"
+          type="button"
+          class="rcard-link rcard-link--ghost"
+          disabled
+          :title="t('projects.researchCard.linkSoonTitle')"
+        >
+          {{ t('projects.articleLinks.read') }}
+          <span aria-hidden="true">/ {{ t('projects.researchCard.linkSoon') }}</span>
+        </button>
+      </div>
+    </article>
+
     <div
-      v-if="isGold585Project(project)"
+      v-else-if="isGold585Project(project)"
       class="gold585-case-card relative mx-auto w-full overflow-hidden rounded-[30px] border border-[#b8944e]/25 p-2 text-[#f8edda] shadow-[0_30px_78px_rgba(31,5,9,0.44)] sm:p-2.5"
     >
       <div class="pointer-events-none absolute inset-0 gold585-case-surface"></div>
@@ -1980,6 +2058,90 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
+/* ---- Компактная карточка исследования ---- */
+.rcard{
+  --ac:#5cf0c0;
+  position:relative;display:grid;gap:.65rem .85rem;
+  grid-template-columns:auto minmax(0,1fr);
+  padding:.72rem .85rem;border-radius:10px;
+  background:linear-gradient(158deg, rgba(16,26,34,.94), rgba(6,10,16,.98));
+  box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--ac) 20%, transparent);
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  transition:box-shadow .2s ease, transform .2s ease;
+}
+.rcard:hover{
+  transform:translateY(-1px);
+  box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--ac) 42%, transparent), 0 .8rem 1.6rem rgba(0,0,0,.35);
+}
+.rcard::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:2px;border-radius:2px 0 0 2px;
+  background:var(--ac);box-shadow:0 0 .5rem color-mix(in srgb, var(--ac) 55%, transparent);
+}
+.rcard--archive{--ac:#ffc14d}
+@media(min-width:900px){
+  .rcard{grid-template-columns:auto minmax(0,1fr) auto;align-items:start}
+  .rcard-actions{align-self:center}
+}
+.rcard-leading{display:flex;align-items:flex-start;gap:.45rem;padding-left:.15rem}
+.rcard-id{
+  flex:none;font-size:.58rem;letter-spacing:.18em;line-height:1.6;
+  color:color-mix(in srgb, var(--ac) 72%, #fff 28%);
+}
+.rcard-thumb{
+  width:2.75rem;height:2.75rem;flex:none;border-radius:6px;object-fit:cover;
+  border:1px solid color-mix(in srgb, var(--ac) 24%, transparent);
+  filter:grayscale(1) contrast(1.06);
+}
+.rcard-body{min-width:0;display:grid;gap:.35rem}
+.rcard-head{display:grid;gap:.18rem}
+.rcard-eyebrow{
+  display:flex;flex-wrap:wrap;align-items:center;gap:.35rem;
+  font-size:.54rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(190,214,230,.48);
+}
+.rcard-eyebrow i{
+  font-style:normal;padding:.06rem .32rem;
+  border:1px solid color-mix(in srgb, var(--ac) 28%, transparent);
+  color:color-mix(in srgb, var(--ac) 82%, #fff 18%);
+}
+.rcard-title{
+  margin:0;font-family:Inter,system-ui,-apple-system,sans-serif;font-weight:800;
+  font-size:clamp(.88rem,1.6vw,1.05rem);line-height:1.25;color:#eef6fb;
+}
+.rcard-text{
+  margin:0;font-size:.66rem;line-height:1.5;color:rgba(206,222,234,.6);
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;
+}
+.rcard-tags{display:flex;flex-wrap:wrap;gap:.25rem}
+.rcard-tags span{
+  padding:.1rem .36rem;font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;
+  border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03);color:rgba(220,234,244,.65);
+}
+.rcard-warn{
+  display:flex;gap:.4rem;margin:0;padding:.35rem .45rem;
+  border:1px dashed rgba(255,193,77,.4);background:rgba(255,193,77,.05);
+  font-size:.58rem;line-height:1.45;color:#ffe2ad;
+}
+.rcard-warn b{flex:none;color:#ffc14d}
+.rcard-actions{
+  grid-column:1/-1;display:flex;flex-wrap:wrap;gap:.35rem;padding-top:.15rem;
+  border-top:1px dashed rgba(255,255,255,.08);
+}
+@media(min-width:900px){
+  .rcard-actions{
+    grid-column:3;grid-row:1;display:grid;gap:.35rem;padding-top:0;border-top:0;justify-items:end;
+  }
+}
+.rcard-link{
+  display:inline-flex;align-items:center;gap:.32rem;padding:.32rem .58rem;text-decoration:none;
+  border:1px solid color-mix(in srgb, var(--ac) 38%, transparent);
+  background:color-mix(in srgb, var(--ac) 7%, transparent);
+  font-family:inherit;font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;
+  color:color-mix(in srgb, var(--ac) 88%, #fff 12%);white-space:nowrap;
+  transition:background .2s ease,color .2s ease;
+}
+.rcard-link:hover{background:color-mix(in srgb, var(--ac) 18%, transparent);color:#fff}
+.rcard-link--ghost{border-style:dashed;color:rgba(220,234,244,.4);cursor:not-allowed}
+
 .gold585-case-card {
   background:
     radial-gradient(ellipse 62% 52% at 18% 0%, rgba(212, 6, 28, 0.28), transparent 62%),
