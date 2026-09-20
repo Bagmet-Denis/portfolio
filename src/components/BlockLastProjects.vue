@@ -21,6 +21,8 @@ const storeBadgeSrc: Record<StoreType, string> = {
 
 const latestProjects = computed<ProjectCard[]>(() => {
   const mapped: ProjectCard[] = mobileProjects.map((project) => {
+    const isPlatesProject = project.title === 'Тренировки. Блин да Гриф'
+    const localizedDescription = getProjectDescription(t, project.title, project.description || '')
     const storeLinks = []
     if (project.appStoreUrl) storeLinks.push({ type: 'appstore' as const, url: project.appStoreUrl })
     if (project.googlePlayUrl) storeLinks.push({ type: 'googleplay' as const, url: project.googlePlayUrl })
@@ -49,9 +51,14 @@ const latestProjects = computed<ProjectCard[]>(() => {
 
     return {
       id: `mobile-${project.id}-${project.title}`,
+      category: 'mobile',
       title: project.title,
-      description: stripHtml(getProjectDescription(t, project.title, project.description || '')).slice(0, 180),
-      technologies: project.technologies.filter(Boolean).slice(0, 5),
+      description: isPlatesProject
+        ? localizedDescription
+        : stripHtml(localizedDescription).slice(0, 180),
+      technologies: isPlatesProject
+        ? project.technologies.filter(Boolean)
+        : project.technologies.filter(Boolean).slice(0, 5),
       iconUrl: resolveAssetUrl(project.iconPath),
       galleryUrls: resolveAssetUrls(project.screenshots),
       storeLinks,

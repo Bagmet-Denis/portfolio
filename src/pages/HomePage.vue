@@ -6,10 +6,31 @@ import CardInfoAboutMe from '@/components/CardInfoAboutMe.vue'
 import BlockFeaturedProject from '@/components/BlockFeaturedProject.vue'
 import BlockLastProjects from '@/components/BlockLastProjects.vue'
 import HomeFooterSection from '@/components/HomeFooterSection.vue'
+import HeroSplitStage from '@/components/hero-split/HeroSplitStage.vue'
+import { darkMaterialStyle } from '@/components/hero-split/darkMaterial'
 import { publicAssetUrl } from '@/utils/resolveAssetUrl'
 
 const cloudSrc = publicAssetUrl('cloud.png')
-const gridPattern = publicAssetUrl('grid_pattern.svg')
+const paperOverlay = publicAssetUrl('paper_overlay.png')
+
+/**
+ * Тёмный материал: один и тот же у луча в хиро и у секции Featured case.
+ * У луча фаза сетки прибита к низу, у секции — к верху, поэтому на стыке
+ * линии продолжают друг друга.
+ */
+const darkMaterial = { color: '#17120f', gridOpacity: 0.14, grainUrl: paperOverlay }
+const featuredSectionStyle = darkMaterialStyle({
+  gridOpacity: darkMaterial.gridOpacity,
+  grainUrl: darkMaterial.grainUrl,
+  anchor: 'top',
+  baseColor: darkMaterial.color,
+  // Под материалом — прежний градиент секции. Первые ~110px — чистый цвет
+  // материала, чтобы стык с лучом был буквально пиксель в пиксель.
+  below: [
+    { image: `linear-gradient(180deg, ${darkMaterial.color} 0px, rgba(23, 18, 15, 0) 110px)`, size: 'auto', blend: 'normal' },
+    { image: 'radial-gradient(circle at top left, #531818 0%, #1d1716 45%, #121212 100%)', size: 'auto', blend: 'normal' },
+  ],
+})
 
 const homeCloudDecorations = [
   {
@@ -52,6 +73,26 @@ const homeCloudDecorations = [
     </div>
 
     <main class="relative z-10 mx-auto w-full">
+      <!-- Рваная тёмная полоса поверх хиро. Карточки внутри — как были;
+           параметры подобраны в /hero-lab, там же их можно докрутить. -->
+      <HeroSplitStage
+        dark-style="shade"
+        :center-top="60"
+        :center-bottom="40"
+        :band-width="44"
+        :band-min-px="300"
+        :dark-color="darkMaterial.color"
+        :grid-opacity="darkMaterial.gridOpacity"
+        :grain-url="darkMaterial.grainUrl"
+        top-color="#201e1c"
+        :top-fade="140"
+        :reveal-duration="900"
+        :idle-drift="0.8"
+        follow-cursor
+        :follow-strength="3.5"
+        :roughness="0.5"
+        :seed="7"
+      >
       <section class="relative mx-auto max-w-[1580px] px-4 py-4 sm:px-6 lg:pb-6 xl:px-8">
         <div class="relative z-10 space-y-3 lg:hidden">
           <div class="grid gap-3 md:grid-cols-[minmax(0,1fr)_220px] md:items-start">
@@ -78,11 +119,14 @@ const homeCloudDecorations = [
           </div>
         </div>
       </section>
+      </HeroSplitStage>
 
-      <section
-        class="relative overflow-hidden border-t border-black/10 bg-[radial-gradient(circle_at_top_left,#531818_0%,#1d1716_45%,#121212_100%)]">
-        <div class="absolute inset-0 opacity-18 mix-blend-screen"
-          :style="{ backgroundImage: `url(${gridPattern})`, backgroundSize: '28px', backgroundPosition: 'center' }" />
+      <!-- Featured case из того же «тёмного материала», что и луч в хиро.
+           Красное свечение стартует чуть ниже верха: первые ~110px — чистый
+           цвет материала, чтобы стык с лучом был буквально пиксель в пиксель. -->
+      <!-- -mt-px: накрываем субпиксельную щель на стыке с хиро (его высота дробная
+           из-за повёрнутых карточек, и антиалиасинг пропускал сквозь неё светлый фон). -->
+      <section class="relative -mt-px overflow-hidden" :style="featuredSectionStyle">
         <div class="absolute -left-10 top-6 h-36 w-36 rounded-full bg-[#d7342a]/20 blur-3xl" />
         <div class="absolute right-0 top-0 h-44 w-44 rounded-full bg-[#f3d0b6]/10 blur-3xl" />
         <div class="relative z-10">

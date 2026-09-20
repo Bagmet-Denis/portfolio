@@ -340,24 +340,6 @@ const mAlienShowcaseItems = computed(() => {
         : ['Auth', 'Chat list', 'Dialog', 'Profile', 'Settings', 'Media'][index] ?? `Screen ${index + 1}`,
   }))
 })
-const platesStats = computed(() =>
-  locale.value === 'ru'
-    ? [
-        { value: 'Генерация тренировок', label: 'ИИ подбирает программу под цель, уровень и ограничения' },
-        { value: 'Помощь по занятиям', label: 'AI-ассистент подсказывает, если упражнение не получается' },
-        { value: '3-кратный чемпион Европы', label: 'программы с участием Владислава Туйнова' },
-      ]
-    : [
-        { value: 'Workout generation', label: 'AI adapts programs to goals, level, and limits' },
-        { value: 'Training support', label: 'AI assistant helps when an exercise is not working' },
-        { value: '3-time European champion', label: 'programs with Vladislav Tuinov' },
-      ],
-)
-const platesFeaturePills = computed(() =>
-  locale.value === 'ru'
-    ? ['AI-тренировки', 'AI-чат', 'Сообщество', 'Дневник питания', 'Статистика', 'Журнал', 'Награды', 'BLE']
-    : ['AI workouts', 'AI chat', 'Community', 'Nutrition journal', 'Statistics', 'Journal', 'Rewards', 'BLE'],
-)
 const platesShowcaseItems = computed(() => {
   if (!isPlatesProject(props.project)) return []
 
@@ -1090,8 +1072,17 @@ onBeforeUnmount(() => {
           <div class="pointer-events-none absolute inset-0 plates-hero-shade"></div>
 
           <div class="relative z-10 grid min-w-0 gap-3 min-[1120px]:grid-cols-[minmax(0,1fr)_minmax(430px,34%)] min-[1120px]:items-stretch min-[1500px]:grid-cols-[minmax(0,1fr)_minmax(520px,34%)]">
-            <aside class="plates-performance-console relative flex min-w-0 overflow-hidden rounded-[28px] border border-white/12 p-3">
-              <div class="plates-screen-row flex h-full min-w-0 flex-1 items-center gap-0 overflow-x-auto pb-2 pt-1">
+            <aside class="plates-performance-console relative flex min-w-0 flex-col overflow-hidden rounded-[28px] border border-white/12 p-3">
+              <div class="relative z-[2] mb-2 flex items-center justify-between gap-3 px-1">
+                <p class="text-[10px] font-black uppercase tracking-[0.22em] text-[#ff8b82]">
+                  {{ locale.startsWith('ru') ? 'Экраны приложения' : 'App screens' }}
+                </p>
+                <span class="shrink-0 rounded-full border border-[#ff6b5f]/18 bg-[#ff4a42]/12 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-[#ffe2de]">
+                  {{ platesShowcaseItems.length }} {{ locale.startsWith('ru') ? 'экранов' : 'screens' }}
+                </span>
+              </div>
+
+              <div class="plates-screen-row flex min-w-0 flex-1 items-center gap-0 overflow-x-auto pb-2 pt-1">
                 <button
                   v-for="item in platesShowcaseItems"
                   :key="`${project.id}-plates-screen-${item.index}`"
@@ -1123,93 +1114,55 @@ onBeforeUnmount(() => {
                   decoding="async"
                 />
                 <div class="min-w-0">
-                  <p class="text-[10px] font-black uppercase tracking-[0.26em] text-[#ff7b70]">
-                    Workout app / Flutter / BLE
-                  </p>
-                  <h2 class="mt-2 max-w-3xl text-[2.15rem] font-black leading-[1.02] text-white sm:text-[3rem] min-[1500px]:text-[3.25rem]">
+                  <h2 class="max-w-3xl text-[2.15rem] font-black leading-[1.02] text-white sm:text-[2.45rem] min-[1500px]:text-[2.7rem]">
                     {{ project.title }}
                   </h2>
-                  <p class="mt-2 max-w-2xl text-sm font-semibold leading-6 text-[#ffe2de]/88">
-                    {{ locale.startsWith('ru') ? 'Мобильный фитнес-продукт с AI-генерацией тренировок, AI-чатом, сообществом, дневниками питания и программами от чемпиона Европы.' : 'A mobile fitness product with AI workout generation, AI chat, community, nutrition journals, and programs by a European champion.' }}
-                  </p>
                 </div>
               </div>
 
-              <p
-                class="mt-5 max-w-3xl text-[13px] font-semibold leading-6 text-[#fff4f1]/90 [&_strong]:text-white"
-                v-html="project.description"
-              ></p>
+              <div class="mt-4 rounded-[22px] border border-white/10 bg-black/24 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-[2px]">
+                <p
+                  class="max-w-3xl text-[13px] font-semibold leading-6 text-[#fff4f1]/90 [&_strong]:text-white"
+                  v-html="project.description"
+                ></p>
 
-              <div class="mt-5 grid gap-2 sm:grid-cols-3">
                 <div
-                  v-for="stat in platesStats"
-                  :key="stat.label"
-                  class="plates-stat-tile rounded-[18px] border border-white/12 px-3 py-3"
+                  v-if="project.storeLinks.length || (project.infoModalKey && openInfoModal && infoButtonText)"
+                  class="mt-4 flex flex-wrap items-center gap-2"
                 >
-                  <p class="text-sm font-black leading-tight text-white">
-                    {{ stat.value }}
-                  </p>
-                  <p class="mt-1.5 text-[10px] font-bold leading-4 text-[#ffada6]/78">
-                    {{ stat.label }}
-                  </p>
-                </div>
-              </div>
+                  <a
+                    v-for="link in project.storeLinks"
+                    :key="`${link.type}-${link.url}`"
+                    :href="link.url"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-flex min-h-[42px] items-center justify-center rounded-xl border border-white/14 bg-white px-1.5 py-1 transition duration-200 hover:-translate-y-0.5 hover:bg-[#fff1ef]"
+                    :title="link.type"
+                  >
+                    <img
+                      v-if="storeBadgeSrc[link.type]"
+                      :src="storeBadgeSrc[link.type]"
+                      alt=""
+                      class="h-8 object-contain"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    <span v-else class="px-2 py-1 text-xs font-bold text-[#4a1111]">{{ link.label ?? link.type }}</span>
+                  </a>
 
-              <div class="mt-5 flex flex-wrap gap-1.5">
-                <span
-                  v-for="pill in platesFeaturePills"
-                  :key="pill"
-                  class="rounded-full border border-[#ff5c52]/18 bg-[#ff4a42]/12 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.1em] text-[#ffe2de]"
-                >
-                  {{ pill }}
-                </span>
+                  <button
+                    v-if="project.infoModalKey && openInfoModal && infoButtonText"
+                    type="button"
+                    class="inline-flex min-h-[42px] items-center justify-center rounded-xl border border-[#ff6b5f]/20 bg-[#ff4a42]/12 px-3 text-xs font-black text-[#ffe2de] transition duration-200 hover:-translate-y-0.5 hover:bg-[#ff4a42]/18"
+                    @click="openInfoModal(project.id)"
+                  >
+                    {{ infoButtonText }}
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         </section>
-
-        <div class="relative mt-3 flex flex-col gap-3 min-[900px]:flex-row min-[900px]:items-center min-[900px]:justify-between">
-          <div v-if="project.technologies.length" class="flex flex-wrap gap-1.5">
-            <span
-              v-for="tech in visibleTechnologies"
-              :key="tech"
-              class="rounded-full bg-[#ff4a42]/12 px-2.5 py-1 text-[10px] font-bold tracking-[0.02em] text-[#ffe2de] sm:px-3"
-            >
-              {{ tech }}
-            </span>
-            <span
-              v-if="hiddenTechnologyCount"
-              class="rounded-full bg-white/[0.08] px-2.5 py-1 text-[10px] font-semibold tracking-[0.02em] text-white/62 sm:px-3"
-            >
-              +{{ hiddenTechnologyCount }}
-            </span>
-          </div>
-
-          <div
-            v-if="project.storeLinks.length || (project.infoModalKey && openInfoModal && infoButtonText)"
-            class="flex flex-wrap items-center gap-2"
-          >
-            <a
-              v-for="link in project.storeLinks"
-              :key="`${link.type}-${link.url}`"
-              :href="link.url"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="inline-flex min-h-[40px] items-center justify-center rounded-xl border border-white/14 bg-white px-1.5 py-1 transition duration-200 hover:-translate-y-0.5 hover:bg-[#fff1ef]"
-              :title="link.type"
-            >
-              <img
-                v-if="storeBadgeSrc[link.type]"
-                :src="storeBadgeSrc[link.type]"
-                alt=""
-                class="h-8 object-contain"
-                loading="lazy"
-                decoding="async"
-              />
-              <span v-else class="px-2 py-1 text-xs font-bold text-[#4a1111]">{{ link.label ?? link.type }}</span>
-            </a>
-          </div>
-        </div>
       </div>
     </div>
 
@@ -2721,7 +2674,6 @@ onBeforeUnmount(() => {
   text-shadow: 0 4px 26px rgba(0, 0, 0, 0.46);
 }
 
-.plates-stat-tile,
 .plates-performance-console {
   background:
     linear-gradient(145deg, rgba(255, 255, 255, 0.095), rgba(255, 255, 255, 0.026) 42%, rgba(255, 64, 50, 0.08)),
@@ -3449,7 +3401,6 @@ onBeforeUnmount(() => {
   .tone-stand-strip,
   .tone-stand-photo,
   .plates-case-card,
-  .plates-stat-tile,
   .plates-performance-console,
   .plates-screen-card,
   .m-alien-case-card,

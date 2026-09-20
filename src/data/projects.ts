@@ -1124,7 +1124,7 @@ export const mobileProjects: MobileProjectModel[] = [
     28,
     'src/assets/projects/plates/1024x1024.png',
     'Тренировки. Блин да Гриф',
-    '<strong>Блин-да-Гриф</strong> — мобильное приложение для тренировок с индивидуальной генерацией программ через ИИ, AI-чатом для уточнения проблем по занятиям, сообществом, дневниками питания, статистикой и личным прогрессом.<br><br>Пользователь может подобрать тренировку под цель и уровень, обсудить с AI-ассистентом ситуацию, если упражнение не получается или нагрузка слишком тяжелая, делиться результатами с другими участниками и вести питание в одном продукте. Среди авторов программ — <strong>Владислав Туйнов</strong>, 3-кратный чемпион Европы по кикбоксингу. По технической части это Flutter/Dart-приложение с Firebase, push-уведомлениями, REST/WebSocket-слоем и Bluetooth/BLE-сценариями для фитнес-устройств.',
+    '<strong>Блин-да-Гриф</strong> объединяет персональные тренировки, AI-помощника, сообщество, дневник питания и отслеживание прогресса в одном мобильном продукте.<br><br>Пользователь выбирает цель и уровень, получает программу, уточняет сложные моменты в AI-чате и делится результатами. Среди авторов тренировок — <strong>Владислав Туйнов</strong>, 3-кратный чемпион Европы по кикбоксингу.',
     [
       'src/assets/projects/plates/plates0.png',
       'src/assets/projects/plates/plates1.png',
@@ -1139,6 +1139,11 @@ export const mobileProjects: MobileProjectModel[] = [
       'src/assets/projects/plates/plates10.png',
       'src/assets/projects/plates/plates11.png',
       'src/assets/projects/plates/plates12.png',
+      'src/assets/projects/plates/plates13.png',
+      'src/assets/projects/plates/plates14.png',
+      'src/assets/projects/plates/plates15.png',
+      'src/assets/projects/plates/plates16.png',
+      'src/assets/projects/plates/plates17.png',
     ],
     [
       'Flutter',

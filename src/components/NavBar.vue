@@ -124,7 +124,6 @@ summary::-webkit-details-marker {
   min-width: 0;
   align-items: center;
   gap: 1rem;
-  border-bottom: 1px solid rgba(255, 245, 239, 0.08);
   background:
     linear-gradient(180deg, rgba(255, 245, 239, 0.045), transparent 100%),
     rgba(31, 29, 27, 0.96);

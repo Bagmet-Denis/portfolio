@@ -3,7 +3,6 @@ import { watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { RouterView } from 'vue-router'
 import { saveLocale, type AppLocale } from './i18n'
-import SeasonsFalling from 'vue-seasons-falling'
 import NavBar from './components/NavBar.vue'
 import GlobalContactSection from './components/GlobalContactSection.vue'
 import { publicAssetUrl } from './utils/resolveAssetUrl'
@@ -20,20 +19,14 @@ const paperOverlay = publicAssetUrl('paper_overlay.png')
 </script>
 
 <template>
-  <div class="relative flex h-[100dvh] overflow-hidden bg-[#f3eadf] p-0 md:p-4">
-
-
-    <!-- Панель приложения -->
+  <div class="relative flex h-[100dvh] overflow-hidden bg-(--color-header-bg)">
+    <!-- Оболочка страницы: шапка сверху, контент скроллится внутри data-app-scroll -->
     <div
-      class="relative z-10 flex h-full min-h-0 w-full flex-col overflow-hidden bg-(--color-header-bg) text-(--color-text) md:rounded-xl md:shadow-xl"
+      class="relative z-10 flex h-full min-h-0 w-full flex-col overflow-hidden bg-(--color-header-bg) text-(--color-text)"
       :style="{ backgroundImage: `url(${backgroundPattern})`, backgroundRepeat: 'repeat', backgroundSize: '20px 20px' }">
 
       <div class="absolute inset-0 pointer-events-none z-0 mix-blend-darken opacity-60"
         :style="{ backgroundImage: `url(${paperOverlay})`, backgroundRepeat: 'repeat', backgroundSize: 'auto' }">
-      </div>
-
-      <div aria-hidden="true" class="pointer-events-none absolute inset-0 z-[1] overflow-hidden">
-        <SeasonsFalling season="summer" :amount="100" :wind="0.12" :mouseInteraction="true" />
       </div>
 
       <div class="relative z-[1000]">
